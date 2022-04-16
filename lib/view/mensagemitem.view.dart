@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone/model/mensagem.model.dart';
+import 'package:menuon/model/mensagem.model.dart';
 
 class MensagemItem extends StatelessWidget {
   final MensagemModel model;

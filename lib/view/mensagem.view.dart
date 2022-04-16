@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone/model/mensagem.model.dart';
-import 'package:whatsapp_clone/view/mensagemitem.view.dart';
+import 'package:menuon/model/mensagem.model.dart';
+import 'package:menuon/view/mensagemitem.view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MensagemView extends StatelessWidget {
