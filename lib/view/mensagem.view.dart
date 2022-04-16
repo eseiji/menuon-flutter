@@ -14,6 +14,7 @@ class MensagemView extends StatelessWidget {
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: firestore
             .collection('Mensagens')
+            .where('usuarios', arrayContains: auth.currentUser!.uid)
             .orderBy('dataUltimaMensagem', descending: true)
             .snapshots(),
         builder: (_, snapshot) {
