@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'package:flutter/foundation.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -6,28 +9,89 @@ class LoginView extends StatelessWidget {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   String telefone = '';
+  String email = '';
   String senha = '';
 
   void save(BuildContext context) async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
-      // var result = await auth.createUserWithEmailAndPassword(
-      //     email: email, password: senha);
 
+      try {
+        // TROCAR POR TELEFONE E SENHA
+        var result = await auth.signInWithEmailAndPassword(
+            email: email, password: senha);
 
+        Navigator.of(context).pushNamed('/mensagens');
+        //return Future.value(result);
 
-      // TROCAR POR TELEFONE E SENHA
-      // var result = await auth.signInWithEmailAndPassword(email: email, password: senha);
-
-
-
-
-
-      // print(result.user!.uid);
-
-      Navigator.of(context).pushNamed('/mensagens');
+      } on FirebaseAuthException catch (e) {
+        switch (e.code) {
+          case 'invalid-email':
+            print(context);
+            print(e.code);
+            break;
+          case 'wrong-password':
+            print(context);
+            print(e.code);
+            break;
+          case 'user-not-found':
+            print(context);
+            print(e.code);
+            _showMyDialog(context);
+            break;
+          case 'user-disabled':
+            print(context);
+            print(e.code);
+            break;
+        }
+      }
     }
   }
+
+  Future<void> _showMyDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Usuário não encontrado'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Verifique suas credenciais e tente novamente.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  // void save(BuildContext context) async {
+  //   if (formKey.currentState!.validate()) {
+  //     formKey.currentState!.save();
+  //     // var result = await auth.createUserWithEmailAndPassword(
+  //     //     email: email, password: senha);
+
+  //     // TROCAR POR TELEFONE E SENHA
+  //     var result =
+  //         await auth.signInWithEmailAndPassword(email: email, password: senha);
+  //     var sim = result;
+
+  //     // var reksult = await auth.signInWithCredential(cpf: cpf);
+
+  //     // print(result.user!.uid);
+
+  //     Navigator.of(context).pushNamed('/mensagens');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +104,7 @@ class LoginView extends StatelessWidget {
           key: formKey,
           child: Align(
             alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               // TextFormField(
               //   onSaved: (value) => telefone = value!,
               //   validator: (value) {
@@ -59,25 +121,25 @@ class LoginView extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(5),
                 ),
-                child: 
-                TextFormField(
+                child: TextFormField(
                   decoration: const InputDecoration(
                     border: InputBorder.none,
-                    labelText: 'Telefone',
+                    labelText: 'E-mail',
                     labelStyle: TextStyle(
                       color: Colors.black54,
                       fontWeight: FontWeight.bold,
                     ),
                     prefixIcon: Icon(
-                      Icons.phone,
+                      Icons.email,
                       color: Colors.black54,
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical:5, horizontal: 13),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 5, horizontal: 13),
                   ),
-                  onSaved: (value) => telefone = value!,
+                  onSaved: (value) => email = value!,
                   validator: (value) {
                     if (value!.isEmpty) {
-                    return 'Campo telefone obrigatório';
+                      return 'Campo telefone obrigatório';
                     }
                     return null;
                   },
@@ -102,7 +164,8 @@ class LoginView extends StatelessWidget {
                       Icons.key,
                       color: Colors.black54,
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical:5, horizontal: 13),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 5, horizontal: 13),
                   ),
                   obscureText: true,
                   onSaved: (value) => senha = value!,
@@ -121,17 +184,17 @@ class LoginView extends StatelessWidget {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xff28282d),
-                    textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    textStyle:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   onPressed: () => save(context),
                   child: Text("Entrar"),
                 ),
               ),
-          ]),
+            ]),
           ),
         ),
       ),
-      
       backgroundColor: Color(0xff28282d),
     );
   }

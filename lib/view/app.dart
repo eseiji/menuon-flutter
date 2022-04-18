@@ -18,7 +18,8 @@ class App extends StatelessWidget {
     return MaterialApp(
       // home: auth.currentUser == null ? LoginView() : MensagemView(),
       debugShowCheckedModeBanner: false,
-      home: auth.currentUser == null ? LoginView() : ChatView(),
+      // home: auth.currentUser == null ? LoginView() : ChatView(),
+      home: LoginView(),
       // home: QRCodeView(),
       // home: MapView(),
       // home: MensagemView(),
