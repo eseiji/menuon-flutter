@@ -4,20 +4,20 @@ import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginView extends StatelessWidget {
+class RegistrationView extends StatelessWidget {
   var formKey = GlobalKey<FormState>();
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   String email = '';
-  String senha = '';
+  String password = '';
+  String confirmPassword = '';
 
   void save(BuildContext context) async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
 
       try {
-        var result = await auth.signInWithEmailAndPassword(
-            email: email, password: senha);
+        var result = await auth.createUserWithEmailAndPassword(email: email, password: password);
 
         Navigator.of(context).pushNamed('/mensagens');
 
@@ -138,10 +138,42 @@ class LoginView extends StatelessWidget {
                         EdgeInsets.symmetric(vertical: 5, horizontal: 13),
                   ),
                   obscureText: true,
-                  onSaved: (value) => senha = value!,
+                  onSaved: (value) => password = value!,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Campo senha obrigatório';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Container(
+                width: 500,
+                margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    labelText: 'Confirmar senha',
+                    labelStyle: TextStyle(
+                      color: Colors.black54,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    prefixIcon: Icon(
+                      Icons.check,
+                      color: Colors.black54,
+                    ),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 5, horizontal: 13),
+                  ),
+                  obscureText: true,
+                  onSaved: (value) => confirmPassword = value!,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Confirme sua senha';
                     }
                     return null;
                   },
@@ -158,7 +190,7 @@ class LoginView extends StatelessWidget {
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   onPressed: () => save(context),
-                  child: Text("Entrar"),
+                  child: Text("Cadastrar"),
                 ),
               ),
             ]),

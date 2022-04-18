@@ -5,6 +5,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 import 'mensagem.view.dart';
 import 'login.view.dart';
+import 'registration.view.dart';
 import 'map.view.dart';
 import 'qrcode.view.dart';
 import 'chat.view.dart';
@@ -19,7 +20,7 @@ class App extends StatelessWidget {
       // home: auth.currentUser == null ? LoginView() : MensagemView(),
       debugShowCheckedModeBanner: false,
       // home: auth.currentUser == null ? LoginView() : ChatView(),
-      home: LoginView(),
+      home: RegistrationView(),
       // home: QRCodeView(),
       // home: MapView(),
       // home: MensagemView(),
