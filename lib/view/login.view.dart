@@ -1,12 +1,12 @@
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatelessWidget {
   var formKey = GlobalKey<FormState>();
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  // final FirebaseAuth auth = FirebaseAuth.instance;
 
   String email = '';
   String senha = '';
@@ -15,33 +15,33 @@ class LoginView extends StatelessWidget {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
 
-      try {
-        var result = await auth.signInWithEmailAndPassword(
-            email: email, password: senha);
+      // try {
+      //   var result = await auth.signInWithEmailAndPassword(
+      //       email: email, password: senha);
 
-        Navigator.of(context).pushNamed('/mensagens');
+      //   Navigator.of(context).pushNamed('/mensagens');
 
-      } on FirebaseAuthException catch (e) {
-        switch (e.code) {
-          case 'invalid-email':
-            print(context);
-            print(e.code);
-            break;
-          case 'wrong-password':
-            print(context);
-            print(e.code);
-            break;
-          case 'user-not-found':
-            print(context);
-            print(e.code);
-            _showMyDialog(context);
-            break;
-          case 'user-disabled':
-            print(context);
-            print(e.code);
-            break;
-        }
-      }
+      // } on FirebaseAuthException catch (e) {
+      //   switch (e.code) {
+      //     case 'invalid-email':
+      //       print(context);
+      //       print(e.code);
+      //       break;
+      //     case 'wrong-password':
+      //       print(context);
+      //       print(e.code);
+      //       break;
+      //     case 'user-not-found':
+      //       print(context);
+      //       print(e.code);
+      //       _showMyDialog(context);
+      //       break;
+      //     case 'user-disabled':
+      //       print(context);
+      //       print(e.code);
+      //       break;
+      //   }
+      // }
     }
   }
 
