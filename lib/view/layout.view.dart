@@ -5,7 +5,7 @@ class Layout {
 
   static Widget render({
     required Widget content,
-    Widget? fab,
+    Widget? fab
   }) {
     return Scaffold(
       backgroundColor: Colors.black,

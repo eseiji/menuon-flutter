@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class QRScanpage extends StatefulWidget {
   @override
@@ -10,8 +11,6 @@ class _QRScanPageState extends State<QRScanpage> {
   final qrKey = GlobalKey(debugLabel: 'QR');
 
   void redirect(BuildContext context, String? link) {
-    print(context);
-    print(link);
     Navigator.of(context).pushNamed('/${link}');
   }
 
@@ -28,10 +27,10 @@ class _QRScanPageState extends State<QRScanpage> {
   void reassemble() async {
     super.reassemble();
 
-//     if (Platform.isAndroid) {
-//     await controller!.pauseCamera();
-//     }
-//     controller!.resumeCamera();
+    // if (Platform.isAndroid) {
+    //   await controller!.pauseCamera();
+    // }
+    // controller!.resumeCamera();
   }
 
   @override
@@ -48,7 +47,7 @@ class _QRScanPageState extends State<QRScanpage> {
       );
 
   Widget buildResult() => Container(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color: Colors.purpleAccent,
@@ -56,21 +55,18 @@ class _QRScanPageState extends State<QRScanpage> {
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             primary: Colors.purple,
-            textStyle: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 255, 255, 255)),
+            textStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 255, 255, 255),
+            ),
           ),
-          onPressed: () =>
-              {if (barcode != null) redirect(context, barcode!.code)},
+          onPressed: () => {
+            if (barcode != null) redirect(context, barcode!.code),
+          },
           child: Text("Escanear"),
         ),
-// child: Text(
-
-//     barcode != null ? 'Resultado : ${barcode!.code}' : 'Escaneie o QRCode',
-//     maxLines: 3,
-//     style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 255, 255, 255)),
-// ),
       );
+
   Widget buildQrView(BuildContext context) => QRView(
         key: qrKey,
         onQRViewCreated: onQRViewCreated,
@@ -82,10 +78,15 @@ class _QRScanPageState extends State<QRScanpage> {
           cutOutSize: MediaQuery.of(context).size.width * 0.6,
         ),
       );
+
   void onQRViewCreated(QRViewController controller) {
     setState(() => this.controller = controller);
 
-    controller.scannedDataStream
-        .listen((barcode) => setState(() => this.barcode = barcode));
+    controller.scannedDataStream.listen((barcode) =>
+      setState(() {
+        this.barcode = barcode;
+        redirect(context, barcode.code);
+      },
+    ));
   }
 }

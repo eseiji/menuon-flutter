@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,7 +7,12 @@ import './view/login.view.dart';
 import './view/cadastro.view.dart';
 import './view/qr_scan.view.dart';
 
-void main() => runApp(MyApp());
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp()); 
+}
 
 class MyApp extends StatelessWidget {
 
@@ -22,7 +29,8 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.cantarellTextTheme(
             Theme.of(context).textTheme,
           )),
-      home: LoginPage(),
+      home: QRScanpage(),
+      // home: LoginPage(),
       routes: {
         '/login': (_) => LoginPage(),
         '/cadastrar': (_) => CadastroPage(),

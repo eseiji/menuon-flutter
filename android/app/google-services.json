@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "435141425856",
+    "project_id": "menuon-a6bf7",
+    "storage_bucket": "menuon-a6bf7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:435141425856:android:e8accbac753bbe2c1dcb25",
+        "android_client_info": {
+          "package_name": "com.example.menu_on"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "435141425856-d46kf09vc4qk56vn08vfoe1j8oa26gk6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRbjDzZl-yRdAz6Jf8Zd686SGvOW0s5KQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "435141425856-d46kf09vc4qk56vn08vfoe1j8oa26gk6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
