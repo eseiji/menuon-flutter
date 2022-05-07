@@ -1,171 +1,153 @@
-import 'dart:developer';
-import 'package:flutter/foundation.dart';
-
-// import 'package:firebase_auth/firebase_auth.dart';
+import '../view/layout.view.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
-class LoginView extends StatelessWidget {
-  var formKey = GlobalKey<FormState>();
-  // final FirebaseAuth auth = FirebaseAuth.instance;
-
-  String email = '';
-  String senha = '';
-
-  void save(BuildContext context) async {
-    if (formKey.currentState!.validate()) {
-      formKey.currentState!.save();
-
-      // try {
-      //   var result = await auth.signInWithEmailAndPassword(
-      //       email: email, password: senha);
-
-      //   Navigator.of(context).pushNamed('/mensagens');
-
-      // } on FirebaseAuthException catch (e) {
-      //   switch (e.code) {
-      //     case 'invalid-email':
-      //       print(context);
-      //       print(e.code);
-      //       break;
-      //     case 'wrong-password':
-      //       print(context);
-      //       print(e.code);
-      //       break;
-      //     case 'user-not-found':
-      //       print(context);
-      //       print(e.code);
-      //       _showMyDialog(context);
-      //       break;
-      //     case 'user-disabled':
-      //       print(context);
-      //       print(e.code);
-      //       break;
-      //   }
-      // }
-    }
-  }
-
-  Future<void> _showMyDialog(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Usuário não encontrado'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const <Widget>[
-                Text('Verifique suas credenciais e tente novamente.'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+class LoginPage extends StatelessWidget {
+  
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: Color(0xff303038),
-        height: 500,
-        margin: EdgeInsets.fromLTRB(50, 50, 50, 50),
-        child: Form(
-          key: formKey,
-          child: Align(
-            alignment: Alignment.center,
-            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Container(
-                width: 500,
-                margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    labelText: 'E-mail',
-                    labelStyle: TextStyle(
-                      color: Colors.black54,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.email,
-                      color: Colors.black54,
-                    ),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 5, horizontal: 13),
-                  ),
-                  onSaved: (value) => email = value!,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Campo e-mail obrigatório';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                width: 500,
-                margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    labelText: 'Senha',
-                    labelStyle: TextStyle(
-                      color: Colors.black54,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.lock,
-                      color: Colors.black54,
-                    ),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 5, horizontal: 13),
-                  ),
-                  obscureText: true,
-                  onSaved: (value) => senha = value!,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Campo senha obrigatório';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                height: 50,
-                width: 300,
-                margin: EdgeInsets.fromLTRB(50, 100, 50, 0),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xff28282d),
-                    textStyle:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  onPressed: () => save(context),
-                  child: Text("Entrar"),
-                ),
-              ),
-            ]),
+    return Layout.render(
+      content: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            flex: 1,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Icon(FontAwesomeIcons.wineGlassAlt, color: Color(0xFF7540EE)),
+                SizedBox(width: 10),
+                Text('Menu ON',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontStyle: FontStyle.italic,
+                      color: Color(0xFF7540EE),
+                    )),
+              ],
+            ),
           ),
-        ),
+          Expanded(
+            flex: 4,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Bem-vindo ',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    )),
+                SizedBox(height: 20),
+                Text('Informe seus dados de acesso para entrar no aplicativo',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontStyle: FontStyle.italic,
+                    )),
+                SizedBox(height: 20),
+                TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    hintText: 'Email',
+                    hintStyle: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontStyle: FontStyle.normal,
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFDFDFE4),
+                      ),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  obscureText: true,
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: 'Senha',
+                    hintStyle: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFDFDFE4),
+                      ),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: () => Get.toNamed(''),
+                  child: Text('Entrar',
+                      style: TextStyle(
+                        color: Color(0xFF7540EE),
+                        fontWeight: FontWeight.bold,
+                      )),
+                  color: Color(0xFF7540EE).withOpacity(.2),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                ),
+                Text('Esqueceu sua senha?',
+                    style: TextStyle(
+                      color: Color(0xFF7540EE),
+                      fontStyle: FontStyle.italic,
+                    ))
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Row(
+              children: <Widget>[
+                Text('Ainda não tem uma conta? ',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontStyle: FontStyle.italic,
+                    )),
+                FlatButton(
+                  onPressed: (() => Get.toNamed('/cadastrar')),
+                  child: Text(
+                    'Criar uma',
+                    style: TextStyle(
+                      color: Color(0xFFFF7052),
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  color: Color.fromARGB(255, 0, 0, 0).withOpacity(.2),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
-      backgroundColor: Color(0xff28282d),
     );
   }
 }

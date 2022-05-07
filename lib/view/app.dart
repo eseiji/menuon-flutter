@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 import 'login.view.dart';
-import 'registration.view.dart';
+import 'cadastro.view.dart';
 import 'qr_scan.view.dart';
 
 class App extends StatelessWidget {
@@ -12,16 +12,14 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print(auth.currentUser!.uid);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: auth.currentUser == null ? LoginView() : ChatView(),
-      home: QRScanpage(),
+      // home: auth.currentUser == null ? LoginPage() : CadastroPage(),
+      home: LoginPage(),
       routes: {
-        // '/mensagens': (context) => MensagemView(),
-        '/login': (context) => LoginView(),
-        '/qrcode': (context) => QRScanpage(),
-        // '/chat': (context) => ChatView(),
+        '/login': (context) => LoginPage(),
+        '/cadastro': (context) => CadastroPage(),
+        '/scan': (context) => QRScanpage(),
       },
     );
   }
