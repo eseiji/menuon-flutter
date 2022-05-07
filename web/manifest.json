@@ -1,6 +1,6 @@
 {
-    "name": "whatsapp_clone",
-    "short_name": "whatsapp_clone",
+    "name": "menu_on",
+    "short_name": "menu_on",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

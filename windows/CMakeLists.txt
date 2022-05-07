@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
-project(whatsapp_clone LANGUAGES CXX)
+project(menu_on LANGUAGES CXX)
 
-set(BINARY_NAME "whatsapp_clone")
+set(BINARY_NAME "menu_on")
 
 cmake_policy(SET CMP0063 NEW)
 

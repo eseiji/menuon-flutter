@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.whatsapp_clone">
+    package="com.example.menu_on">
    <application
-        android:label="whatsapp_clone"
+        android:label="menu_on"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
