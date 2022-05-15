@@ -6,17 +6,15 @@ import 'package:google_fonts/google_fonts.dart';
 import './view/login.view.dart';
 import './view/cadastro.view.dart';
 import './view/qr_scan.view.dart';
-
+import './view/register.view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp()); 
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -29,11 +27,11 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.cantarellTextTheme(
             Theme.of(context).textTheme,
           )),
-      home: QRScanpage(),
-      // home: LoginPage(),
+      //home: QRScanpage(),
+      home: LoginPage(),
       routes: {
         '/login': (_) => LoginPage(),
-        '/cadastrar': (_) => CadastroPage(),
+        '/register': (_) => RegisterPage(),
         '/scan': (_) => QRScanpage()
         /* '/home': (_) => QRScanpage(), */
       },
