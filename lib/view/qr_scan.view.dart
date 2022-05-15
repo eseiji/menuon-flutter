@@ -59,13 +59,7 @@ class _QRScanPageState extends State<QRScanpage> {
             IconButton(
               icon: const Icon(Icons.more_vert),
               tooltip: 'Options',
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('This is a snackbar'),
-                  ),
-                );
-              },
+              onPressed: () {},
             ),
           ],
         ),

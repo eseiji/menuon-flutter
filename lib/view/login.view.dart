@@ -54,28 +54,39 @@ class _LoginPageState extends State<LoginPage> {
           password: senha,
         );
 
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Login realizado com sucesso.'),
+          ),
+        );
+
         Navigator.of(context).pushNamed('/scan');
       } on FirebaseAuthException catch (e) {
         switch (e.code) {
           case 'invalid-email':
-            print(context);
-            print(e.code);
+            messageAlert('E-mail inválido.');
             break;
           case 'wrong-password':
-            print(context);
-            print(e.code);
+            messageAlert('Senha incorreta.');
             break;
           case 'user-not-found':
-            print(context);
-            print(e.code);
+            messageAlert('Usuário não encontrado.');
             break;
           case 'user-disabled':
-            print(context);
-            print(e.code);
+            messageAlert('Conta desabilitada temporariamente.');
             break;
         }
       }
     }
+  }
+
+  void messageAlert(String message) {
+    print(message);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
   }
 
   Widget _buildEmailFT() {
@@ -241,6 +252,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF5767FE),
         title: Container(
           child: Row(
@@ -248,7 +260,7 @@ class _LoginPageState extends State<LoginPage> {
               Icon(FontAwesomeIcons.wineGlassAlt),
               SizedBox(width: 5.0),
               Text(
-                'FALTA A VALIDAÇÃO DOS INPUTS',
+                'MENU ON',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -260,13 +272,7 @@ class _LoginPageState extends State<LoginPage> {
           IconButton(
             icon: const Icon(Icons.more_vert),
             tooltip: 'Options',
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('This is a snackbar'),
-                ),
-              );
-            },
+            onPressed: () {},
           ),
         ],
       ),

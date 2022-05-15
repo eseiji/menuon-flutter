@@ -64,6 +64,12 @@ class _RegisterPageState extends State<RegisterPage> {
         "data": DateTime.now(),
       });
 
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Cadastro realizado com sucesso.'),
+        ),
+      );
+
       Navigator.of(context).pushNamed('/login');
     }
   }
@@ -545,13 +551,7 @@ class _RegisterPageState extends State<RegisterPage> {
           IconButton(
             icon: const Icon(Icons.more_vert),
             tooltip: 'Options',
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('This is a snackbar'),
-                ),
-              );
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -587,7 +587,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Text(
-                                'Bem-vindo(a)',
+                                'Nova conta',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 21,

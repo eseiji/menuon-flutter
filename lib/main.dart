@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import './view/login.view.dart';
-import './view/cadastro.view.dart';
 import './view/qr_scan.view.dart';
 import './view/register.view.dart';
+import './view/menu.view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,13 +27,12 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.cantarellTextTheme(
             Theme.of(context).textTheme,
           )),
-      //home: QRScanpage(),
       home: LoginPage(),
       routes: {
         '/login': (_) => LoginPage(),
         '/register': (_) => RegisterPage(),
-        '/scan': (_) => QRScanpage()
-        /* '/home': (_) => QRScanpage(), */
+        '/scan': (_) => QRScanpage(),
+        '/menu': (_) => MenuPage()
       },
     );
   }
