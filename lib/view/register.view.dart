@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:get/get.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -21,8 +23,14 @@ class _RegisterPageState extends State<RegisterPage> {
   String cpf = '';
   String telefone = '';
 
+  final _phoneTextFieldController = TextEditingController();
+  final _cpfTextFieldController = TextEditingController();
+
+  int _phoneMaskType = 0;
+
   double? spaceBtw = 5;
-  double? sizeBox = 50.0;
+  double? sizeBox = 50;
+  // double? sizeBox = 50.0;
 
   final kHintTextStyle = const TextStyle(
     color: Colors.white54,
@@ -47,30 +55,86 @@ class _RegisterPageState extends State<RegisterPage> {
     ],
   );
 
+  final kDefaultBorder = const OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    borderSide: BorderSide(
+      width: 1,
+      color: Color(0xFF5767FE),
+    ),
+  );
+
+  final kErrorBorder = const OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    borderSide: BorderSide(
+      width: 1,
+      color: Color(0xFF5767FE),
+    ),
+  );
+
+  final kErrorStyle = const TextStyle(
+    fontSize: 13,
+    color: Color(0xFF5767FE),
+    fontStyle: FontStyle.normal,
+  );
+
+  final cellphoneMaskFormatter = MaskTextInputFormatter(
+      mask: '(##) #####-####',
+      filter: {
+        "#": RegExp(r'\d'),
+      },
+      type: MaskAutoCompletionType.lazy);
+
+  final cpfMaskFormatter = MaskTextInputFormatter(
+      mask: '###.###.###-##',
+      filter: {
+        "#": RegExp(r'\d'),
+      },
+      type: MaskAutoCompletionType.lazy);
+
   void cadastro(BuildContext context) async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
 
-      await auth.createUserWithEmailAndPassword(
-        email: email,
-        password: senha,
-      );
+      try {
+        await auth.createUserWithEmailAndPassword(
+          email: email,
+          password: senha,
+        );
 
-      await firestore.collection('clientes').add({
-        "nome": nome,
-        "cpf": cpf,
-        "telefone": telefone,
-        "email": email,
-        "data": DateTime.now(),
-      });
+        await firestore.collection('clientes').add({
+          "nome": nome,
+          "cpf": cpf,
+          "telefone": telefone,
+          "email": email,
+          "data": DateTime.now(),
+        });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Cadastro realizado com sucesso.'),
-        ),
-      );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Cadastro realizado com sucesso.'),
+          ),
+        );
 
-      Navigator.of(context).pushNamed('/login');
+        Navigator.of(context).pushNamed('/login');
+      } on FirebaseAuthException catch (e) {
+        print(e);
+      }
+    }
+  }
+
+  void checkPhoneNumber(String text) {
+    if (text.length > 5) {
+      if (text.indexOf('9') == 5) {
+        _phoneTextFieldController.value =
+            cellphoneMaskFormatter.updateMask(mask: '(##) #####-####');
+        _phoneMaskType = 9;
+        setState(() {});
+      } else {
+        _phoneTextFieldController.value =
+            cellphoneMaskFormatter.updateMask(mask: '(##) ####-####');
+        _phoneMaskType = 8;
+        setState(() {});
+      }
     }
   }
 
@@ -79,34 +143,37 @@ class _RegisterPageState extends State<RegisterPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(height: spaceBtw),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: sizeBox,
-          child: TextFormField(
-            keyboardType: TextInputType.name,
-            style: const TextStyle(color: Colors.white),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              prefixIcon: Icon(
-                Icons.person,
-                color: Colors.white,
-              ),
-              hintText: 'Nome',
-              hintStyle: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontStyle: FontStyle.normal,
-              ),
+        TextFormField(
+          keyboardType: TextInputType.name,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: const Color(0xFF252A34),
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
-            onSaved: (value) => nome = value!,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Campo obrigatório';
-              }
-              return null;
-            },
+            focusedBorder: kDefaultBorder,
+            focusedErrorBorder: kDefaultBorder,
+            prefixIcon: const Icon(
+              Icons.person,
+              color: Colors.white,
+            ),
+            hintText: 'Nome',
+            hintStyle: const TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              fontStyle: FontStyle.normal,
+            ),
+            errorBorder: kErrorBorder,
+            errorStyle: kErrorStyle,
           ),
+          onSaved: (value) => nome = value!,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Campo obrigatório';
+            }
+            return null;
+          },
         ),
       ],
     );
@@ -117,34 +184,39 @@ class _RegisterPageState extends State<RegisterPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(height: spaceBtw),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: sizeBox,
-          child: TextFormField(
-            keyboardType: TextInputType.number,
-            style: const TextStyle(color: Colors.white),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              prefixIcon: Icon(
-                Icons.article,
-                color: Colors.white,
-              ),
-              hintText: 'CPF',
-              hintStyle: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontStyle: FontStyle.normal,
-              ),
+        TextFormField(
+          controller: _cpfTextFieldController,
+          inputFormatters: [cpfMaskFormatter],
+          keyboardType: TextInputType.number,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: const Color(0xFF252A34),
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
-            onSaved: (value) => cpf = value!,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Campo obrigatório';
-              }
-              return null;
-            },
+            focusedBorder: kDefaultBorder,
+            focusedErrorBorder: kDefaultBorder,
+            prefixIcon: const Icon(
+              Icons.article,
+              color: Colors.white,
+            ),
+            hintText: 'CPF',
+            hintStyle: const TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              fontStyle: FontStyle.normal,
+            ),
+            errorBorder: kErrorBorder,
+            errorStyle: kErrorStyle,
           ),
+          onSaved: (value) => cpf = value!,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Campo obrigatório';
+            }
+            return null;
+          },
         ),
       ],
     );
@@ -155,34 +227,48 @@ class _RegisterPageState extends State<RegisterPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(height: spaceBtw),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: sizeBox,
-          child: TextFormField(
-            keyboardType: TextInputType.phone,
-            style: const TextStyle(color: Colors.white),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              prefixIcon: Icon(
-                Icons.phone,
-                color: Colors.white,
-              ),
-              hintText: 'Telefone',
-              hintStyle: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontStyle: FontStyle.normal,
-              ),
+        TextFormField(
+          controller: _phoneTextFieldController,
+          inputFormatters: [cellphoneMaskFormatter],
+          onChanged: checkPhoneNumber,
+          keyboardType: TextInputType.phone,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: const Color(0xFF252A34),
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
-            onSaved: (value) => telefone = value!,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Campo obrigatório';
-              }
-              return null;
-            },
+            focusedBorder: kDefaultBorder,
+            focusedErrorBorder: kDefaultBorder,
+            prefixIcon: const Icon(
+              Icons.phone,
+              color: Colors.white,
+            ),
+            hintText: 'Telefone',
+            hintStyle: const TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              fontStyle: FontStyle.normal,
+            ),
+            errorBorder: kErrorBorder,
+            errorStyle: kErrorStyle,
           ),
+          onSaved: (value) => telefone = value!,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Campo obrigatório';
+            } else {
+              if (!GetUtils.isPhoneNumber(value) ||
+                  (_phoneMaskType == 9 &&
+                      !GetUtils.isLengthEqualTo(value, 15)) ||
+                  (_phoneMaskType == 8 &&
+                      !GetUtils.isLengthEqualTo(value, 14))) {
+                return "Número inválido";
+              }
+            }
+            return null;
+          },
         ),
       ],
     );
@@ -193,34 +279,40 @@ class _RegisterPageState extends State<RegisterPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(height: spaceBtw),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: sizeBox,
-          child: TextFormField(
-            keyboardType: TextInputType.emailAddress,
-            style: const TextStyle(color: Colors.white),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              prefixIcon: Icon(
-                Icons.email,
-                color: Colors.white,
-              ),
-              hintText: 'E-mail',
-              hintStyle: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontStyle: FontStyle.normal,
-              ),
+        TextFormField(
+          keyboardType: TextInputType.emailAddress,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: const Color(0xFF252A34),
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
-            onSaved: (value) => email = value!,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Campo obrigatório';
-              }
-              return null;
-            },
+            focusedBorder: kDefaultBorder,
+            focusedErrorBorder: kDefaultBorder,
+            prefixIcon: const Icon(
+              Icons.email,
+              color: Colors.white,
+            ),
+            hintText: 'E-mail',
+            hintStyle: const TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              fontStyle: FontStyle.normal,
+            ),
+            errorBorder: kErrorBorder,
+            errorStyle: kErrorStyle,
           ),
+          onSaved: (value) => email = value!,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Campo obrigatório';
+            }
+            if (!GetUtils.isEmail(value)) {
+              return "E-mail inválido";
+            }
+            return null;
+          },
         ),
       ],
     );
@@ -231,38 +323,40 @@ class _RegisterPageState extends State<RegisterPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(height: spaceBtw),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: sizeBox,
-          child: TextFormField(
-            obscureText: true,
-            style: const TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.lock,
-                color: Colors.white,
-              ),
-              hintText: 'Senha',
-              hintStyle: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontStyle: FontStyle.normal,
-              ),
-            ),
-            onSaved: (value) => senha = value!,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Campo obrigatório';
-              }
-              return null;
-            },
+        TextFormField(
+          obscureText: true,
+          style: const TextStyle(
+            color: Colors.white,
+            fontFamily: 'OpenSans',
           ),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: const Color(0xFF252A34),
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            focusedBorder: kDefaultBorder,
+            focusedErrorBorder: kDefaultBorder,
+            prefixIcon: const Icon(
+              Icons.lock,
+              color: Colors.white,
+            ),
+            hintText: 'Senha',
+            hintStyle: const TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              fontStyle: FontStyle.normal,
+            ),
+            errorBorder: kErrorBorder,
+            errorStyle: kErrorStyle,
+          ),
+          onSaved: (value) => senha = value!,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Campo obrigatório';
+            }
+            return null;
+          },
         ),
       ],
     );
@@ -299,232 +393,6 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildEmail2TF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            keyboardType: TextInputType.emailAddress,
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.email,
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Email',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPassword2TF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Password',
-          style: kLabelStyle,
-        ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            obscureText: true,
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.lock,
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Password',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildForgotPasswordBtn() {
-    return Container(
-      alignment: Alignment.centerRight,
-      child: FlatButton(
-        onPressed: () => print('Forgot Password Button Pressed'),
-        padding: EdgeInsets.only(right: 0.0),
-        child: Text(
-          'Forgot Password?',
-          style: kLabelStyle,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRememberMeCheckbox() {
-    return Container(
-      height: 20.0,
-      child: Row(
-        children: <Widget>[
-          Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.white),
-            child: Checkbox(
-              value: _rememberMe,
-              checkColor: Colors.green,
-              activeColor: Colors.white,
-              onChanged: (value) {
-                setState(() {
-                  _rememberMe = value;
-                });
-              },
-            ),
-          ),
-          Text(
-            'Remember me',
-            style: kLabelStyle,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLoginBtn() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 25.0),
-      width: double.infinity,
-      child: RaisedButton(
-        elevation: 5.0,
-        onPressed: () => print('Login Button Pressed'),
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        color: Colors.white,
-        child: Text(
-          'LOGIN',
-          style: TextStyle(
-            color: Color(0xFF527DAA),
-            letterSpacing: 1.5,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'OpenSans',
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSignInWithText() {
-    return Column(
-      children: <Widget>[
-        Text(
-          '- OR -',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        SizedBox(height: 20.0),
-        Text(
-          'Sign in with',
-          style: kLabelStyle,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSocialBtn(Function onTap, AssetImage logo) {
-    return GestureDetector(
-      child: Container(
-        height: 60.0,
-        width: 60.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              offset: Offset(0, 2),
-              blurRadius: 6.0,
-            ),
-          ],
-          image: DecorationImage(
-            image: logo,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSocialBtnRow() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 30.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          _buildSocialBtn(
-            () => print('Login with Facebook'),
-            AssetImage(
-              'assets/logos/facebook.jpg',
-            ),
-          ),
-          _buildSocialBtn(
-            () => print('Login with Google'),
-            AssetImage(
-              'assets/logos/google.jpg',
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSignupBtn() {
-    return GestureDetector(
-      onTap: () => print('Sign Up Button Pressed'),
-      child: RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: 'Don\'t have an Account? ',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.0,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            TextSpan(
-              text: 'Sign Up',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
