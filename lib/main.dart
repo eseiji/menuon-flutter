@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:menu_on/view/order.view.dart';
 import './view/login.view.dart';
 import './view/qr_scan.view.dart';
 import './view/register.view.dart';
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
         '/login': (_) => LoginPage(),
         '/register': (_) => RegisterPage(),
         '/scan': (_) => QRScanpage(),
-        '/menu': (_) => MenuPage()
+        '/menu': (_) => MenuPage(),
+        '/cart': (_) => CartScreen()
       },
     );
   }

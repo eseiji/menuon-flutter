@@ -6,6 +6,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:menu_on/view/login.view.dart';
 
+import '../models/Product.dart';
+import 'components/app_bar.dart';
+import 'components/category_item.dart';
+import 'components/item_card.dart';
+import 'components/menu_body.dart';
+
 class MenuPage extends StatefulWidget {
   @override
   _MenuPageState createState() => _MenuPageState();
@@ -21,6 +27,14 @@ class _MenuPageState extends State<MenuPage> {
 
   double? spaceBtw = 5;
   double? sizeBox = 50.0;
+
+  final kDefaultBorder = const OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    borderSide: BorderSide(
+      width: 1,
+      color: Color(0xFF5767FE),
+    ),
+  );
 
   final kHintTextStyle = const TextStyle(
     color: Colors.white54,
@@ -54,82 +68,214 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xFF5767FE),
-        title: Container(
-          child: Row(
-            children: const [
-              Icon(FontAwesomeIcons.wineGlassAlt),
-              SizedBox(width: 5.0),
-              Text(
-                'MENU ON',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Sair',
-            onPressed: () => signout(context),
-          ),
-        ],
-      ),
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Stack(
-            children: <Widget>[
-              Container(
-                color: Color(0xff181920),
-                height: double.infinity,
-                width: double.infinity,
-              ),
-              Container(
-                height: double.infinity,
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40.0,
-                    vertical: 10.0,
-                  ),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        const SizedBox(height: 30.0),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Text(
-                                'TELA CARDÁPIO',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 21,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
+      appBar: appBar(),
+      // AppBar(
+      //   automaticallyImplyLeading: false,
+      //   backgroundColor: const Color(0xFF5767FE),
+      //   title: Container(
+      //     child: Row(
+      //       children: const [
+      //         Icon(FontAwesomeIcons.wineGlassAlt),
+      //         SizedBox(width: 5.0),
+      //         Text(
+      //           'MENU ON',
+      //           style: TextStyle(
+      //             fontWeight: FontWeight.bold,
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      //   actions: [
+      //     IconButton(
+      //       icon: const Icon(Icons.logout),
+      //       tooltip: 'Sair',
+      //       onPressed: () => signout(context),
+      //     ),
+      //   ],
+      // ),
+      body: MenuBody(),
     );
   }
 }
+
+class ItemCard extends StatelessWidget {
+  final Product? product;
+  final Function? press;
+  const ItemCard({
+    Key? key,
+    this.product,
+    this.press,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: EdgeInsets.all(10),
+          height: 180,
+          width: 160,
+          decoration: BoxDecoration(
+            color: const Color(0xFF252A34),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Text('PRODUTO'),
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 20 / 4),
+          child: Text(
+            'Flutter app',
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        ),
+        const Text(
+          'R\$ 50',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/*Form(
+        key: formKey,
+        child: Column(
+          children: <Widget>[
+            Container(
+              margin: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 25,
+                vertical: 0.0,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xFF252A34),
+                borderRadius: BorderRadius.circular(10),
+                // border: Border.all(
+                //   color: const Color(0xFF252A34),
+                // ),
+              ),
+              child: const TextField(
+                // onChanged: onChanged,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.white,
+                  ),
+                  hintText: "Pesquisar",
+                  hintStyle: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  CategoryItem(
+                    title: "Combos",
+                    isActive: true,
+                    press: () {},
+                  ),
+                  CategoryItem(
+                    title: "Bebidas",
+                    press: () {},
+                  ),
+                  CategoryItem(
+                    title: "Sobremesas",
+                    press: () {},
+                  ),
+                  CategoryItem(
+                    title: "Porções",
+                    press: () {},
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: GridView.builder(
+                itemCount: demoProducts.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.75,
+                ),
+                itemBuilder: (context, index) => ItemCard(),
+              ),
+            ),
+            // ItemCard(),
+          ],
+        ),
+      ), */
+
+
+// SingleChildScrollView(
+                        //   scrollDirection: Axis.vertical,
+                        //   child: Column(
+                        //     children: [
+                        //       Row(
+                        //         mainAxisAlignment:
+                        //             MainAxisAlignment.spaceBetween,
+                        //         children: <Widget>[
+                        //           ItemCard(
+                        //             svgSrc: "assets/icons/burger_beer.svg",
+                        //             title: "Burger & Beer",
+                        //             shopName: "MacDonald's",
+                        //             press: () {
+                        //               Navigator.push(
+                        //                 context,
+                        //                 MaterialPageRoute(
+                        //                   builder: (context) {
+                        //                     return LoginPage();
+                        //                     // return DetailsScreen();
+                        //                   },
+                        //                 ),
+                        //               );
+                        //             },
+                        //           ),
+                        //           ItemCard(
+                        //             svgSrc: "assets/icons/chinese_noodles.svg",
+                        //             title: "Chinese & Noodles",
+                        //             shopName: "Wendys",
+                        //             press: () {},
+                        //           ),
+                        //         ],
+                        //       ),
+                        //       Row(
+                        //         mainAxisAlignment:
+                        //             MainAxisAlignment.spaceBetween,
+                        //         children: <Widget>[
+                        //           ItemCard(
+                        //             svgSrc: "assets/icons/burger_beer.svg",
+                        //             title: "Burger & Beer",
+                        //             shopName: "MacDonald's",
+                        //             press: () {
+                        //               Navigator.push(
+                        //                 context,
+                        //                 MaterialPageRoute(
+                        //                   builder: (context) {
+                        //                     return LoginPage();
+                        //                     // return DetailsScreen();
+                        //                   },
+                        //                 ),
+                        //               );
+                        //             },
+                        //           ),
+                        //           ItemCard(
+                        //             svgSrc: "assets/icons/chinese_noodles.svg",
+                        //             title: "Chinese & Noodles",
+                        //             shopName: "Wendys",
+                        //             press: () {},
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
