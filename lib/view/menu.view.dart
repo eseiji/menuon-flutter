@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:menu_on/view/login.view.dart';
 
 import '../models/Product.dart';
+import '../models/ProductMenu.dart';
 import 'components/app_bar.dart';
 import 'components/category_item.dart';
 import 'components/item_card.dart';

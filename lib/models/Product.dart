@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Product {
+class Product1 {
   final int id;
   final String title, description;
   final List<String> images;
@@ -8,7 +8,7 @@ class Product {
   final double rating, price;
   final bool isFavourite, isPopular;
 
-  Product({
+  Product1({
     required this.id,
     required this.images,
     required this.colors,
@@ -23,8 +23,8 @@ class Product {
 
 // Our demo Products
 
-List<Product> demoProducts = [
-  Product(
+List<Product1> demoProducts = [
+  Product1(
     id: 1,
     images: [
       "assets/images/ps4_console_white_1.png",
@@ -38,14 +38,14 @@ List<Product> demoProducts = [
       Color(0xFFDECB9C),
       Colors.white,
     ],
-    title: "Teste",
+    title: "Geladeira",
     price: 64.99,
     description: description,
     rating: 4.8,
     isFavourite: true,
     isPopular: true,
   ),
-  Product(
+  Product1(
     id: 2,
     images: [
       "assets/images/Image Popular Product 2.png",
@@ -62,7 +62,7 @@ List<Product> demoProducts = [
     rating: 4.1,
     isPopular: true,
   ),
-  Product(
+  Product1(
     id: 3,
     images: [
       "assets/images/glap.png",
@@ -80,7 +80,7 @@ List<Product> demoProducts = [
     isFavourite: true,
     isPopular: true,
   ),
-  Product(
+  Product1(
     id: 4,
     images: [
       "assets/images/wireless headset.png",
@@ -97,7 +97,7 @@ List<Product> demoProducts = [
     rating: 4.1,
     isFavourite: true,
   ),
-  Product(
+  Product1(
     id: 5,
     images: [
       "assets/images/wireless headset.png",
@@ -114,7 +114,7 @@ List<Product> demoProducts = [
     rating: 4.1,
     isFavourite: true,
   ),
-  Product(
+  Product1(
     id: 6,
     images: [
       "assets/images/wireless headset.png",

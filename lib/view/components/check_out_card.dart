@@ -20,18 +20,18 @@ class CheckoutCard extends StatelessWidget {
       ),
       // height: 174,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.2),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30),
           topRight: Radius.circular(30),
         ),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, -15),
-            blurRadius: 20,
-            color: Color(0xFFDADADA).withOpacity(0.15),
-          )
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     offset: Offset(0, -15),
+        //     blurRadius: 20,
+        //     color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.15),
+        //   )
+        // ],
       ),
       child: SafeArea(
         child: Column(
@@ -41,28 +41,55 @@ class CheckoutCard extends StatelessWidget {
             Row(
               children: [],
             ),
-            SizedBox(height: 20),
+            // SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text.rich(
                   TextSpan(
                     text: "Total:\n",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                     children: [
                       TextSpan(
-                        text: "\$337.15",
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        text: "R\$ 337.15",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(
-                  width: 190,
-                  child: DefaultButton(
-                    text: "Finalizar pedido",
-                    press: () {},
+                Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: const Color(0xFF5767FE),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 15.0,
+                      )
+                    ],
+                  ),
+                  child: TextButton(
+                    onPressed: () {},
+                    child: const Text(
+                      'Finalizar pedido',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
+                // SizedBox(
+                //   width: 190,
+                //   child: DefaultButton(
+                //     text: "Finalizar pedido",
+                //     press: () {},
+                //   ),
+                // ),
               ],
             ),
           ],

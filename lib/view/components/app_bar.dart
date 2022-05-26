@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 AppBar appBar() {
   return AppBar(
@@ -21,7 +22,10 @@ AppBar appBar() {
       ),
     ),
     actions: [
-      IconButton(onPressed: () {}, icon: Icon(Icons.shopping_basket_rounded))
+      IconButton(
+        onPressed: () => Get.toNamed('/cart'),
+        icon: Icon(Icons.shopping_basket_rounded),
+      )
     ],
   );
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../models/ProductMenu.dart';
 
 import '../../constants.dart';
+import '../product_detail/details_screen.dart';
 import 'categories.dart';
 import 'category_item.dart';
 import 'item_card2.dart';
@@ -52,23 +53,24 @@ class MenuBody extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: kDefaultPaddin),
               child: GridView.builder(
                 itemCount: products.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisSpacing: kDefaultPaddin,
                   crossAxisSpacing: kDefaultPaddin,
                   childAspectRatio: 0.75,
                 ),
-                itemBuilder: (context, index) =>
-                    ItemCard(product: products[index], press: () {}
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => DetailsScreen(
-                        //       product: products[index],
-                        //     ),
-                        //   ),
-                        // ),
+                itemBuilder: (context, index) => ItemCard(
+                    product: products[index],
+                    press: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailsScreen(
+                            product: products[index],
+                          ),
                         ),
+                      );
+                    }),
               ),
             ),
           ),
