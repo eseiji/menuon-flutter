@@ -15,11 +15,11 @@ class _BodyState extends State<Body> {
     return Container(
       color: const Color(0xff181920),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: ListView.builder(
           itemCount: demoCarts.length,
           itemBuilder: (context, index) => Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 10),
             child: Dismissible(
               key: Key(demoCarts[index].product.id.toString()),
               direction: DismissDirection.endToStart,
@@ -29,7 +29,7 @@ class _BodyState extends State<Body> {
                 });
               },
               background: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
                   color: const Color(0xff181920),
                   // color: Color(0xFFFFE6E6),

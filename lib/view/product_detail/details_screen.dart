@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 // import 'package:flutter_svg/svg.dart';
 // import 'package:shop_app/constants.dart';
 // import 'package:shop_app/models/Product.dart';
@@ -40,14 +41,9 @@ class DetailsScreen extends StatelessWidget {
       ),
       actions: <Widget>[
         IconButton(
-          // icon: SvgPicture.asset("assets/icons/search.svg"),
-          icon: Icon(Icons.search),
-          onPressed: () {},
-        ),
-        IconButton(
           // icon: SvgPicture.asset("assets/icons/cart.svg"),
-          icon: Icon(Icons.shop_2),
-          onPressed: () {},
+          icon: Icon(Icons.shopping_basket_rounded),
+          onPressed: () => Get.toNamed('/cart'),
         ),
         SizedBox(width: kDefaultPaddin / 2)
       ],

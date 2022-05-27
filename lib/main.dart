@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.cantarellTextTheme(
             Theme.of(context).textTheme,
           )),
-      home: LoginPage(),
+      home: MenuPage(),
       routes: {
         '/login': (_) => LoginPage(),
         '/register': (_) => RegisterPage(),

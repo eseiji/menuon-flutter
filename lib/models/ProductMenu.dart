@@ -27,8 +27,8 @@ List<Product> products = [
       color: Color(0xFF3D82AE)),
   Product(
       id: 2,
-      title: "Belt Bag",
-      price: 234,
+      title: "Batata frita",
+      price: 23,
       size: 8,
       description: dummyText,
       image: "assets/images/simples.jpg",
@@ -68,5 +68,4 @@ List<Product> products = [
   ),
 ];
 
-String dummyText =
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since. When an unknown printer took a galley.";
+String dummyText = "TESTE";

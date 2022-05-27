@@ -15,7 +15,10 @@ AppBar appBar() {
           TextSpan(
             text: 'MENU ON',
             style: TextStyle(
+              // color: Color.fromARGB(255, 255, 255, 255),
               color: Color(0xFF5767FE),
+              fontWeight: FontWeight.bold,
+              fontSize: 19,
             ),
           )
         ],
