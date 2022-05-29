@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import '../../../models/ProductMenu.dart';
+// import '../../../models/ProductMenu.dart';
 
 import '../../../constants.dart';
+import '../../../models/ProductTeste.dart';
 
 class Description extends StatelessWidget {
-  const Description({
-    Key? key,
-    required this.product,
-  }) : super(key: key);
+  final ProductModel model;
 
-  final Product product;
+  Description(this.model);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin),
       child: Text(
-        product.description,
+        model.descricao,
         style: TextStyle(height: 1.5),
       ),
     );

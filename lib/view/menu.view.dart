@@ -10,7 +10,6 @@ import '../models/Product.dart';
 import '../models/ProductMenu.dart';
 import 'components/app_bar.dart';
 import 'components/category_item.dart';
-import 'components/item_card.dart';
 import 'components/menu_body.dart';
 
 class MenuPage extends StatefulWidget {

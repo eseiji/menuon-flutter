@@ -3,17 +3,15 @@ import 'package:flutter/material.dart';
 // import 'package:shop_app/models/Product.dart';
 
 import '../../../constants.dart';
-import '../../../models/ProductMenu.dart';
+// import '../../../models/ProductMenu.dart';
 
 import '../../../constants.dart';
+import '../../../models/ProductTeste.dart';
 
 class AddToCart extends StatelessWidget {
-  const AddToCart({
-    Key? key,
-    required this.product,
-  }) : super(key: key);
+  final ProductModel model;
 
-  final Product product;
+  AddToCart(this.model);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +25,8 @@ class AddToCart extends StatelessWidget {
               child: FlatButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18)),
-                color: product.color,
+                color: Colors.white,
+                // color: model.color,
                 onPressed: () {},
                 child: Text(
                   "Adicionar".toUpperCase(),

@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import '../../../models/ProductMenu.dart';
+// import '../../../models/ProductMenu.dart';
 
 import '../../../constants.dart';
+import '../../../models/ProductTeste.dart';
 
 class ProductTitleWithImage extends StatelessWidget {
-  const ProductTitleWithImage({
-    Key? key,
-    required this.product,
-  }) : super(key: key);
+  final ProductModel model;
 
-  final Product product;
+  ProductTitleWithImage(this.model);
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +16,12 @@ class ProductTitleWithImage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          // Text(
+          //   "Aristocratic Hand Bag",
+          //   style: TextStyle(color: Colors.white),
+          // ),
           Text(
-            "Aristocratic Hand Bag",
-            style: TextStyle(color: Colors.white),
-          ),
-          Text(
-            product.title,
+            model.nome,
             style: Theme.of(context)
                 .textTheme
                 .headline4!
@@ -35,25 +33,27 @@ class ProductTitleWithImage extends StatelessWidget {
               RichText(
                 text: TextSpan(
                   children: [
-                    TextSpan(text: "Price\n"),
+                    TextSpan(text: "Preço\n"),
                     TextSpan(
-                      text: "\$${product.price}",
+                      text: "R\$ ${model.preco}",
                       style: Theme.of(context).textTheme.headline4!.copyWith(
-                          color: Colors.white, fontWeight: FontWeight.bold),
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                   ],
                 ),
               ),
               SizedBox(width: kDefaultPaddin),
-              Expanded(
-                child: Hero(
-                  tag: "${product.id}",
-                  child: Image.asset(
-                    product.image,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              )
+              // Expanded(
+              //   child: Hero(
+              //     tag: "${product.id}",
+              //     child: Image.asset(
+              //       product.image,
+              //       fit: BoxFit.fill,
+              //     ),
+              //   ),
+              // )
             ],
           )
         ],

@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
-import '../../models/ProductMenu.dart';
+// import '../../models/ProductMenu.dart';
+import '../../models/ProductTeste.dart';
 
 class ItemCard extends StatelessWidget {
-  final Product? product;
+  final ProductModel model;
+
+  // final Product? product;
   final Function()? press;
-  const ItemCard({
-    Key? key,
-    this.product,
-    this.press,
-  }) : super(key: key);
+  // const ItemCard(
+  //   ProductModel productModel, {
+  //   Key? key,
+  //   // this.product,
+  //   this.press,
+  //   this.model,
+  // }) : super(key: key);
+
+  ItemCard(this.model, {this.press});
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +47,10 @@ class ItemCard extends StatelessWidget {
                     topRight: Radius.circular(16),
                   ),
                 ),
-                child: Hero(
-                  tag: "${product!.id}",
-                  child: Image.asset(product!.image),
-                ),
+                // child: Hero(
+                //   tag: "${product!.nome}",
+                //   child: Image.asset(product!.imagemUrl),
+                // ),
               ),
             ),
             Padding(
@@ -56,11 +63,11 @@ class ItemCard extends StatelessWidget {
                 children: [
                   Text(
                     // products is out demo list
-                    product!.title,
+                    model.nome,
                     style: TextStyle(color: kTextLightColor),
                   ),
                   Text(
-                    "R\$ ${product!.price}",
+                    "R\$ ${model.preco}",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

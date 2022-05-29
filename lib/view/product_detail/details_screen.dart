@@ -8,28 +8,33 @@ import '../../models/ProductMenu.dart';
 
 // import '../../models/Product.dart';
 import '../../constants.dart';
+import '../../models/ProductTeste.dart';
 import 'components/details_body.dart';
 
 class DetailsScreen extends StatelessWidget {
-  final Product product;
+  // final Product product;
 
-  const DetailsScreen({
-    Key? key,
-    required this.product,
-  }) : super(key: key);
+  final ProductModel model;
+
+  DetailsScreen(this.model);
+
+  // const DetailsScreen({
+  //   Key? key,
+  //   required this.product,
+  // }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // each product have a color
-      backgroundColor: product.color,
+      backgroundColor: Colors.white54,
       appBar: buildAppBar(context),
-      body: Body(product: product),
+      body: Body(model),
     );
   }
 
   AppBar buildAppBar(BuildContext context) {
     return AppBar(
-      backgroundColor: product.color,
+      backgroundColor: Colors.transparent,
       elevation: 0,
       leading: IconButton(
         icon: Icon(Icons.arrow_back),
