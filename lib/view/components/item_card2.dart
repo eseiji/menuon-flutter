@@ -47,10 +47,10 @@ class ItemCard extends StatelessWidget {
                     topRight: Radius.circular(16),
                   ),
                 ),
-                // child: Hero(
-                //   tag: "${product!.nome}",
-                //   child: Image.asset(product!.imagemUrl),
-                // ),
+                child: Hero(
+                  tag: model.nome,
+                  child: Image.network("https://${model.imagemUrl}"),
+                ),
               ),
             ),
             Padding(
@@ -63,7 +63,7 @@ class ItemCard extends StatelessWidget {
                 children: [
                   Text(
                     // products is out demo list
-                    model.nome,
+                    "${model.nome} - ${model.tamanho}ml",
                     style: TextStyle(color: kTextLightColor),
                   ),
                   Text(

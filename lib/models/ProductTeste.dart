@@ -1,5 +1,5 @@
 class ProductModel {
-  String? imagemUrl;
+  String imagemUrl = '';
   String nome = '';
   String descricao = '';
   int preco = 0;
@@ -8,6 +8,7 @@ class ProductModel {
   ProductModel(this.imagemUrl, this.nome, this.descricao, this.preco, this.tamanho);
 
   ProductModel.fromMap(String nomeA, Map<String, dynamic> map) {
+    // imagemUrl = 'https://ibb.co/njkYvVJ';
     imagemUrl = map['imagemUrl'];
     nome = nomeA;
     descricao = map['descricao'];

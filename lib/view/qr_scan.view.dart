@@ -1,9 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/* import 'dart:io' show Platform; */
+import 'dart:io' show Platform;
 
 class QRScanpage extends StatefulWidget {
   @override
@@ -31,10 +32,10 @@ class _QRScanPageState extends State<QRScanpage> {
   void reassemble() async {
     super.reassemble();
 
-    /*  if (Platform.isAndroid) {
+    if (Platform.isAndroid) {
       await controller!.pauseCamera();
     }
-    controller!.resumeCamera(); */
+    controller!.resumeCamera();
   }
 
   @override

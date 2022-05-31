@@ -16,6 +16,8 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -28,7 +30,7 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.cantarellTextTheme(
             Theme.of(context).textTheme,
           )),
-      home: MenuPage(),
+      home: auth.currentUser == null ? LoginPage() : MenuPage(),
       routes: {
         '/login': (_) => LoginPage(),
         '/register': (_) => RegisterPage(),

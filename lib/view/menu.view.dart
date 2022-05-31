@@ -9,6 +9,7 @@ import 'package:menu_on/view/login.view.dart';
 import '../models/Product.dart';
 import '../models/ProductMenu.dart';
 import 'components/app_bar.dart';
+import 'components/bottom_bar.dart';
 import 'components/category_item.dart';
 import 'components/menu_body.dart';
 
@@ -68,7 +69,8 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
+      extendBody: true,
+      appBar: appBar(context),
       // AppBar(
       //   automaticallyImplyLeading: false,
       //   backgroundColor: const Color(0xFF5767FE),
@@ -95,6 +97,7 @@ class _MenuPageState extends State<MenuPage> {
       //   ],
       // ),
       body: MenuBody(),
+      bottomNavigationBar: BottomBar(),
     );
   }
 }

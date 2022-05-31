@@ -1,7 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-AppBar appBar() {
+void signout(BuildContext context) async {
+  await FirebaseAuth.instance.signOut();
+
+  Navigator.of(context).pushNamed('/login');
+}
+
+AppBar appBar(context) {
   return AppBar(
     backgroundColor: const Color(0xff181920),
     elevation: 2,
@@ -25,6 +32,10 @@ AppBar appBar() {
       ),
     ),
     actions: [
+      IconButton(
+        onPressed: () => signout(context),
+        icon: Icon(Icons.logout_rounded),
+      ),
       IconButton(
         onPressed: () => Get.toNamed('/cart'),
         icon: Icon(Icons.shopping_basket_rounded),

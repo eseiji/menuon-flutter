@@ -56,7 +56,7 @@ class MenuBody extends StatelessWidget {
               child: StreamBuilder<QuerySnapshot>(
                 stream: firestore
                     .collection('cardapio')
-                    .doc('saaz')
+                    .doc('ambev')
                     .collection('bebidas')
                     .snapshots(),
                 builder: (_, snapshot) {
