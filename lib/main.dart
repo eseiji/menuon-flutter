@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: MenuPage(),
-      // home: auth.currentUser == null ? LoginPage() : MenuPage(),
+      // home: MenuPage(),
+      home: auth.currentUser == null ? LoginPage() : MenuPage(),
       routes: {
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),

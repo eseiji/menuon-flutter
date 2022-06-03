@@ -31,10 +31,6 @@ class _QRScanPageState extends State<QRScanpage> {
   @override
   void reassemble() async {
     super.reassemble();
-
-    if (Platform.isAndroid) {
-      await controller!.pauseCamera();
-    }
     controller!.resumeCamera();
   }
 
