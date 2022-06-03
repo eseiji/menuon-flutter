@@ -11,10 +11,8 @@ import 'description.dart';
 import 'product_title_with_image.dart';
 
 class Body extends StatelessWidget {
-
   final ProductModel model;
 
-  
   Body(this.model);
   @override
   Widget build(BuildContext context) {
@@ -35,14 +33,15 @@ class Body extends StatelessWidget {
                     right: kDefaultPaddin,
                   ),
                   // height: 500,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF252A34),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(24),
                       topRight: Radius.circular(24),
                     ),
                   ),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       ColorAndSize(model),
                       SizedBox(height: kDefaultPaddin / 2),

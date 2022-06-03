@@ -68,9 +68,17 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
+    // final arguments = (ModalRoute.of(context)!.settings.arguments);
+    // final arguments = ModalRoute.of(context)!.settings.arguments;
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    print(arguments);
+    final enterprise = arguments['enterprise'];
+    // final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+
     return Scaffold(
       extendBody: true,
-      appBar: appBar(context),
+      appBar: appBar(context, enterprise),
       // AppBar(
       //   automaticallyImplyLeading: false,
       //   backgroundColor: const Color(0xFF5767FE),

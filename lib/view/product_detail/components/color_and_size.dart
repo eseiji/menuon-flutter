@@ -7,7 +7,6 @@ import '../../../models/ProductTeste.dart';
 class ColorAndSize extends StatelessWidget {
   final ProductModel model;
 
-  
   ColorAndSize(this.model);
 
   @override
@@ -44,7 +43,7 @@ class ColorDot extends StatelessWidget {
       ),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: color,
+          color: Color(0xFF252A34),
           shape: BoxShape.circle,
         ),
       ),

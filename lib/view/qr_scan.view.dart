@@ -16,7 +16,7 @@ class _QRScanPageState extends State<QRScanpage> {
 
   void redirect(BuildContext context, String? link) {
     controller!.pauseCamera();
-    Navigator.of(context).pushNamed('/$link');
+    Navigator.of(context).pushNamed('/menu', arguments: {'enterprise': link});
   }
 
   Barcode? barcode;

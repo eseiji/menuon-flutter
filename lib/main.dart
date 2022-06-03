@@ -8,6 +8,7 @@ import './view/login.view.dart';
 import './view/qr_scan.view.dart';
 import './view/register.view.dart';
 import './view/menu.view.dart';
+import 'view/product_details/details_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,21 +23,24 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      enableLog: false,
+      enableLog: true,
       title: 'Menu ON',
       theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          textTheme: GoogleFonts.cantarellTextTheme(
-            Theme.of(context).textTheme,
-          )),
-      home: auth.currentUser == null ? LoginPage() : MenuPage(),
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        textTheme: GoogleFonts.cantarellTextTheme(
+          Theme.of(context).textTheme,
+        ),
+      ),
+      home: MenuPage(),
+      // home: auth.currentUser == null ? LoginPage() : MenuPage(),
       routes: {
-        '/login': (_) => LoginPage(),
-        '/register': (_) => RegisterPage(),
-        '/scan': (_) => QRScanpage(),
-        '/menu': (_) => MenuPage(),
-        '/cart': (_) => CartScreen()
+        '/login': (context) => LoginPage(),
+        '/register': (context) => RegisterPage(),
+        '/scan': (context) => QRScanpage(),
+        '/menu': (context) => MenuPage(),
+        '/cart': (context) => CartScreen(),
+        '/teste': (context) => DetailsScreen()
       },
     );
   }

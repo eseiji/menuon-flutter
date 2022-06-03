@@ -28,7 +28,11 @@ class _CartCounterState extends State<CartCounter> {
           child: Text(
             // if our item is less  then 10 then  it shows 01 02 like that
             numOfItems.toString().padLeft(2, "0"),
-            style: Theme.of(context).textTheme.headline6,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+            // style: Theme.of(context).textTheme.headline6,
           ),
         ),
         buildOutlineButton(
@@ -47,6 +51,8 @@ class _CartCounterState extends State<CartCounter> {
       width: 40,
       height: 32,
       child: OutlineButton(
+        color: Colors.white,
+        textColor: Colors.white,
         padding: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(13),
