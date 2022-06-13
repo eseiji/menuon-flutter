@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/constants.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
+// import 'package:flutter/constants.dart';
+// import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class TitlePriceRating extends StatelessWidget {
   final int price, numOfReviews;
@@ -45,13 +45,18 @@ class TitlePriceRating extends StatelessWidget {
               ],
             ),
           ),
-          priceTag(context, price: price),
+          priceTag(
+            context, /*  price: price */
+          ),
         ],
       ),
     );
   }
 
-  ClipPath priceTag(BuildContext context, {int price}) {
+  ClipPath priceTag(
+    BuildContext context,
+    /* {int price} */
+  ) {
     return ClipPath(
       clipper: PricerCliper(),
       child: Container(
@@ -59,13 +64,13 @@ class TitlePriceRating extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 15),
         height: 66,
         width: 65,
-        color: kPrimaryColor,
+        color: Colors.black,
         child: Text(
           "\$$price",
-          style: Theme.of(context)
+          /* style: Theme.of(context)
               .textTheme
               .title
-              .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+              .copyWith(color: Colors.white, fontWeight: FontWeight.bold), */
         ),
       ),
     );

@@ -50,15 +50,17 @@ class _CartCounterState extends State<CartCounter> {
     return SizedBox(
       width: 40,
       height: 32,
-      child: OutlineButton(
-        color: Colors.white,
+      child: ElevatedButton(
+        onPressed: () {},
+        child: Text(""),
+        /* color: Colors.white,
         textColor: Colors.white,
         padding: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(13),
         ),
         onPressed: press,
-        child: Icon(icon),
+        child: Icon(icon), */
       ),
     );
   }

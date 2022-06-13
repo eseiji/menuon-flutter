@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'dart:io' show Platform;
@@ -14,9 +15,19 @@ class QRScanpage extends StatefulWidget {
 class _QRScanPageState extends State<QRScanpage> {
   final qrKey = GlobalKey(debugLabel: 'QR');
 
-  void redirect(BuildContext context, String? link) {
+  void redirect(BuildContext context, String? link) async {
     controller!.pauseCamera();
-    Navigator.of(context).pushNamed('/menu', arguments: {'enterprise': link});
+    // Navigator.of(context).pushNamed('/menu', arguments: {'company': link});
+    // Navigator.of(context)
+    //     .popAndPushNamed('/menu', arguments: {'company': link});
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('company', link!);
+
+    Navigator.of(context).pushNamedAndRemoveUntil('/menu', (route) => false,
+        arguments: {'company': link});
+
+        // Navigator.of(context).
   }
 
   Barcode? barcode;
@@ -31,7 +42,11 @@ class _QRScanPageState extends State<QRScanpage> {
   @override
   void reassemble() async {
     super.reassemble();
+    if (Platform.isAndroid) {
+      await controller!.pauseCamera();
+    }
     controller!.resumeCamera();
+    // controller!.resumeCamera();
   }
 
   @override
@@ -88,7 +103,10 @@ class _QRScanPageState extends State<QRScanpage> {
   }
 
   void onQRViewCreated(QRViewController controller) {
-    setState(() => this.controller = controller);
+    setState(() {
+      this.controller = controller;
+      reassemble();
+    });
 
     controller.scannedDataStream.listen(
       (barcode) => setState(

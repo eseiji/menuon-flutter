@@ -12,14 +12,23 @@ import 'categories.dart';
 import 'category_item.dart';
 import 'item_card2.dart';
 
-class MenuBody extends StatelessWidget {
+class MenuBody extends StatefulWidget {
+  const MenuBody({Key? key, required this.company}) : super(key: key);
+
+  final String company;
+
+  @override
+  State<MenuBody> createState() => _MenuBodyState();
+}
+
+class _MenuBodyState extends State<MenuBody> {
   // FirebaseFirestore firestore = FirebaseFirestore.instance;
   final firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xff181920),
+      color: const Color(0xff181920),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -49,24 +58,29 @@ class MenuBody extends StatelessWidget {
               ),
             ),
           ),
-          Categories(),
+          const SizedBox(height: 10),
+          // Categories(),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: kDefaultPaddin),
+              padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
               child: StreamBuilder<QuerySnapshot>(
                 stream: firestore
                     .collection('cardapio')
-                    .doc('ambev')
+                    .doc(widget.company)
                     .collection('bebidas')
                     .snapshots(),
                 builder: (_, snapshot) {
-                  if (!snapshot.hasData) return CircularProgressIndicator();
-                  if (snapshot.hasError)
-                    return Text('Erro ao carregar o cardápio.');
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return const Text('Erro ao carregar o cardápio.');
+                  }
 
                   return GridView.builder(
                     itemCount: snapshot.data!.docs.length,
-                    // itemCount: snapshot.data!.docs[0]._delegate._data[0].value[0].length,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
@@ -74,74 +88,28 @@ class MenuBody extends StatelessWidget {
                       crossAxisSpacing: kDefaultPaddin,
                       childAspectRatio: 0.75,
                     ),
-                    itemBuilder: (context, index) =>
-                        // Container(
-                        //       child: Column(
-                        //         children: [
-                        //           Text(
-                        //             "${snapshot.data!.docs[0].id}",
-                        //             style: TextStyle(
-                        //               color: Colors.white,
-                        //             ),
-                        //           ),
-                        //           Text(
-                        //             "${snapshot.data!.docs[0].data()}",
-                        //             style: TextStyle(
-                        //               color: Colors.white,
-                        //             ),
-                        //           ),
-                        //           Text(
-                        //             "${snapshot.data!.docs[0].data()}",
-                        //             style: TextStyle(
-                        //               color: Colors.white,
-                        //             ),
-                        //           ),
-                        //         ],
-                        //       ),
-                        //     )
-
-                        ItemCard(
-                            ProductModel.fromMap(
-                                snapshot.data!.docs[index].id,
-                                snapshot.data!.docs[index].data()
-                                    as Map<String, dynamic>), press: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DetailsScreen(
-                            ProductModel.fromMap(
-                                snapshot.data!.docs[index].id,
-                                snapshot.data!.docs[index].data()
-                                    as Map<String, dynamic>),
+                    itemBuilder: (context, index) => ItemCard(
+                      ProductModel.fromMap(
+                          snapshot.data!.docs[index].id,
+                          snapshot.data!.docs[index].data()
+                              as Map<String, dynamic>),
+                      press: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailsScreen(
+                              ProductModel.fromMap(
+                                  snapshot.data!.docs[index].id,
+                                  snapshot.data!.docs[index].data()
+                                      as Map<String, dynamic>),
+                            ),
                           ),
-                        ),
-                      );
-                    }),
+                        );
+                      },
+                    ),
                   );
                 },
               ),
-              // GridView.builder(
-              //   itemCount: products.length,
-              //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              //     crossAxisCount: 2,
-              //     mainAxisSpacing: kDefaultPaddin,
-              //     crossAxisSpacing: kDefaultPaddin,
-              //     childAspectRatio: 0.75,
-              //   ),
-              //   itemBuilder: (context, index) => ItemCard(
-              //     product: products[index],
-              //     press: () {
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //           builder: (context) => DetailsScreen(
-              //             product: products[index],
-              //           ),
-              //         ),
-              //       );
-              //     },
-              //   ),
-              // ),
             ),
           ),
         ],

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+/* import 'package:flutter_svg/flutter_svg.dart'; */
 
 AppBar detailsAppBar() {
   return AppBar(
@@ -13,11 +13,11 @@ AppBar detailsAppBar() {
     ),
     actions: <Widget>[
       IconButton(
-        icon: SvgPicture.asset("assets/icons/share.svg"),
+        icon: Icon(Icons.add),
         onPressed: () {},
       ),
       IconButton(
-        icon: SvgPicture.asset("assets/icons/more.svg"),
+        icon: Icon(Icons.remove),
         onPressed: () {},
       ),
     ],

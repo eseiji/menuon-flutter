@@ -12,11 +12,11 @@ class CartScreen extends StatelessWidget {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
     print(arguments);
-    final enterprise = arguments['enterprise'];
+    final company = arguments['company'];
 
     return Scaffold(
       extendBody: true,
-      appBar: appBar(context, enterprise),
+      appBar: appBar(context, company),
       body: Body(),
       bottomNavigationBar: const CheckoutCard(),
     );
