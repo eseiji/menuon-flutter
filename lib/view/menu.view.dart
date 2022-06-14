@@ -16,6 +16,8 @@ import 'components/menu_body.dart';
 
 import 'package:menu_on/services/define_company.dart';
 
+import "dart:async";
+
 class MenuPage extends StatefulWidget {
   const MenuPage({Key? key}) : super(key: key);
 
@@ -26,8 +28,10 @@ class MenuPage extends StatefulWidget {
 class _MenuPageState extends State<MenuPage> {
   var formKey = GlobalKey<FormState>();
   final firestore = FirebaseFirestore.instance;
-  
-  late String company;
+
+  // late String company = '';
+  late String color;
+  late Future<String> company;
 
   String email = '';
   String senha = '';
@@ -66,35 +70,104 @@ class _MenuPageState extends State<MenuPage> {
     ],
   );
 
-  void getCompany() async {
+  // void main() async {
+  //   company = await getCompany();
+  //   color = await buscarCorPersonalizada();
+  // }
+
+  // void getCompany() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   print('JA PASSOU');
+  //   final arguments = (ModalRoute.of(context)?.settings.arguments ??
+  //       <String, dynamic>{}) as Map;
+
+  //   final companyFromSharedPref = prefs.getString('company');
+
+  //   if (arguments['company'] != null) {
+  //     company = arguments['company'];
+  //   } else {
+  //     company = companyFromSharedPref!;
+  //   }
+  //   buscarCorPersonalizada();
+  // }
+
+  Future<String> buscarCorPersonalizada(String company) async {
+    var collection = FirebaseFirestore.instance.collection('cardapio');
+    var docSnapshot = await collection.doc(company).get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      color = data?['corPersonalizada'];
+    }
+    return color;
+  }
+
+  Future<String> getCompany() async {
+    late String company;
     final prefs = await SharedPreferences.getInstance();
+    print('JA PASSOU');
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
 
     final companyFromSharedPref = prefs.getString('company');
 
-    setState(() {
-      if (arguments['company'] != null) {
-        company = arguments['company'];
-      } else {
-        company = companyFromSharedPref!;
-      }
-    });
+    if (arguments['company'] != null) {
+      company = arguments['company'];
+    } else {
+      company = companyFromSharedPref!;
+    }
+    return company;
   }
 
   @override
   void initState() {
     super.initState();
-    getCompany();
+    // getCompany();
+    company = getCompany();
+    // final company = getCompany();
+    // final color = buscarCorPersonalizada();
+    print("EXECUTANDO O RESTO");
+    // getCompany();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      appBar: appBar(context, company),
-      body: MenuBody(company: company),
-      bottomNavigationBar: const BottomBar(),
+    return FutureBuilder(
+      future: company,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          final error = snapshot.error;
+          return Center(child: Text('$error'));
+        } else if (snapshot.hasData) {
+          final String repo = snapshot.data as String;
+          return FutureBuilder(
+            future: buscarCorPersonalizada(repo),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                final error = snapshot.error;
+                return Center(child: Text('$error'));
+              } else if (snapshot.hasData) {
+                final String repo2 = snapshot.data as String;
+                return Scaffold(
+                  extendBody: true,
+                  appBar: appBar(context, repo, repo2),
+                  body: MenuBody(company: repo),
+                  bottomNavigationBar: const BottomBar(),
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
     );
+    // Scaffold(
+    //   extendBody: true,
+    //   appBar: appBar(context, company, color),
+    //   body: MenuBody(company: company),
+    //   bottomNavigationBar: const BottomBar(),
+    // );
   }
 }

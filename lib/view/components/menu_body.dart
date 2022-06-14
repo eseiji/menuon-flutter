@@ -25,6 +25,10 @@ class _MenuBodyState extends State<MenuBody> {
   // FirebaseFirestore firestore = FirebaseFirestore.instance;
   final firestore = FirebaseFirestore.instance;
 
+  List<String> categories = ["Entrada", "Bebidas", "Sobremesa"];
+  int selectedIndex = 0;
+  String category = 'bebidas';
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,7 +37,7 @@ class _MenuBodyState extends State<MenuBody> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            margin: const EdgeInsets.all(20),
+            margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
             padding: const EdgeInsets.symmetric(
               horizontal: 25,
               vertical: 0.0,
@@ -58,8 +62,19 @@ class _MenuBodyState extends State<MenuBody> {
               ),
             ),
           ),
-          const SizedBox(height: 10),
+          // const SizedBox(height: 10),
           // Categories(),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin),
+            child: SizedBox(
+              height: 35,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: categories.length,
+                itemBuilder: (context, index) => buildCategory(index),
+              ),
+            ),
+          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
@@ -67,7 +82,7 @@ class _MenuBodyState extends State<MenuBody> {
                 stream: firestore
                     .collection('cardapio')
                     .doc(widget.company)
-                    .collection('bebidas')
+                    .collection(category)
                     .snapshots(),
                 builder: (_, snapshot) {
                   if (!snapshot.hasData) {
@@ -78,7 +93,7 @@ class _MenuBodyState extends State<MenuBody> {
                   if (snapshot.hasError) {
                     return const Text('Erro ao carregar o cardápio.');
                   }
-
+                  print('DEU CERTO');
                   return GridView.builder(
                     itemCount: snapshot.data!.docs.length,
                     gridDelegate:
@@ -113,6 +128,44 @@ class _MenuBodyState extends State<MenuBody> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget buildCategory(int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedIndex = index;
+          category = categories[index].toLowerCase();
+          // category =
+          print('PASSANDO: $index');
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              categories[index],
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                color: selectedIndex == index ? kTextLightColor : kTextColor,
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(
+                  top: kDefaultPaddin / 4), //top padding 5
+              height: 2,
+              width: 30,
+              color: selectedIndex == index
+                  ? const Color.fromARGB(255, 77, 75, 75)
+                  : Colors.transparent,
+            )
+          ],
+        ),
       ),
     );
   }

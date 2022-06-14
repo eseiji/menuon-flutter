@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:menu_on/view/components/teste.dart';
 import 'package:menu_on/view/order.view.dart';
 import './view/login.view.dart';
 import './view/qr_scan.view.dart';
@@ -40,7 +41,8 @@ class MyApp extends StatelessWidget {
         '/scan': (context) => QRScanpage(),
         '/menu': (context) => MenuPage(),
         '/cart': (context) => CartScreen(),
-        '/teste': (context) => DetailsScreen()
+        '/teste': (context) => DetailsScreen(),
+        '/teste2': (context) => Teste(),
       },
     );
   }

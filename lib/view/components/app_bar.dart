@@ -13,9 +13,8 @@ void signout(BuildContext context) async {
   Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
 }
 
-AppBar appBar(context, company) {
-
-
+AppBar appBar(context, company, color) {
+  var t = int.parse(color);
   return AppBar(
     backgroundColor: const Color(0xff181920),
     elevation: 2,
@@ -28,9 +27,9 @@ AppBar appBar(context, company) {
         children: [
           TextSpan(
             text: '$company',
-            style: const TextStyle(
+            style: TextStyle(
               // color: Color.fromARGB(255, 255, 255, 255),
-              color: Color(0xFF5767FE),
+              color: Color(t),
               fontWeight: FontWeight.bold,
               fontSize: 19,
             ),

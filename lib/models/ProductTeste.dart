@@ -5,7 +5,8 @@ class ProductModel {
   int preco = 0;
   int tamanho = 0;
 
-  ProductModel(this.imagemUrl, this.nome, this.descricao, this.preco, this.tamanho);
+  ProductModel(
+      this.imagemUrl, this.nome, this.descricao, this.preco, this.tamanho);
 
   ProductModel.fromMap(String nomeA, Map<String, dynamic> map) {
     // imagemUrl = 'https://ibb.co/njkYvVJ';

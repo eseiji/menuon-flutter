@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:menu_on/view/components/menu_body.dart';
 
 import '../../../constants.dart';
 
@@ -10,7 +11,7 @@ class Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<Categories> {
-  List<String> categories = ["Combos", "Bebidas", "Sobremesas", "Porções"];
+  List<String> categories = ["Entradas", "Bebidas", "Sobremesas"];
   // By default our first item will be selected
   int selectedIndex = 0;
   @override
@@ -33,6 +34,7 @@ class _CategoriesState extends State<Categories> {
       onTap: () {
         setState(() {
           selectedIndex = index;
+          print('PASSANDO: $index');
         });
       },
       child: Padding(
@@ -44,15 +46,17 @@ class _CategoriesState extends State<Categories> {
               categories[index],
               style: TextStyle(
                 fontWeight: FontWeight.bold,
+                fontSize: 15,
                 color: selectedIndex == index ? kTextLightColor : kTextColor,
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: kDefaultPaddin / 4), //top padding 5
+              margin: const EdgeInsets.only(
+                  top: kDefaultPaddin / 4), //top padding 5
               height: 2,
               width: 30,
               color: selectedIndex == index
-                  ? Color.fromARGB(255, 77, 75, 75)
+                  ? const Color.fromARGB(255, 77, 75, 75)
                   : Colors.transparent,
             )
           ],
