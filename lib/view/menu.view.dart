@@ -30,7 +30,7 @@ class _MenuPageState extends State<MenuPage> {
   final firestore = FirebaseFirestore.instance;
 
   // late String company = '';
-  late String color;
+  late String color = '';
   late Future<String> company;
 
   String email = '';
@@ -102,7 +102,9 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   Future<String> getCompany() async {
-    late String company;
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    late String company = '';
     final prefs = await SharedPreferences.getInstance();
     print('JA PASSOU');
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
@@ -112,8 +114,10 @@ class _MenuPageState extends State<MenuPage> {
 
     if (arguments['company'] != null) {
       company = arguments['company'];
+    } else if (companyFromSharedPref != null) {
+      company = companyFromSharedPref;
     } else {
-      company = companyFromSharedPref!;
+      await auth.signOut();
     }
     return company;
   }
@@ -121,6 +125,7 @@ class _MenuPageState extends State<MenuPage> {
   @override
   void initState() {
     super.initState();
+
     // getCompany();
     company = getCompany();
     // final company = getCompany();
@@ -151,7 +156,7 @@ class _MenuPageState extends State<MenuPage> {
                   extendBody: true,
                   appBar: appBar(context, repo, repo2),
                   body: MenuBody(company: repo),
-                  bottomNavigationBar: const BottomBar(),
+                  // bottomNavigationBar: const BottomBar(),
                 );
               } else {
                 return const Center(child: CircularProgressIndicator());

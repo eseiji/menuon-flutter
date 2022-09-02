@@ -17,10 +17,11 @@ class Body extends StatelessWidget {
         //   imgSrc: "assets/images/burger.png",
         // ),
 
-        Image.network(
-          "https://i.postimg.cc/Dwzk9rGd/heineken.jpg",
-          height: 50,
-        ),
+        // Image.network(
+        //   "https://i.postimg.cc/Dwzk9rGd/heineken.jpg",
+        //   height: 50,
+        // ),
+        // Image.network("https://${model.imagemUrl}"),
         Expanded(
           child: ItemInfo(),
         ),

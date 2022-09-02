@@ -16,10 +16,12 @@ class ProductTitleWithImage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          // Text(
-          //   "Aristocratic Hand Bag",
-          //   style: TextStyle(color: Colors.white),
-          // ),
+          Center(
+            child: Container(
+              height: 180,
+              child: Image.network("https://${model.imagemUrl}"),
+            ),
+          ),
           Text(
             model.nome,
             style: Theme.of(context)
@@ -47,11 +49,12 @@ class ProductTitleWithImage extends StatelessWidget {
               SizedBox(width: kDefaultPaddin),
               // Expanded(
               //   child: Hero(
-              //     tag: "${product.id}",
-              //     child: Image.asset(
-              //       product.image,
-              //       fit: BoxFit.fill,
-              //     ),
+              //     tag: model.nome,
+              //     child: Image.network("https://${model.imagemUrl}"),
+              //     // Image.asset(
+              //     //   product.image,
+              //     //   fit: BoxFit.fill,
+              //     // ),
               //   ),
               // )
             ],

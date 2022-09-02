@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:menu_on/view/details/details-screen.dart';
 // import 'package:shop_app/constants.dart';
 // import 'package:shop_app/models/Product.dart';
 // import 'package:shop_app/screens/details/details_screen.dart';
@@ -25,9 +26,19 @@ class _MenuBodyState extends State<MenuBody> {
   // FirebaseFirestore firestore = FirebaseFirestore.instance;
   final firestore = FirebaseFirestore.instance;
 
-  List<String> categories = ["Entrada", "Bebidas", "Sobremesa"];
+  // final testeCtrl = TextEditingController();
+  String testeCtrl = '';
+
+  void felipe(String carlos) {
+    print(carlos);
+    setState(() {
+      testeCtrl = carlos;
+    });
+  }
+
+  List<String> categories = ["Entradas", "Bebidas", "Sobremesas"];
   int selectedIndex = 0;
-  String category = 'bebidas';
+  String category = 'entradas';
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +57,9 @@ class _MenuBodyState extends State<MenuBody> {
               color: const Color(0xFF252A34),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const TextField(
+            child: TextField(
+              onChanged: (value) => felipe(value),
               style: TextStyle(color: Colors.white),
-              // onChanged: onChanged,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 icon: Icon(
@@ -62,8 +73,6 @@ class _MenuBodyState extends State<MenuBody> {
               ),
             ),
           ),
-          // const SizedBox(height: 10),
-          // Categories(),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin),
             child: SizedBox(
@@ -93,7 +102,6 @@ class _MenuBodyState extends State<MenuBody> {
                   if (snapshot.hasError) {
                     return const Text('Erro ao carregar o cardápio.');
                   }
-                  print('DEU CERTO');
                   return GridView.builder(
                     itemCount: snapshot.data!.docs.length,
                     gridDelegate:
@@ -103,25 +111,32 @@ class _MenuBodyState extends State<MenuBody> {
                       crossAxisSpacing: kDefaultPaddin,
                       childAspectRatio: 0.75,
                     ),
-                    itemBuilder: (context, index) => ItemCard(
-                      ProductModel.fromMap(
+                    itemBuilder: (context, index) {
+                      return ItemCard(
+                        ProductModel.fromMap(
                           snapshot.data!.docs[index].id,
                           snapshot.data!.docs[index].data()
-                              as Map<String, dynamic>),
-                      press: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailsScreen(
-                              ProductModel.fromMap(
-                                  snapshot.data!.docs[index].id,
-                                  snapshot.data!.docs[index].data()
-                                      as Map<String, dynamic>),
+                              as Map<String, dynamic>,
+                        ),
+                        press: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return DetailsScreen2(
+                                  widget.company,
+                                  ProductModel.fromMap(
+                                    snapshot.data!.docs[index].id,
+                                    snapshot.data!.docs[index].data()
+                                        as Map<String, dynamic>,
+                                  ),
+                                );
+                              },
                             ),
-                          ),
-                        );
-                      },
-                    ),
+                          );
+                        },
+                      );
+                    },
                   );
                 },
               ),
@@ -138,8 +153,6 @@ class _MenuBodyState extends State<MenuBody> {
         setState(() {
           selectedIndex = index;
           category = categories[index].toLowerCase();
-          // category =
-          print('PASSANDO: $index');
         });
       },
       child: Padding(
@@ -157,7 +170,8 @@ class _MenuBodyState extends State<MenuBody> {
             ),
             Container(
               margin: const EdgeInsets.only(
-                  top: kDefaultPaddin / 4), //top padding 5
+                top: kDefaultPaddin / 4,
+              ), //top padding 5
               height: 2,
               width: 30,
               color: selectedIndex == index

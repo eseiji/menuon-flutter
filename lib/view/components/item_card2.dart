@@ -6,18 +6,26 @@ import '../../models/ProductTeste.dart';
 
 class ItemCard extends StatelessWidget {
   final ProductModel model;
-
-  // final Product? product;
   final Function()? press;
-  // const ItemCard(
-  //   ProductModel productModel, {
-  //   Key? key,
-  //   // this.product,
-  //   this.press,
-  //   this.model,
-  // }) : super(key: key);
 
   ItemCard(this.model, {this.press});
+
+  String formatSize(dynamic size) {
+    String result;
+    if (num.tryParse('$size') != null) {
+      if (size >= 1000 && size > 0) {
+        size = (size / 1000).round();
+        result = "${model.nome} - ${size}L";
+      } else if (size > 0 && size < 1000) {
+        result = "${model.nome} - ${model.tamanho}ml";
+      } else {
+        result = model.nome;
+      }
+    } else {
+      result = "${model.nome} - ${model.tamanho}";
+    }
+    return result;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +55,9 @@ class ItemCard extends StatelessWidget {
                     topRight: Radius.circular(16),
                   ),
                 ),
-                child: Hero(
-                  tag: model.nome,
-                  child: Image.network("https://${model.imagemUrl}"),
+                child: Center(
+                  child: Image.network("https://${model.imagemUrl}",
+                      fit: BoxFit.fitHeight),
                 ),
               ),
             ),
@@ -58,17 +66,48 @@ class ItemCard extends StatelessWidget {
                 vertical: kDefaultPaddin / 4,
                 horizontal: 10,
               ),
-              child: Column(
+              child:
+                  // StreamBuilder<String>(
+                  //   stream: formatSize(model.tamanho),
+                  //   builder: (context, snapshot) {
+                  //     if (snapshot.hasError) {
+                  //       final error = snapshot.error;
+                  //       return Center(child: Text('$error'));
+                  //     } else if (snapshot.hasData) {
+                  //       final String text = snapshot.data as String;
+                  //       return Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           Text(
+                  //             text,
+                  //             style: const TextStyle(color: kTextLightColor),
+                  //           ),
+                  //           Text(
+                  //             "R\$ ${model.preco}",
+                  //             style: const TextStyle(
+                  //               color: Colors.white,
+                  //               fontWeight: FontWeight.bold,
+                  //             ),
+                  //           )
+                  //         ],
+                  //       );
+                  //     } else {
+                  //       return const Center(child: CircularProgressIndicator());
+                  //     }
+                  //   },
+                  // ),
+                  Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    // products is out demo list
-                    "${model.nome} - ${model.tamanho}ml",
-                    style: TextStyle(color: kTextLightColor),
+                    formatSize(model.tamanho),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: kTextLightColor),
                   ),
                   Text(
                     "R\$ ${model.preco}",
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),

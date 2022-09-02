@@ -3,7 +3,7 @@ class ProductModel {
   String nome = '';
   String descricao = '';
   int preco = 0;
-  int tamanho = 0;
+  dynamic tamanho;
 
   ProductModel(
       this.imagemUrl, this.nome, this.descricao, this.preco, this.tamanho);

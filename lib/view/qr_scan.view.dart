@@ -16,7 +16,8 @@ class _QRScanPageState extends State<QRScanpage> {
   final qrKey = GlobalKey(debugLabel: 'QR');
 
   void redirect(BuildContext context, String? link) async {
-    controller!.pauseCamera();
+    controller!.dispose();
+    // controller!.pauseCamera();
     // Navigator.of(context).pushNamed('/menu', arguments: {'company': link});
     // Navigator.of(context)
     //     .popAndPushNamed('/menu', arguments: {'company': link});
@@ -27,7 +28,7 @@ class _QRScanPageState extends State<QRScanpage> {
     Navigator.of(context).pushNamedAndRemoveUntil('/menu', (route) => false,
         arguments: {'company': link});
 
-        // Navigator.of(context).
+    // Navigator.of(context).
   }
 
   Barcode? barcode;
@@ -45,6 +46,7 @@ class _QRScanPageState extends State<QRScanpage> {
     if (Platform.isAndroid) {
       await controller!.pauseCamera();
     }
+
     controller!.resumeCamera();
     // controller!.resumeCamera();
   }
@@ -53,31 +55,31 @@ class _QRScanPageState extends State<QRScanpage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: const Color(0xFF5767FE),
-          title: Container(
-            child: Row(
-              children: const [
-                Icon(FontAwesomeIcons.wineGlassAlt),
-                SizedBox(width: 5.0),
-                Text(
-                  'MENU ON',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.more_vert),
-              tooltip: 'Options',
-              onPressed: () {},
-            ),
-          ],
-        ),
+        // appBar: AppBar(
+        //   automaticallyImplyLeading: false,
+        //   backgroundColor: const Color(0xFF5767FE),
+        //   title: Container(
+        //     child: Row(
+        //       children: const [
+        //         Icon(FontAwesomeIcons.wineGlassAlt),
+        //         SizedBox(width: 5.0),
+        //         Text(
+        //           'MENU ON',
+        //           style: TextStyle(
+        //             fontWeight: FontWeight.bold,
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        //   actions: [
+        //     IconButton(
+        //       icon: const Icon(Icons.more_vert),
+        //       tooltip: 'Options',
+        //       onPressed: () {},
+        //     ),
+        //   ],
+        // ),
         body: Stack(
           alignment: Alignment.center,
           children: <Widget>[
@@ -116,5 +118,12 @@ class _QRScanPageState extends State<QRScanpage> {
         },
       ),
     );
+  }
+
+  @override
+  void didPopNext() {
+    setState(() {
+      //force widget to re-create when user navigate back
+    });
   }
 }

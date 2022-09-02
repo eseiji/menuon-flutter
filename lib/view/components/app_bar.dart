@@ -40,15 +40,15 @@ AppBar appBar(context, company, color) {
     actions: [
       IconButton(
         onPressed: () => signout(context),
-        icon: Icon(Icons.logout_rounded),
+        icon: Icon(Icons.logout, size: 20),
       ),
-      IconButton(
-        onPressed: () => Get.toNamed(
-          '/cart',
-          arguments: {'company': company},
-        ),
-        icon: Icon(Icons.shopping_basket_rounded),
-      )
+      // IconButton(
+      //   onPressed: () => Get.toNamed(
+      //     '/cart',
+      //     arguments: {'company': company},
+      //   ),
+      //   icon: Icon(Icons.shopping_basket_rounded),
+      // )
     ],
   );
 }
