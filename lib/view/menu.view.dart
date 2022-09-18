@@ -17,6 +17,7 @@ import 'components/menu_body.dart';
 import 'package:menu_on/services/define_company.dart';
 
 import "dart:async";
+import 'dart:convert' as convert;
 
 class MenuPage extends StatefulWidget {
   const MenuPage({Key? key}) : super(key: key);
@@ -91,78 +92,89 @@ class _MenuPageState extends State<MenuPage> {
   //   buscarCorPersonalizada();
   // }
 
-  Future<String> buscarCorPersonalizada(String company) async {
-    var collection = FirebaseFirestore.instance.collection('cardapio');
-    var docSnapshot = await collection.doc(company).get();
-    if (docSnapshot.exists) {
-      Map<String, dynamic>? data = docSnapshot.data();
-      color = data?['corPersonalizada'];
-    }
-    return color;
-  }
+  // Future<String> buscarCorPersonalizada(String company) async {
+  //   var collection = FirebaseFirestore.instance.collection('cardapio');
+  //   var docSnapshot = await collection.doc(company).get();
+  //   if (docSnapshot.exists) {
+  //     Map<String, dynamic>? data = docSnapshot.data();
+  //     color = data?['corPersonalizada'];
+  //   }
+  //   return color;
+  // }
+
+  // GET PRODUCTS & GET CATEGORIES ======================================================================================================
 
   Future<String> getCompany() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
+    print('getCompany');
+    // FirebaseAuth auth = FirebaseAuth.instance;
 
-    late String company = '';
+    // late String company = '';
     final prefs = await SharedPreferences.getInstance();
-    print('JA PASSOU');
-    final arguments = (ModalRoute.of(context)?.settings.arguments ??
-        <String, dynamic>{}) as Map;
+    // print('JA PASSOU');
+    // final arguments = (ModalRoute.of(context)?.settings.arguments ??
+    //     <String, dynamic>{}) as Map;
 
-    final companyFromSharedPref = prefs.getString('company');
-
-    if (arguments['company'] != null) {
-      company = arguments['company'];
-    } else if (companyFromSharedPref != null) {
-      company = companyFromSharedPref;
+    final company = prefs.getString('company');
+    if (company != null) {
+      print(convert.jsonDecode(company));
+      return company;
     } else {
-      await auth.signOut();
+      return 'company';
     }
-    return company;
+
+    // if (arguments['company'] != null) {
+    //   company = arguments['company'];
+    // } else if (companyFromSharedPref != null) {
+    //   company = companyFromSharedPref;
+    // } else {
+    //   await auth.signOut();
+    // }
+    // return company;
   }
 
-  @override
-  void initState() {
-    super.initState();
+  // @override
+  // void initState() {
+  //   super.initState();
 
-    // getCompany();
-    company = getCompany();
-    // final company = getCompany();
-    // final color = buscarCorPersonalizada();
-    print("EXECUTANDO O RESTO");
-    // getCompany();
-  }
+  //   // getCompany();
+  //   company = getCompany();
+  //   // final company = getCompany();
+  //   // final color = buscarCorPersonalizada();
+  //   print("EXECUTANDO O RESTO");
+  //   // getCompany();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: company,
+      future: getCompany(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           final error = snapshot.error;
           return Center(child: Text('$error'));
         } else if (snapshot.hasData) {
-          final String repo = snapshot.data as String;
-          return FutureBuilder(
-            future: buscarCorPersonalizada(repo),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                final error = snapshot.error;
-                return Center(child: Text('$error'));
-              } else if (snapshot.hasData) {
-                final String repo2 = snapshot.data as String;
-                return Scaffold(
-                  extendBody: true,
-                  appBar: appBar(context, repo, repo2),
-                  body: MenuBody(company: repo),
-                  // bottomNavigationBar: const BottomBar(),
-                );
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            },
-          );
+          print(snapshot);
+          return const Center(child: CircularProgressIndicator());
+          // final String repo = snapshot.data as String;
+          // return FutureBuilder(
+          //   future: buscarCorPersonalizada(repo),
+          //   builder: (context, snapshot) {
+          //     if (snapshot.hasError) {
+          //       final error = snapshot.error;
+          //       return Center(child: Text('$error'));
+          //     } else if (snapshot.hasData) {
+          //       final String repo2 = snapshot.data as String;
+          //       return Scaffold(
+          //         extendBody: true,
+          //         appBar: appBar(context, repo, repo2),
+          //         body: MenuBody(company: repo),
+          //         // bottomNavigationBar: const BottomBar(),
+          //       );
+          //     } else {
+          //       return const Center(child: CircularProgressIndicator());
+          //     }
+          //   },
+          // );
         } else {
           return const Center(child: CircularProgressIndicator());
         }

@@ -5,6 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:menu_on/services/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert' as convert;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -16,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   var modalFormKey = GlobalKey<FormState>();
   final firestore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
+  final _authentication = Authentication();
 
   String email = '';
   String senha = '';
@@ -78,31 +82,18 @@ class _LoginPageState extends State<LoginPage> {
   void login(BuildContext context) async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
-
-      try {
-        var result = await auth.signInWithEmailAndPassword(
-          email: email,
-          password: senha,
-        );
-
+      final response = await _authentication.login(email, senha);
+      // var result = await auth.signInWithEmailAndPassword(
+      //   email: email,
+      //   password: senha,
+      // );
+      if (response['id_user'] != null) {
+        final prefs = await SharedPreferences.getInstance();
+        prefs.setString('user', convert.jsonEncode(response));
         messageAlert('Login realizado com sucesso.');
-
         Navigator.of(context).pushNamed('/scan');
-      } on FirebaseAuthException catch (e) {
-        switch (e.code) {
-          case 'invalid-email':
-            messageAlert('E-mail inválido.');
-            break;
-          case 'wrong-password':
-            messageAlert('Senha incorreta.');
-            break;
-          case 'user-not-found':
-            messageAlert('Usuário não encontrado.');
-            break;
-          case 'user-disabled':
-            messageAlert('Conta desabilitada temporariamente.');
-            break;
-        }
+      } else {
+        messageAlert('E-mail ou senha inválidos.');
       }
     }
   }

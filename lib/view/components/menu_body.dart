@@ -8,7 +8,7 @@ import 'package:menu_on/view/details/details-screen.dart';
 
 import '../../constants.dart';
 import '../../models/ProductTeste.dart';
-import '../product_detail/details_screen.dart';
+// import '../product_detail/details_screen.dart';
 import 'categories.dart';
 import 'category_item.dart';
 import 'item_card2.dart';

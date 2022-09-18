@@ -33,8 +33,8 @@ class MyApp extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      // home: LoginPage(),
-      home: auth.currentUser == null ? LoginPage() : MenuPage(),
+      home: LoginPage(),
+      // home: auth.currentUser == null ? LoginPage() : MenuPage(),
       routes: {
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),

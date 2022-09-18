@@ -14,7 +14,7 @@ void signout(BuildContext context) async {
 }
 
 AppBar appBar(context, company, color) {
-  var t = int.parse(color);
+  // var t = int.parse(color);
   return AppBar(
     backgroundColor: const Color(0xff181920),
     elevation: 2,
@@ -28,8 +28,8 @@ AppBar appBar(context, company, color) {
           TextSpan(
             text: '$company',
             style: TextStyle(
-              // color: Color.fromARGB(255, 255, 255, 255),
-              color: Color(t),
+              color: Color.fromARGB(255, 255, 255, 255),
+              // color: Color(t),
               fontWeight: FontWeight.bold,
               fontSize: 19,
             ),
@@ -42,13 +42,13 @@ AppBar appBar(context, company, color) {
         onPressed: () => signout(context),
         icon: Icon(Icons.logout, size: 20),
       ),
-      // IconButton(
-      //   onPressed: () => Get.toNamed(
-      //     '/cart',
-      //     arguments: {'company': company},
-      //   ),
-      //   icon: Icon(Icons.shopping_basket_rounded),
-      // )
+      IconButton(
+        onPressed: () => Get.toNamed(
+          '/cart',
+          arguments: {'company': company},
+        ),
+        icon: Icon(Icons.shopping_basket_rounded),
+      )
     ],
   );
 }

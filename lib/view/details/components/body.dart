@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:menu_on/models/ProductTeste.dart';
 import 'package:menu_on/view/details/components/item_image.dart';
 import 'package:menu_on/view/details/components/order_button.dart';
 import 'package:menu_on/view/details/components/title_price_rating.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Body2 extends StatelessWidget {
   final ProductModel model;
@@ -35,7 +38,7 @@ class Body2 extends StatelessWidget {
   }
 }
 
-class ItemInfo extends StatelessWidget {
+class ItemInfo extends StatefulWidget {
   final String company;
   final int preco;
   final String nome;
@@ -51,6 +54,16 @@ class ItemInfo extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<ItemInfo> createState() => _ItemInfoState();
+}
+
+class _ItemInfoState extends State<ItemInfo> {
+  @override
+  int numOfItems = 1;
+  //   void addToCart(<String, dynamic> product) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   await prefs.setString('order_products', link!);
+  // }
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
@@ -66,16 +79,16 @@ class ItemInfo extends StatelessWidget {
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          shopeName(company),
+          shopeName(widget.company),
           TitlePriceRating(
-            nome: nome,
-            preco: preco,
-            tamanho: tamanho,
+            nome: widget.nome,
+            preco: widget.preco,
+            tamanho: widget.tamanho,
           ),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              descricao,
+              widget.descricao,
               style: const TextStyle(
                 height: 1.5,
                 color: Colors.white,
@@ -85,11 +98,116 @@ class ItemInfo extends StatelessWidget {
           // SizedBox(height: size.height * 0.1),
           // const SizedBox(height: 25),
           const Spacer(),
-          // Free space  10% of total height
-          OrderButton(
-            size: size,
-            press: () {},
+          Container(
+            margin: EdgeInsets.only(bottom: 15),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 35,
+                  height: 25,
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Color(0xFF5767FE),
+                        primary: Colors.white,
+                        padding: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        // shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.circular(20)),
+                        // primary: Colors.white,
+                        // backgroundColor: Color(0xFF5767FE),
+                      ),
+                      onPressed: () {
+                        if (numOfItems > 1) {
+                          setState(() {
+                            numOfItems--;
+                          });
+                        }
+                      },
+                      child: const Icon(Icons.remove)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "${numOfItems}",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 35,
+                  height: 25,
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Color(0xFF5767FE),
+                        primary: Colors.white,
+                        padding: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        // shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.circular(20)),
+                        // primary: Colors.white,
+                        // backgroundColor: Color(0xFF5767FE),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          numOfItems++;
+                        });
+                      },
+                      child: const Icon(Icons.add)),
+                ),
+              ],
+            ),
           ),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: const Color(0xFF5767FE),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 2.0,
+                      )
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.shopping_cart,
+                        color: Colors.white,
+                      ),
+                      TextButton(
+                        onPressed: () => {},
+                        child: const Text(
+                          'Adicionar no carrinho',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          // Free space  10% of total height
+          // OrderButton(
+          //   size: size,
+          //   press: () {},
+          // ),
         ],
       ),
     );
