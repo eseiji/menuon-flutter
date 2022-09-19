@@ -16,7 +16,7 @@ class CartScreen extends StatelessWidget {
 
     return Scaffold(
       extendBody: true,
-      appBar: appBar(context, company, ''),
+      appBar: appBar(context),
       body: Body(),
       bottomNavigationBar: const CheckoutCard(),
     );

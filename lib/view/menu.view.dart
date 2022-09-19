@@ -104,8 +104,8 @@ class _MenuPageState extends State<MenuPage> {
 
   // GET PRODUCTS & GET CATEGORIES ======================================================================================================
 
-  Future<String> getCompany() async {
-    print('getCompany');
+  Future<String> getCategories() async {
+    print('getCategories');
     // FirebaseAuth auth = FirebaseAuth.instance;
 
     // late String company = '';
@@ -146,39 +146,11 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getCompany(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          final error = snapshot.error;
-          return Center(child: Text('$error'));
-        } else if (snapshot.hasData) {
-          print(snapshot);
-          return const Center(child: CircularProgressIndicator());
-          // final String repo = snapshot.data as String;
-          // return FutureBuilder(
-          //   future: buscarCorPersonalizada(repo),
-          //   builder: (context, snapshot) {
-          //     if (snapshot.hasError) {
-          //       final error = snapshot.error;
-          //       return Center(child: Text('$error'));
-          //     } else if (snapshot.hasData) {
-          //       final String repo2 = snapshot.data as String;
-          //       return Scaffold(
-          //         extendBody: true,
-          //         appBar: appBar(context, repo, repo2),
-          //         body: MenuBody(company: repo),
-          //         // bottomNavigationBar: const BottomBar(),
-          //       );
-          //     } else {
-          //       return const Center(child: CircularProgressIndicator());
-          //     }
-          //   },
-          // );
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      },
+    return Scaffold(
+      extendBody: true,
+      appBar: appBar(context),
+      body: MenuBody(),
+      // bottomNavigationBar: const BottomBar(),
     );
     // Scaffold(
     //   extendBody: true,

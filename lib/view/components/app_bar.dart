@@ -13,7 +13,7 @@ void signout(BuildContext context) async {
   Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
 }
 
-AppBar appBar(context, company, color) {
+AppBar appBar(context) {
   // var t = int.parse(color);
   return AppBar(
     backgroundColor: const Color(0xff181920),
@@ -26,7 +26,7 @@ AppBar appBar(context, company, color) {
         ),
         children: [
           TextSpan(
-            text: '$company',
+            text: 'company',
             style: TextStyle(
               color: Color.fromARGB(255, 255, 255, 255),
               // color: Color(t),
@@ -45,7 +45,7 @@ AppBar appBar(context, company, color) {
       IconButton(
         onPressed: () => Get.toNamed(
           '/cart',
-          arguments: {'company': company},
+          arguments: {'company': 'company'},
         ),
         icon: Icon(Icons.shopping_basket_rounded),
       )
