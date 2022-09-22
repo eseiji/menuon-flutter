@@ -9,9 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Body2 extends StatelessWidget {
   final ProductModel model;
-  final String company;
+  // final String company;
 
-  Body2(this.model, this.company);
+  Body2(this.model);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -20,12 +20,12 @@ class Body2 extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
-          ItemImage(
-            imgSrc: model.imagemUrl,
-          ),
+          // ItemImage(
+          //   imgSrc: model.imagemUrl,
+          // ),
           Expanded(
             child: ItemInfo(
-              company: company,
+              company: 'company',
               nome: model.nome,
               preco: model.preco,
               descricao: model.descricao,
@@ -40,7 +40,7 @@ class Body2 extends StatelessWidget {
 
 class ItemInfo extends StatefulWidget {
   final String company;
-  final int preco;
+  final String preco;
   final String nome;
   final String descricao;
   final dynamic tamanho;

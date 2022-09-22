@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TitlePriceRating extends StatelessWidget {
-  final int preco;
+  final String preco;
   final String nome;
   final dynamic tamanho;
   const TitlePriceRating({
@@ -70,7 +70,7 @@ class TitlePriceRating extends StatelessWidget {
     );
   }
 
-  ClipPath priceTag(BuildContext context, int price) {
+  ClipPath priceTag(BuildContext context, String price) {
     return ClipPath(
       clipper: PricerCliper(),
       child: Container(

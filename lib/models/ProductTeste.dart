@@ -1,20 +1,19 @@
 class ProductModel {
-  String imagemUrl = '';
+  String? imagemUrl = '';
   String nome = '';
   String descricao = '';
-  int preco = 0;
+  String preco = '';
   dynamic tamanho;
 
-  ProductModel(
-      this.imagemUrl, this.nome, this.descricao, this.preco, this.tamanho);
+  ProductModel(this.nome, this.descricao, this.preco);
 
   ProductModel.fromMap(String nomeA, Map<String, dynamic> map) {
     // imagemUrl = 'https://ibb.co/njkYvVJ';
-    imagemUrl = map['imagemUrl'];
-    nome = nomeA;
-    descricao = map['descricao'];
-    preco = map['preco'];
-    tamanho = map['tamanho'];
+    // imagemUrl = map['imagemUrl'] != null ? map['imagemUrl'] : null;
+    nome = map['name'];
+    descricao = map['description'];
+    preco = map['price'];
+    // tamanho = map['tamanho'];
 
     // quantidadeNaoLida = map['quantidadeNaoLida'] ?? 'valor'; TBM PODE SER USADO ASSIM
   }

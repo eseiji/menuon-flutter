@@ -4,9 +4,9 @@ import 'package:menu_on/view/details/components/body.dart';
 
 class DetailsScreen2 extends StatelessWidget {
   final ProductModel model;
-  final String company;
+  // final String company;
 
-  DetailsScreen2(this.company, this.model);
+  DetailsScreen2(this.model);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class DetailsScreen2 extends StatelessWidget {
         elevation: 0,
         backgroundColor: Color(0xff181920),
       ),
-      body: Body2(model, company),
+      body: Body2(model),
     );
   }
 }

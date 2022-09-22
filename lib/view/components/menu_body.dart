@@ -15,6 +15,7 @@ import 'category_item.dart';
 import 'item_card2.dart';
 import 'dart:convert' as convert;
 import 'package:menu_on/services/categories.dart';
+import 'package:menu_on/services/products.dart';
 
 class MenuBody extends StatefulWidget {
   const MenuBody({Key? key}) : super(key: key);
@@ -31,17 +32,10 @@ class _MenuBodyState extends State<MenuBody> {
   String testeCtrl = '';
   late Future<Map<String, dynamic>> company;
   final _categories = Categories();
-
-  // void getCompany() async {
-  //   print('getCompany');
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final companyPrefs = prefs.getString('company');
-  //   if (companyPrefs != null) {
-  //     var companyJson = convert.jsonDecode(companyPrefs);
-  //     getCategories(companyJson['id_company']);
-  //     company = companyJson;
-  //   }
-  // }
+  int _category = 0;
+  final _products = Products();
+  String getProductsStatus = 'loading';
+  String getCategoriesStatus = 'loading';
 
   Future<Map<String, dynamic>> getCategories() async {
     final prefs = await SharedPreferences.getInstance();
@@ -53,12 +47,45 @@ class _MenuBodyState extends State<MenuBody> {
       final response =
           await _categories.getCategories(companyJson['id_company']);
       if (response['categories'] != null) {
+        // print('getCategories');
+        // setState(() {
+        //   _category = response['categories'][0]['id_category'];
+        // });
+        prefs.setInt('category', response['categories'][0]['id_category']);
         return response;
       } else {
         return Future.error('Nenhuma categoria foi encontrada.');
       }
     } else {
       return Future.error('Nenhuma categoria foi encontrada.');
+    }
+  }
+
+  Future<Map<String, dynamic>> getProducts() async {
+    getProductsStatus = 'loading';
+    final prefs = await SharedPreferences.getInstance();
+    final companyPrefs = prefs.getString('company');
+    final categoryPrefs = prefs.getInt('category');
+    int selectedCategory = 0;
+
+    if (companyPrefs != null && categoryPrefs != null) {
+      var companyJson = convert.jsonDecode(companyPrefs);
+      if (_category != 0) {
+        selectedCategory = _category;
+      } else {
+        selectedCategory = categoryPrefs;
+      }
+      final response = await _products.getProducts(
+          companyJson['id_company'], selectedCategory);
+
+      if (response['products'] != null) {
+        getProductsStatus = 'ready';
+        return response;
+      } else {
+        return Future.error('Nenhum produto foi encontrado.');
+      }
+    } else {
+      return Future.error('Nenhum produto foi encontrado.');
     }
   }
 
@@ -71,7 +98,7 @@ class _MenuBodyState extends State<MenuBody> {
 
   // List<String> categories = ["Entradas", "Bebidas", "Sobremesas"];
   int selectedIndex = 0;
-  String category = 'entradas';
+  // String category = 'entradas';
 
   @override
   Widget build(BuildContext context) {
@@ -120,83 +147,100 @@ class _MenuBodyState extends State<MenuBody> {
                       return ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: categories.length,
-                        itemBuilder: (context, index) =>
-                            buildCategory(index, categories[index]['name']),
+                        itemBuilder: (context, index) => buildCategory(
+                            index,
+                            categories[index]['name'],
+                            categories[index]['id_category']),
                       );
                     } else {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                        widthFactor: 30,
+                        heightFactor: 30,
+                      );
                     }
                   }),
             ),
           ),
-          // Expanded(
-          //   child: Padding(
-          //     padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
-          //     child: StreamBuilder<QuerySnapshot>(
-          //       stream: firestore
-          //           .collection('cardapio')
-          //           .doc(widget.company)
-          //           .collection(category)
-          //           .snapshots(),
-          //       builder: (_, snapshot) {
-          //         if (!snapshot.hasData) {
-          //           return const Center(
-          //             child: CircularProgressIndicator(),
-          //           );
-          //         }
-          //         if (snapshot.hasError) {
-          //           return const Text('Erro ao carregar o cardápio.');
-          //         }
-          //         return GridView.builder(
-          //           itemCount: snapshot.data!.docs.length,
-          //           gridDelegate:
-          //               const SliverGridDelegateWithFixedCrossAxisCount(
-          //             crossAxisCount: 2,
-          //             mainAxisSpacing: kDefaultPaddin,
-          //             crossAxisSpacing: kDefaultPaddin,
-          //             childAspectRatio: 0.75,
-          //           ),
-          //           itemBuilder: (context, index) {
-          //             return ItemCard(
-          //               ProductModel.fromMap(
-          //                 snapshot.data!.docs[index].id,
-          //                 snapshot.data!.docs[index].data()
-          //                     as Map<String, dynamic>,
-          //               ),
-          //               press: () {
-          //                 Navigator.push(
-          //                   context,
-          //                   MaterialPageRoute(
-          //                     builder: (context) {
-          //                       return DetailsScreen2(
-          //                         widget.company,
-          //                         ProductModel.fromMap(
-          //                           snapshot.data!.docs[index].id,
-          //                           snapshot.data!.docs[index].data()
-          //                               as Map<String, dynamic>,
-          //                         ),
-          //                       );
-          //                     },
-          //                   ),
-          //                 );
-          //               },
-          //             );
-          //           },
-          //         );
-          //       },
-          //     ),
-          //   ),
-          // ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
+              child: FutureBuilder(
+                future: getProducts(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData || getProductsStatus == 'loading') {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                      widthFactor: 30,
+                      heightFactor: 30,
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return const Text('Erro ao carregar os produtos.');
+                  }
+                  if (snapshot.hasData) {
+                    final Map<String, dynamic> data =
+                        snapshot.data as Map<String, dynamic>;
+                    final List<dynamic> products = data['products'];
+                    return GridView.builder(
+                      itemCount: products.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: kDefaultPaddin,
+                        crossAxisSpacing: kDefaultPaddin,
+                        childAspectRatio: 0.75,
+                      ),
+                      itemBuilder: (context, index) {
+                        return ItemCard(
+                          ProductModel.fromMap(
+                            "${products[index]['id_product']}",
+                            products[index] as Map<String, dynamic>,
+                          ),
+                          press: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return DetailsScreen2(
+                                    ProductModel.fromMap(
+                                      "${products[index]['id_product']}",
+                                      products[index] as Map<String, dynamic>,
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                      widthFactor: 30,
+                      heightFactor: 30,
+                    );
+                  }
+                },
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget buildCategory(int index, String category) {
+  Widget buildCategory(int index, String category, int idCategory) {
+    print(idCategory);
     return GestureDetector(
       onTap: () {
+        _category = idCategory;
         setState(() {
           selectedIndex = index;
+          // _category = idCategory;
+
+          // prefs.setInt('category', response['categories'][0]['id_category']);
           // category = categories[index].toLowerCase();
         });
       },
