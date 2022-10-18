@@ -8,8 +8,9 @@ import 'dart:convert' as convert;
 void signout(BuildContext context) async {
   // FirebaseAuth auth = FirebaseAuth.instance;
   final prefs = await SharedPreferences.getInstance();
-  await prefs.remove('company');
-  await prefs.remove('user');
+  // await prefs.remove('company');
+  // await prefs.remove('user');
+  await prefs.clear();
   // await auth.signOut();
 
   Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);

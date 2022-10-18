@@ -6,6 +6,7 @@ import 'package:menu_on/view/details/components/item_image.dart';
 import 'package:menu_on/view/details/components/order_button.dart';
 import 'package:menu_on/view/details/components/title_price_rating.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert' as convert;
 
 class Body2 extends StatelessWidget {
   final ProductModel model;
@@ -25,6 +26,7 @@ class Body2 extends StatelessWidget {
           // ),
           Expanded(
             child: ItemInfo(
+              idProduct: model.idProduct,
               company: 'company',
               nome: model.nome,
               preco: model.preco,
@@ -39,6 +41,7 @@ class Body2 extends StatelessWidget {
 }
 
 class ItemInfo extends StatefulWidget {
+  final int idProduct;
   final String company;
   final String preco;
   final String nome;
@@ -46,6 +49,7 @@ class ItemInfo extends StatefulWidget {
   final dynamic tamanho;
   const ItemInfo({
     Key? key,
+    required this.idProduct,
     required this.company,
     required this.nome,
     required this.preco,
@@ -60,10 +64,37 @@ class ItemInfo extends StatefulWidget {
 class _ItemInfoState extends State<ItemInfo> {
   @override
   int numOfItems = 1;
-  //   void addToCart(<String, dynamic> product) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString('order_products', link!);
-  // }
+  List<Map<String, dynamic>> product = [];
+
+  void addToCart() async {
+    final prefs = await SharedPreferences.getInstance();
+    var orderProducts = prefs.getString('order_products');
+    if (orderProducts != null && orderProducts.isNotEmpty) {
+      var orderProductsParsed = convert.jsonDecode(orderProducts);
+      orderProductsParsed.add({
+        'productId': widget.idProduct,
+        'numOfItems': numOfItems,
+        'unitPrice': widget.preco
+      });
+
+      // product.add({'productId': widget.idProduct, 'numOfItems': numOfItems});
+      await prefs.setString(
+          'order_products', convert.jsonEncode(orderProductsParsed));
+    } else {
+      product = [
+        {
+          'productId': widget.idProduct,
+          'numOfItems': numOfItems,
+          'unitPrice': widget.preco
+        }
+      ];
+      print(product);
+      await prefs.setString('order_products', convert.jsonEncode(product));
+    }
+    print('ADD TO CART');
+    print(prefs.getString('order_products'));
+  }
+
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
@@ -186,7 +217,7 @@ class _ItemInfoState extends State<ItemInfo> {
                         color: Colors.white,
                       ),
                       TextButton(
-                        onPressed: () => {},
+                        onPressed: () => addToCart(),
                         child: const Text(
                           'Adicionar no carrinho',
                           style: TextStyle(

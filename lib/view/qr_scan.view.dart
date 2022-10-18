@@ -18,8 +18,6 @@ class QRScanpage extends StatefulWidget {
 class _QRScanPageState extends State<QRScanpage> {
   final _companies = Companies();
   String status = 'reading';
-  // final qrKey = GlobalKey(debugLabel: 'QR');
-
   void messageAlert(String message) {
     print(message);
     ScaffoldMessenger.of(context).showSnackBar(
@@ -30,34 +28,26 @@ class _QRScanPageState extends State<QRScanpage> {
   }
 
   void redirect(BuildContext context, String? link) async {
-    // controller!.dispose();
-    // controller!.pauseCamera();
-    // Navigator.of(context).pushNamed('/menu', arguments: {'company': link});
-    // Navigator.of(context)
-    //     .popAndPushNamed('/menu', arguments: {'company': link});
-
-    // final prefs = await SharedPreferences.getInstance();
-    // await prefs.setString('company', link!);
-
     Navigator.of(context).pushNamedAndRemoveUntil('/menu', (route) => false);
-
-    // Navigator.of(context).
   }
 
   void checkCompany(String idCompany) async {
-    setState(() {
-      status = 'loading';
-    });
+    // setState(() {
+    //   status = 'loading';
+    // });
+    status = 'loading';
     final response = await _companies.getCompany(idCompany);
     if (response['id_company'] != null) {
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('company', convert.jsonEncode(response));
       messageAlert('Login realizado com sucesso.');
+      await cameraController.stop();
       Navigator.of(context).pushNamedAndRemoveUntil('/menu', (route) => false);
     } else {
-      setState(() {
-        status = 'reading';
-      });
+      // setState(() {
+      //   status = 'reading';
+      // });
+      status = 'reading';
       messageAlert('E-mail ou senha inválidos.');
     }
   }
@@ -167,26 +157,25 @@ class _QRScanPageState extends State<QRScanpage> {
         ),
         child: Center(
           child: Container(
-            margin: const EdgeInsets.all(10.0),
-            // color: Colors.amber[600],
-            width: 300.0,
-            height: 300.0,
-            child: status == 'reading'
-                ? MobileScanner(
-                    allowDuplicates: false,
-                    controller: cameraController,
-                    onDetect: (barcode, args) {
-                      if (barcode.rawValue == null) {
-                        debugPrint('Failed to scan Barcode');
-                      } else {
-                        final String code = barcode.rawValue!;
-                        checkCompany(code);
-                        debugPrint('Barcode found! $code');
-                      }
-                    },
-                  )
-                : const CircularProgressIndicator(),
-          ),
+              margin: const EdgeInsets.all(10.0),
+              // color: Colors.amber[600],
+              width: 300.0,
+              height: 300.0,
+              child: status == 'reading'
+                  ? MobileScanner(
+                      allowDuplicates: true,
+                      controller: cameraController,
+                      onDetect: (barcode, args) {
+                        if (barcode.rawValue == null) {
+                          debugPrint('Failed to scan Barcode');
+                        } else {
+                          final String code = barcode.rawValue!;
+                          checkCompany(code);
+                          debugPrint('Barcode found! $code');
+                        }
+                      },
+                    )
+                  : null),
         ),
       ),
     );

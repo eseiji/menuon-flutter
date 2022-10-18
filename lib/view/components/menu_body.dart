@@ -194,7 +194,6 @@ class _MenuBodyState extends State<MenuBody> {
                       itemBuilder: (context, index) {
                         return ItemCard(
                           ProductModel.fromMap(
-                            "${products[index]['id_product']}",
                             products[index] as Map<String, dynamic>,
                           ),
                           press: () {
@@ -204,7 +203,6 @@ class _MenuBodyState extends State<MenuBody> {
                                 builder: (context) {
                                   return DetailsScreen2(
                                     ProductModel.fromMap(
-                                      "${products[index]['id_product']}",
                                       products[index] as Map<String, dynamic>,
                                     ),
                                   );
