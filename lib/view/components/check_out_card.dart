@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:menu_on/models/ProductTeste.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:menu_on/services/orders.dart';
 
 import 'dart:convert' as convert;
 /* import 'package:flutter_svg/flutter_svg.dart'; */
@@ -17,11 +18,17 @@ class CheckoutCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _orders = Orders();
+
     Future<String> getOrderProducts() async {
       final prefs = await SharedPreferences.getInstance();
       var orderProducts = prefs.getString('order_products');
       print(orderProducts);
       return orderProducts as String;
+    }
+
+    Future<void> postProducts() async {
+      await _orders.postOrder(total, status, id_table, id_customer)
     }
 
     // Future<String> getProducts() async {

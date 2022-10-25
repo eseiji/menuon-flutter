@@ -41,7 +41,7 @@ class _QRScanPageState extends State<QRScanpage> {
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('company', convert.jsonEncode(response));
       messageAlert('Login realizado com sucesso.');
-      await cameraController.stop();
+      // await cameraController.stop();
       Navigator.of(context).pushNamedAndRemoveUntil('/menu', (route) => false);
     } else {
       // setState(() {
