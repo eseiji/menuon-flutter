@@ -38,7 +38,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
-        '/scan': (context) => QRScanpage(),
+        '/scan': (context) => Scanner(),
+        // '/scan': (context) => QRScanpage(),
         '/menu': (context) => MenuPage(),
         '/cart': (context) => CartScreen(),
         '/teste': (context) => DetailsScreen(),

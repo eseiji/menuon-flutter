@@ -27,8 +27,32 @@ class CheckoutCard extends StatelessWidget {
       return orderProducts as String;
     }
 
-    Future<void> postProducts() async {
-      await _orders.postOrder(total, status, id_table, id_customer)
+    Future<void> postOrder() async {
+      double total = 0;
+      String formattedPrice;
+      final prefs = await SharedPreferences.getInstance();
+      var orderProducts = prefs.getString('order_products');
+      List<dynamic> orderProductsParsed =
+          convert.jsonDecode(orderProducts as String);
+
+      for (var e in orderProductsParsed) {
+        {
+          if (e['unitPrice'] != null && e['numOfItems'] != null) {
+            formattedPrice = (e['unitPrice'] as String).replaceAll("\$", '');
+            total = total +
+                (double.parse(formattedPrice) * (e['numOfItems'] as int));
+          }
+        }
+      }
+
+      // print('total');
+      // print(total);
+
+      // print('orderProductsParsed');
+      // print(orderProductsParsed);
+      var orderResponse = await _orders.postOrder(total, 0, 1, 4, 1);
+      print(orderResponse);
+      // if (orderResponse)
     }
 
     // Future<String> getProducts() async {
@@ -113,7 +137,7 @@ class CheckoutCard extends StatelessWidget {
                             ],
                           ),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () => postOrder(),
                             child: const Text(
                               'Finalizar pedido',
                               style: TextStyle(
