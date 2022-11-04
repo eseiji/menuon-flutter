@@ -65,8 +65,12 @@ class _ItemInfoState extends State<ItemInfo> {
   @override
   int numOfItems = 1;
   List<Map<String, dynamic>> product = [];
+  String status = 'none';
 
   void addToCart() async {
+    setState(() {
+      status = 'pending';
+    });
     final prefs = await SharedPreferences.getInstance();
     var orderProducts = prefs.getString('order_products');
     if (orderProducts != null && orderProducts.isNotEmpty) {
@@ -91,6 +95,10 @@ class _ItemInfoState extends State<ItemInfo> {
       print(product);
       await prefs.setString('order_products', convert.jsonEncode(product));
     }
+    await Future.delayed(const Duration(milliseconds: 2000));
+    setState(() {
+      status = 'done';
+    });
     print('ADD TO CART');
     print(prefs.getString('order_products'));
   }
@@ -209,26 +217,64 @@ class _ItemInfoState extends State<ItemInfo> {
                       )
                     ],
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.shopping_cart,
-                        color: Colors.white,
-                      ),
-                      TextButton(
-                        onPressed: () => addToCart(),
-                        child: const Text(
-                          'Adicionar no carrinho',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: status == 'none'
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.shopping_cart,
+                              color: Colors.white,
+                            ),
+                            TextButton(
+                              onPressed: () => addToCart(),
+                              child: const Text(
+                                'Adicionar no carrinho',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : status == 'done'
+                          ? Padding(
+                              padding: const EdgeInsets.all(9.0),
+                              child: Center(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100.0),
+                                    color: const Color(0xFF5767FE),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.black,
+                                        blurRadius: 1.0,
+                                      )
+                                    ],
+                                  ),
+                                  width: 30,
+                                  height: 30,
+                                  child: const Icon(
+                                    Icons.done,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : const Padding(
+                              padding: EdgeInsets.all(9.0),
+                              child: Center(
+                                child: SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2.5,
+                                  ),
+                                ),
+                              ),
+                            ),
                 ),
               ),
             ],
