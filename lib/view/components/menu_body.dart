@@ -32,7 +32,7 @@ class _MenuBodyState extends State<MenuBody> {
   String testeCtrl = '';
   late Future<Map<String, dynamic>> company;
   final _categories = Categories();
-  int _category = 0;
+  int? _category;
   final _products = Products();
   String getProductsStatus = 'loading';
   String getCategoriesStatus = 'loading';
@@ -51,7 +51,9 @@ class _MenuBodyState extends State<MenuBody> {
         // setState(() {
         //   _category = response['categories'][0]['id_category'];
         // });
+        _category = response['categories'][0]['id_category'];
         prefs.setInt('category', response['categories'][0]['id_category']);
+        // setState(() {});
         return response;
       } else {
         return Future.error('Nenhuma categoria foi encontrada.');
@@ -62,24 +64,29 @@ class _MenuBodyState extends State<MenuBody> {
   }
 
   Future<Map<String, dynamic>> getProducts() async {
-    getProductsStatus = 'loading';
+    // getProductsStatus = 'loading';
     final prefs = await SharedPreferences.getInstance();
     final companyPrefs = prefs.getString('company');
     final categoryPrefs = prefs.getInt('category');
-    int selectedCategory = 0;
+    int? selectedCategory;
 
     if (companyPrefs != null && categoryPrefs != null) {
       var companyJson = convert.jsonDecode(companyPrefs);
-      if (_category != 0) {
-        selectedCategory = _category;
-      } else {
-        selectedCategory = categoryPrefs;
-      }
+      // if (_category != 0) {
+      //   selectedCategory = _category;
+      // } else {
+      //   selectedCategory = categoryPrefs;
+      // }
+      selectedCategory = categoryPrefs;
       final response = await _products.getProducts(
           companyJson['id_company'], selectedCategory);
 
+      // setState(() {
+      //   getProductsStatus = 'ready';
+      // });
+      print('response');
+      print(response['products']);
       if (response['products'] != null) {
-        getProductsStatus = 'ready';
         return response;
       } else {
         return Future.error('Nenhum produto foi encontrado.');
@@ -99,6 +106,11 @@ class _MenuBodyState extends State<MenuBody> {
   // List<String> categories = ["Entradas", "Bebidas", "Sobremesas"];
   int selectedIndex = 0;
   // String category = 'entradas';
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -144,13 +156,15 @@ class _MenuBodyState extends State<MenuBody> {
                       final Map<String, dynamic> data =
                           snapshot.data as Map<String, dynamic>;
                       final List<dynamic> categories = data['categories'];
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: categories.length,
-                        itemBuilder: (context, index) => buildCategory(
-                            index,
-                            categories[index]['name'],
-                            categories[index]['id_category']),
+                      return SizedBox(
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: categories.length,
+                          itemBuilder: (context, index) => buildCategory(
+                              index,
+                              categories[index]['name'],
+                              categories[index]['id_category']),
+                        ),
                       );
                     } else {
                       return const Center(
@@ -168,7 +182,8 @@ class _MenuBodyState extends State<MenuBody> {
               child: FutureBuilder(
                 future: getProducts(),
                 builder: (context, snapshot) {
-                  if (!snapshot.hasData || getProductsStatus == 'loading') {
+                  if (!snapshot.hasData) {
+                    print('NAO TEM DADOS');
                     return const Center(
                       child: CircularProgressIndicator(),
                       widthFactor: 30,
@@ -179,6 +194,7 @@ class _MenuBodyState extends State<MenuBody> {
                     return const Text('Erro ao carregar os produtos.');
                   }
                   if (snapshot.hasData) {
+                    print('ENTROU');
                     final Map<String, dynamic> data =
                         snapshot.data as Map<String, dynamic>;
                     final List<dynamic> products = data['products'];
@@ -232,10 +248,14 @@ class _MenuBodyState extends State<MenuBody> {
   Widget buildCategory(int index, String category, int idCategory) {
     print(idCategory);
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        final prefs = await SharedPreferences.getInstance();
+        prefs.setInt('category', idCategory);
         _category = idCategory;
+        // setState(() => {getProductsStatus = 'ready'});
         setState(() {
           selectedIndex = index;
+          getProductsStatus = 'loading';
           // _category = idCategory;
 
           // prefs.setInt('category', response['categories'][0]['id_category']);

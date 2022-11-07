@@ -3,7 +3,7 @@ import 'dart:convert' as convert;
 
 class Products {
   Future<Map<String, dynamic>> getProducts(
-      int idCompany, int idCategory) async {
+      int idCompany, int? idCategory) async {
     var url = Uri.parse(
         'https://menuon-api.herokuapp.com/products/$idCompany/$idCategory');
     final response = await http.get(url);

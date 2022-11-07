@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:menu_on/models/ProductTeste.dart';
+import 'package:menu_on/services/companies.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:menu_on/services/orders.dart';
 
 import 'dart:convert' as convert;
+import 'package:geolocator/geolocator.dart';
 /* import 'package:flutter_svg/flutter_svg.dart'; */
 /* import 'package:shop_app/components/default_button.dart'; */
 
@@ -24,6 +26,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
   @override
   String status = 'none';
   final _orders = Orders();
+  final _companies = Companies();
   Widget build(BuildContext context) {
     Future<String> getOrderProducts() async {
       final prefs = await SharedPreferences.getInstance();
@@ -38,29 +41,50 @@ class _CheckoutCardState extends State<CheckoutCard> {
         status = 'pending';
       });
       print(status);
-      // double total = 0;
-      // String formattedPrice;
-      // final prefs = await SharedPreferences.getInstance();
-      // var orderProducts = prefs.getString('order_products');
-      // List<dynamic> orderProductsParsed =
-      //     convert.jsonDecode(orderProducts as String);
+      double total = 0;
+      String formattedPrice;
+      final prefs = await SharedPreferences.getInstance();
+      var orderProducts = prefs.getString('order_products');
+      List<dynamic> orderProductsParsed =
+          convert.jsonDecode(orderProducts as String);
 
-      // for (var e in orderProductsParsed) {
-      //   {
-      //     if (e['unitPrice'] != null && e['numOfItems'] != null) {
-      //       formattedPrice = (e['unitPrice'] as String).replaceAll("\$", '');
-      //       total = total +
-      //           (double.parse(formattedPrice) * (e['numOfItems'] as int));
-      //     }
-      //   }
-      // }
-      // var orderResponse = await _orders.postOrder(total, 0, 1, 4, 1);
+      for (var e in orderProductsParsed) {
+        {
+          if (e['unitPrice'] != null && e['numOfItems'] != null) {
+            formattedPrice = (e['unitPrice'] as String).replaceAll("\$", '');
+            total = total +
+                (double.parse(formattedPrice) * (e['numOfItems'] as int));
+          }
+        }
+      }
+      var orderResponse = await _orders.postOrder(total, 0, 1, 4, 1);
       setState(() {
         status = 'done';
       });
       print('status');
       print(status);
       // print(orderResponse);
+    }
+
+    validandoLocalizacao(double latitude, double logitude) async {
+      double latRestaurante = 0.0;
+      double longRestaurante = 0.0;
+      String? idCompany = '';
+      final prefs = await SharedPreferences.getInstance();
+      idCompany = prefs.getString('company');
+      if (idCompany != null) {
+        final response = await _companies.getCompany(idCompany);
+        latRestaurante = response['latitude'];
+        longRestaurante = response['longitude'];
+        var diferenca = GeolocatorPlatform.instance.distanceBetween(
+          latitude,
+          logitude,
+          latRestaurante,
+          longRestaurante,
+        );
+
+        return diferenca;
+      }
     }
 
     // Future<String> getProducts() async {
@@ -208,20 +232,20 @@ class _CheckoutCardState extends State<CheckoutCard> {
                       ),
                     ],
                   ),
-                  TextButton(
-                    // onPressed: () => status = 'done',
-                    onPressed: () => postOrder(),
-                    child: status == 'none'
-                        ? const Text(
-                            'Finalizar pedido',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
-                        : const CircularProgressIndicator(),
-                  ),
+                  // TextButton(
+                  //   // onPressed: () => status = 'done',
+                  //   onPressed: () => postOrder(),
+                  //   child: status == 'none'
+                  //       ? const Text(
+                  //           'Finalizar pedido',
+                  //           style: TextStyle(
+                  //             color: Colors.white,
+                  //             fontSize: 15.0,
+                  //             fontWeight: FontWeight.bold,
+                  //           ),
+                  //         )
+                  //       : const CircularProgressIndicator(),
+                  // ),
                 ],
               ),
             ),
