@@ -32,13 +32,14 @@ class _MenuBodyState extends State<MenuBody> {
   String testeCtrl = '';
   late Future<Map<String, dynamic>> company;
   final _categories = Categories();
-  int? _category;
+  // int? _category;
   final _products = Products();
   String getProductsStatus = 'loading';
   String getCategoriesStatus = 'loading';
 
   Future<Map<String, dynamic>> getCategories() async {
     final prefs = await SharedPreferences.getInstance();
+    final categoryPrefs = prefs.getInt('category');
     final companyPrefs = prefs.getString('company');
 
     if (companyPrefs != null) {
@@ -51,8 +52,9 @@ class _MenuBodyState extends State<MenuBody> {
         // setState(() {
         //   _category = response['categories'][0]['id_category'];
         // });
-        _category = response['categories'][0]['id_category'];
-        prefs.setInt('category', response['categories'][0]['id_category']);
+        if (categoryPrefs == null) {
+          prefs.setInt('category', response['categories'][0]['id_category']);
+        }
         return response;
       } else {
         return Future.error('Nenhuma categoria foi encontrada.');
@@ -64,15 +66,16 @@ class _MenuBodyState extends State<MenuBody> {
 
   Future<Map<String, dynamic>> getProducts() async {
     // getProductsStatus = 'loading';
+    print('getProducts==================================');
     getProductsStatus = 'loading';
     final prefs = await SharedPreferences.getInstance();
     final companyPrefs = prefs.getString('company');
     final categoryPrefs = prefs.getInt('category');
     int? selectedCategory;
 
-    if (companyPrefs == null || categoryPrefs == null) {
-      await getCategories();
-    }
+    // if (companyPrefs == null || categoryPrefs == null) {
+    //   await getCategories();
+    // }
 
     if (companyPrefs != null && categoryPrefs != null) {
       var companyJson = convert.jsonDecode(companyPrefs);
@@ -124,6 +127,7 @@ class _MenuBodyState extends State<MenuBody> {
     return Container(
       color: const Color(0xff181920),
       child: Column(
+        mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
@@ -152,89 +156,105 @@ class _MenuBodyState extends State<MenuBody> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin),
-            child: SizedBox(
-              height: 35,
-              child: FutureBuilder(
-                  future: getCategories(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      final Map<String, dynamic> data =
-                          snapshot.data as Map<String, dynamic>;
-                      final List<dynamic> categories = data['categories'];
-                      return SizedBox(
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: categories.length,
-                          itemBuilder: (context, index) => buildCategory(
-                              index,
-                              categories[index]['name'],
-                              categories[index]['id_category']),
-                        ),
-                      );
-                    } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                        widthFactor: 30,
-                        heightFactor: 30,
-                      );
-                    }
-                  }),
-            ),
-          ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
-              child: FutureBuilder(
-                future: getProducts(),
+            flex: 1,
+            child: FutureBuilder(
+                future: getCategories(),
                 builder: (context, snapshot) {
-                  if (!snapshot.hasData || getProductsStatus == 'loading') {
-                    print('NAO TEM DADOS');
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                      widthFactor: 30,
-                      heightFactor: 30,
-                    );
-                  }
-                  if (snapshot.hasError) {
-                    return const Text('Erro ao carregar os produtos.');
-                  }
                   if (snapshot.hasData) {
-                    print('ENTROU');
                     final Map<String, dynamic> data =
                         snapshot.data as Map<String, dynamic>;
-                    final List<dynamic> products = data['products'];
-                    return GridView.builder(
-                      itemCount: products.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: kDefaultPaddin,
-                        crossAxisSpacing: kDefaultPaddin,
-                        childAspectRatio: 0.75,
-                      ),
-                      itemBuilder: (context, index) {
-                        return ItemCard(
-                          ProductModel.fromMap(
-                            products[index] as Map<String, dynamic>,
+                    final List<dynamic> categories = data['categories'];
+                    return Padding(
+                      padding:
+                          const EdgeInsets.symmetric(vertical: kDefaultPaddin),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          SizedBox(
+                            height: 35,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: categories.length,
+                              itemBuilder: (context, index) => buildCategory(
+                                  index,
+                                  categories[index]['name'],
+                                  categories[index]['id_category']),
+                            ),
                           ),
-                          press: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return DetailsScreen2(
-                                    ProductModel.fromMap(
-                                      products[index] as Map<String, dynamic>,
-                                    ),
-                                  );
+                          const SizedBox(height: 10),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: kDefaultPaddin),
+                              child: FutureBuilder(
+                                future: getProducts(),
+                                builder: (context, snapshot) {
+                                  if (!snapshot.hasData ||
+                                      getProductsStatus == 'loading') {
+                                    print('NAO TEM DADOS');
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                      widthFactor: 30,
+                                      heightFactor: 30,
+                                    );
+                                  }
+                                  if (snapshot.hasError) {
+                                    return const Text(
+                                        'Erro ao carregar os produtos.');
+                                  }
+                                  if (snapshot.hasData) {
+                                    print('ENTROU');
+                                    final Map<String, dynamic> data =
+                                        snapshot.data as Map<String, dynamic>;
+                                    final List<dynamic> products =
+                                        data['products'];
+                                    return GridView.builder(
+                                      itemCount: products.length,
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        mainAxisSpacing: kDefaultPaddin,
+                                        crossAxisSpacing: kDefaultPaddin,
+                                        childAspectRatio: 0.75,
+                                      ),
+                                      itemBuilder: (context, index) {
+                                        return ItemCard(
+                                          ProductModel.fromMap(
+                                            products[index]
+                                                as Map<String, dynamic>,
+                                          ),
+                                          press: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) {
+                                                  return DetailsScreen2(
+                                                    ProductModel.fromMap(
+                                                      products[index] as Map<
+                                                          String, dynamic>,
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                      widthFactor: 30,
+                                      heightFactor: 30,
+                                    );
+                                  }
                                 },
                               ),
-                            );
-                          },
-                        );
-                      },
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   } else {
                     return const Center(
@@ -243,30 +263,84 @@ class _MenuBodyState extends State<MenuBody> {
                       heightFactor: 30,
                     );
                   }
-                },
-              ),
-            ),
+                }),
           ),
+          // Expanded(
+          //   child: Padding(
+          //     padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
+          //     child: FutureBuilder(
+          //       future: getProducts(),
+          //       builder: (context, snapshot) {
+          //         if (!snapshot.hasData || getProductsStatus == 'loading') {
+          //           print('NAO TEM DADOS');
+          //           return const Center(
+          //             child: CircularProgressIndicator(),
+          //             widthFactor: 30,
+          //             heightFactor: 30,
+          //           );
+          //         }
+          //         if (snapshot.hasError) {
+          //           return const Text('Erro ao carregar os produtos.');
+          //         }
+          //         if (snapshot.hasData) {
+          //           print('ENTROU');
+          //           final Map<String, dynamic> data =
+          //               snapshot.data as Map<String, dynamic>;
+          //           final List<dynamic> products = data['products'];
+          //           return GridView.builder(
+          //             itemCount: products.length,
+          //             gridDelegate:
+          //                 const SliverGridDelegateWithFixedCrossAxisCount(
+          //               crossAxisCount: 2,
+          //               mainAxisSpacing: kDefaultPaddin,
+          //               crossAxisSpacing: kDefaultPaddin,
+          //               childAspectRatio: 0.75,
+          //             ),
+          //             itemBuilder: (context, index) {
+          //               return ItemCard(
+          //                 ProductModel.fromMap(
+          //                   products[index] as Map<String, dynamic>,
+          //                 ),
+          //                 press: () {
+          //                   Navigator.push(
+          //                     context,
+          //                     MaterialPageRoute(
+          //                       builder: (context) {
+          //                         return DetailsScreen2(
+          //                           ProductModel.fromMap(
+          //                             products[index] as Map<String, dynamic>,
+          //                           ),
+          //                         );
+          //                       },
+          //                     ),
+          //                   );
+          //                 },
+          //               );
+          //             },
+          //           );
+          //         } else {
+          //           return const Center(
+          //             child: CircularProgressIndicator(),
+          //             widthFactor: 30,
+          //             heightFactor: 30,
+          //           );
+          //         }
+          //       },
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
   }
 
   Widget buildCategory(int index, String category, int idCategory) {
-    print(idCategory);
     return GestureDetector(
       onTap: () async {
         final prefs = await SharedPreferences.getInstance();
         prefs.setInt('category', idCategory);
-        _category = idCategory;
-        // setState(() => {getProductsStatus = 'ready'});
         setState(() {
           selectedIndex = index;
-          // getProductsStatus = 'loading';
-          // _category = idCategory;
-
-          // prefs.setInt('category', response['categories'][0]['id_category']);
-          // category = categories[index].toLowerCase();
         });
       },
       child: Padding(
