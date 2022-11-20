@@ -9,6 +9,7 @@ import './view/login.view.dart';
 import './view/qr_scan.view.dart';
 import './view/register.view.dart';
 import './view/menu.view.dart';
+import './view/pix.view.dart';
 import 'view/product_details/details_screen.dart';
 
 Future<void> main() async {
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         '/cart': (context) => CartScreen(),
         '/teste': (context) => DetailsScreen(),
         '/teste2': (context) => Teste(),
+        '/payment': (context) => Pix(),
       },
     );
   }

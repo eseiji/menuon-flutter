@@ -35,56 +35,114 @@ class _CheckoutCardState extends State<CheckoutCard> {
       return orderProducts as String;
     }
 
-    Future<void> postOrder() async {
-      print(status);
-      setState(() {
-        status = 'pending';
-      });
-      print(status);
-      double total = 0;
-      String formattedPrice;
-      final prefs = await SharedPreferences.getInstance();
-      var orderProducts = prefs.getString('order_products');
-      List<dynamic> orderProductsParsed =
-          convert.jsonDecode(orderProducts as String);
+    Future<Position> _determinePosition() async {
+      bool serviceEnabled;
+      LocationPermission permission;
 
-      for (var e in orderProductsParsed) {
-        {
-          if (e['unitPrice'] != null && e['numOfItems'] != null) {
-            formattedPrice = (e['unitPrice'] as String).replaceAll("\$", '');
-            total = total +
-                (double.parse(formattedPrice) * (e['numOfItems'] as int));
-          }
+      // Test if location services are enabled.
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        // Location services are not enabled don't continue
+        // accessing the position and request users of the
+        // App to enable the location services.
+        return Future.error('Location services are disabled.');
+      }
+
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          // Permissions are denied, next time you could try
+          // requesting permissions again (this is also where
+          // Android's shouldShowRequestPermissionRationale
+          // returned true. According to Android guidelines
+          // your App should show an explanatory UI now.
+          return Future.error('Location permissions are denied');
         }
       }
-      var orderResponse = await _orders.postOrder(total, 0, 1, 4, 1);
-      setState(() {
-        status = 'done';
-      });
-      print('status');
-      print(status);
-      // print(orderResponse);
+
+      if (permission == LocationPermission.deniedForever) {
+        // Permissions are denied forever, handle appropriately.
+        return Future.error(
+            'Location permissions are permanently denied, we cannot request permissions.');
+      }
+
+      // When we reach here, permissions are granted and we can
+      // continue accessing the position of the device.
+      return await Geolocator.getCurrentPosition();
     }
 
-    validandoLocalizacao(double latitude, double logitude) async {
+    validandoLocalizacao() async {
       double latRestaurante = 0.0;
       double longRestaurante = 0.0;
-      String? idCompany = '';
+      String? company = '';
+      Map<String, dynamic> parsedCompany;
       final prefs = await SharedPreferences.getInstance();
-      idCompany = prefs.getString('company');
-      if (idCompany != null) {
-        final response = await _companies.getCompany(idCompany);
-        latRestaurante = response['latitude'];
-        longRestaurante = response['longitude'];
+      company = prefs.getString('company');
+      if (company != null) {
+        parsedCompany = convert.jsonDecode(company);
+        var currentLoc = await _determinePosition();
+        var lat = currentLoc.latitude;
+        var long = currentLoc.longitude;
+        print('currentLoc');
+        final response =
+            await _companies.getCompany('${parsedCompany["id_company"]}');
+        latRestaurante = double.parse(response['latitude']);
+        longRestaurante = double.parse(response['longitude']);
         var diferenca = GeolocatorPlatform.instance.distanceBetween(
-          latitude,
-          logitude,
+          lat,
+          long,
           latRestaurante,
           longRestaurante,
         );
+        // var diferenca = GeolocatorPlatform.instance.distanceBetween(
+        //   -20.7975102,
+        //   -49.4003299,
+        //   -20.7975102,
+        //   -49.4003299,
+        // );
+
+        print('diferenca');
+        print(diferenca);
 
         return diferenca;
       }
+    }
+
+    Future<void> postOrder() async {
+      // print(status);
+      setState(() {
+        status = 'pending';
+      });
+      var diferenca = await validandoLocalizacao();
+      // print(status);
+      if (diferenca != null && diferenca < 100) {
+        double total = 0;
+        String formattedPrice;
+        final prefs = await SharedPreferences.getInstance();
+        var orderProducts = prefs.getString('order_products');
+        List<dynamic> orderProductsParsed =
+            convert.jsonDecode(orderProducts as String);
+
+        for (var e in orderProductsParsed) {
+          {
+            if (e['unitPrice'] != null && e['numOfItems'] != null) {
+              formattedPrice = (e['unitPrice'] as String).replaceAll("\$", '');
+              total = total +
+                  (double.parse(formattedPrice) * (e['numOfItems'] as int));
+            }
+          }
+        }
+        var orderResponse = await _orders.postOrder(total, 0, 1, 4, 1);
+        setState(() {
+          status = 'done';
+        });
+      } else {
+        print("VOCÊ NÃO ESTÁ NOI RESTAURANTE");
+      }
+      // print('status');
+      // print(status);
+      // print(orderResponse);
     }
 
     // Future<String> getProducts() async {
@@ -369,19 +427,20 @@ class DropdownButtonExample extends StatefulWidget {
 const List<String> list = <String>['Pix'];
 
 class _DropdownButtonExampleState extends State<DropdownButtonExample> {
-  String dropdownValue = list.first;
+  String? dropdownValue;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 50,
-      width: double.infinity,
+      // width: double.infinity,
       padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: DropdownButton<String>(
+        isExpanded: true,
         alignment: AlignmentDirectional.centerStart,
         value: dropdownValue,
         // icon: const Icon(Icons.arrow_downward),
@@ -389,9 +448,9 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
         hint: const Text(
           'Selecione o meio de pagamento',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontSize: 16,
-            fontWeight: FontWeight.bold,
+            // fontWeight: FontWeight.bold,
           ),
         ),
         style: const TextStyle(
@@ -405,22 +464,20 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
         onChanged: (String? value) {
           // This is called when the user selects an item.
           setState(() {
-            dropdownValue = value!;
+            dropdownValue = value ?? "";
           });
         },
-        selectedItemBuilder: (BuildContext context) {
-          return <String>['Pix'].map((String value) {
-            return Center(
-              child: Text(
-                dropdownValue,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                ),
-              ),
-            );
-          }).toList();
-        },
+        // selectedItemBuilder: (BuildContext context) {
+        //   return <String>['Pix'].map((String value) {
+        //     return Text(
+        //       dropdownValue,
+        //       style: const TextStyle(
+        //         color: Colors.black,
+        //         fontSize: 16,
+        //       ),
+        //     );
+        //   }).toList();
+        // },
         // selectedItemBuilder: list.map<Widget>((String value) {
         //   return Text(
         //     value,

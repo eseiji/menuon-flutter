@@ -53,7 +53,6 @@ class _MenuBodyState extends State<MenuBody> {
         // });
         _category = response['categories'][0]['id_category'];
         prefs.setInt('category', response['categories'][0]['id_category']);
-        // setState(() {});
         return response;
       } else {
         return Future.error('Nenhuma categoria foi encontrada.');
@@ -65,10 +64,15 @@ class _MenuBodyState extends State<MenuBody> {
 
   Future<Map<String, dynamic>> getProducts() async {
     // getProductsStatus = 'loading';
+    getProductsStatus = 'loading';
     final prefs = await SharedPreferences.getInstance();
     final companyPrefs = prefs.getString('company');
     final categoryPrefs = prefs.getInt('category');
     int? selectedCategory;
+
+    if (companyPrefs == null || categoryPrefs == null) {
+      await getCategories();
+    }
 
     if (companyPrefs != null && categoryPrefs != null) {
       var companyJson = convert.jsonDecode(companyPrefs);
@@ -84,15 +88,18 @@ class _MenuBodyState extends State<MenuBody> {
       // setState(() {
       //   getProductsStatus = 'ready';
       // });
-      print('response');
-      print(response['products']);
+      // print('response');
+      // print(response['products']);
       if (response['products'] != null) {
+        getProductsStatus = 'ready';
+
         return response;
       } else {
-        return Future.error('Nenhum produto foi encontrado.');
+        // return Future.error('Nenhum produto foi encontrado.');
+        throw Exception();
       }
     } else {
-      return Future.error('Nenhum produto foi encontrado.');
+      throw Exception();
     }
   }
 
@@ -182,7 +189,7 @@ class _MenuBodyState extends State<MenuBody> {
               child: FutureBuilder(
                 future: getProducts(),
                 builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
+                  if (!snapshot.hasData || getProductsStatus == 'loading') {
                     print('NAO TEM DADOS');
                     return const Center(
                       child: CircularProgressIndicator(),
@@ -255,7 +262,7 @@ class _MenuBodyState extends State<MenuBody> {
         // setState(() => {getProductsStatus = 'ready'});
         setState(() {
           selectedIndex = index;
-          getProductsStatus = 'loading';
+          // getProductsStatus = 'loading';
           // _category = idCategory;
 
           // prefs.setInt('category', response['categories'][0]['id_category']);
