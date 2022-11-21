@@ -17,8 +17,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   var formKey = GlobalKey<FormState>();
   var modalFormKey = GlobalKey<FormState>();
-  final firestore = FirebaseFirestore.instance;
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  // final firestore = FirebaseFirestore.instance;
+  // final FirebaseAuth auth = FirebaseAuth.instance;
   final _authentication = Authentication();
 
   String email = '';
@@ -28,6 +28,8 @@ class _LoginPageState extends State<LoginPage> {
 
   double? spaceBtw = 5;
   double? sizeBox = 50.0;
+
+  String _loginStatus = 'none';
 
   final kHintTextStyle = const TextStyle(
     color: Colors.white54,
@@ -81,6 +83,9 @@ class _LoginPageState extends State<LoginPage> {
 
   void login(BuildContext context) async {
     if (formKey.currentState!.validate()) {
+      setState(() {
+        _loginStatus = 'pending';
+      });
       formKey.currentState!.save();
       final response = await _authentication.login(email, senha);
       // var result = await auth.signInWithEmailAndPassword(
@@ -88,6 +93,9 @@ class _LoginPageState extends State<LoginPage> {
       //   password: senha,
       // );
       if (response['id_user'] != null) {
+        setState(() {
+          _loginStatus = 'done';
+        });
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('user', convert.jsonEncode(response));
         messageAlert('Login realizado com sucesso.');
@@ -98,23 +106,23 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void resetPassword(BuildContext context) async {
-    if (modalFormKey.currentState!.validate()) {
-      modalFormKey.currentState!.save();
+  // void resetPassword(BuildContext context) async {
+  //   if (modalFormKey.currentState!.validate()) {
+  //     modalFormKey.currentState!.save();
 
-      try {
-        var result = await auth.sendPasswordResetEmail(
-          email: email,
-        );
+  //     try {
+  //       var result = await auth.sendPasswordResetEmail(
+  //         email: email,
+  //       );
 
-        Navigator.pop(context);
+  //       Navigator.pop(context);
 
-        messageAlert('E-mail enviado.');
-      } on FirebaseAuthException catch (e) {
-        print(e);
-      }
-    }
-  }
+  //       messageAlert('E-mail enviado.');
+  //     } on FirebaseAuthException catch (e) {
+  //       print(e);
+  //     }
+  //   }
+  // }
 
   void messageAlert(String message) {
     print(message);
@@ -230,155 +238,187 @@ class _LoginPageState extends State<LoginPage> {
             ),
             child: TextButton(
               onPressed: () => login(context),
-              child: const Text(
-                'Entrar',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'OpenSans',
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildForgotPasswordBtn() {
-    return Container(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () {
-          showModalBottomSheet<void>(
-            backgroundColor: Colors.transparent,
-            // barrierColor: Colors.purple,
-            isScrollControlled: true,
-            context: context,
-            builder: (BuildContext context) {
-              return Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40.0,
-                  vertical: 50.0,
-                ),
-                // height: 200,
-                // height: MediaQuery.of(context).size.height * 0.5,
-                decoration: const BoxDecoration(
-                  color: Color(0xff181920),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10.0),
-                    topRight: Radius.circular(10.0),
-                  ),
-                ),
-                child: Form(
-                  key: modalFormKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      // const SizedBox(height: 30.0),
-                      Container(
-                        // padding: EdgeInsets.only(
-                        // bottom: MediaQuery.of(context).viewInsets.bottom),
-                        alignment: Alignment.centerLeft,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            // Text(d
-                            //   'Bem-vindo(a)',
-                            //   style: TextStyle(
-                            //     color: Colors.white,
-                            //     fontSize: 21,
-                            //     fontWeight: FontWeight.bold,
-                            //   ),
-                            // ),
-                            // SizedBox(height: 5),
-                            Text(
-                              'Recebe em seu e-mail, um link para recuperar a senha',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontStyle: FontStyle.normal,
-                              ),
+              child: _loginStatus == 'none'
+                  ? const Text(
+                      'Entrar',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'OpenSans',
+                      ),
+                    )
+                  : _loginStatus == 'done'
+                      ? Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100.0),
+                              color: const Color(0xFF5767FE),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black,
+                                  blurRadius: 1.0,
+                                )
+                              ],
                             ),
-                          ],
+                            width: 30,
+                            height: 30,
+                            child: const Icon(
+                              Icons.done,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      : Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2.5,
+                            ),
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).viewInsets.bottom),
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 10.0),
-                            _buildEmailFT(),
-                            const SizedBox(height: 40.0),
-                            _buildSendEmailResetPwdBtn(),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Center(
-                //   child: Column(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     mainAxisSize: MainAxisSize.min,
-                //     children: <Widget>[
-                //       const Text('Modal BottomSheet'),
-                //       ElevatedButton(
-                //         child: const Text('Close BottomSheet'),
-                //         onPressed: () => Navigator.pop(context),
-                //       )
-                //     ],
-                //   ),
-                // ),
-              );
-            },
-          );
-        },
-        child: const Text('Esqueceu a senha?',
-            style: TextStyle(
-              color: Colors.white70,
-              fontStyle: FontStyle.italic,
-              fontSize: 12.0,
-            )),
-      ),
-    );
-  }
-
-  Widget _buildSendEmailResetPwdBtn() {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              color: const Color(0xFF5767FE),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black,
-                  blurRadius: 15.0,
-                )
-              ],
-            ),
-            child: TextButton(
-              onPressed: () => resetPassword(context),
-              child: const Text(
-                'Recuperar senha',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'OpenSans',
-                ),
-              ),
             ),
           ),
         ),
       ],
     );
   }
+
+  // Widget _buildForgotPasswordBtn() {
+  //   return Container(
+  //     alignment: Alignment.centerRight,
+  //     child: TextButton(
+  //       onPressed: () {
+  //         showModalBottomSheet<void>(
+  //           backgroundColor: Colors.transparent,
+  //           // barrierColor: Colors.purple,
+  //           isScrollControlled: true,
+  //           context: context,
+  //           builder: (BuildContext context) {
+  //             return Container(
+  //               padding: const EdgeInsets.symmetric(
+  //                 horizontal: 40.0,
+  //                 vertical: 50.0,
+  //               ),
+  //               // height: 200,
+  //               // height: MediaQuery.of(context).size.height * 0.5,
+  //               decoration: const BoxDecoration(
+  //                 color: Color(0xff181920),
+  //                 borderRadius: BorderRadius.only(
+  //                   topLeft: Radius.circular(10.0),
+  //                   topRight: Radius.circular(10.0),
+  //                 ),
+  //               ),
+  //               child: Form(
+  //                 key: modalFormKey,
+  //                 child: Column(
+  //                   mainAxisSize: MainAxisSize.min,
+  //                   mainAxisAlignment: MainAxisAlignment.center,
+  //                   children: <Widget>[
+  //                     // const SizedBox(height: 30.0),
+  //                     Container(
+  //                       // padding: EdgeInsets.only(
+  //                       // bottom: MediaQuery.of(context).viewInsets.bottom),
+  //                       alignment: Alignment.centerLeft,
+  //                       child: Column(
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         mainAxisAlignment: MainAxisAlignment.center,
+  //                         children: const [
+  //                           // Text(d
+  //                           //   'Bem-vindo(a)',
+  //                           //   style: TextStyle(
+  //                           //     color: Colors.white,
+  //                           //     fontSize: 21,
+  //                           //     fontWeight: FontWeight.bold,
+  //                           //   ),
+  //                           // ),
+  //                           // SizedBox(height: 5),
+  //                           Text(
+  //                             'Recebe em seu e-mail, um link para recuperar a senha',
+  //                             style: TextStyle(
+  //                               color: Colors.white,
+  //                               fontStyle: FontStyle.normal,
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     Padding(
+  //                       padding: EdgeInsets.only(
+  //                           bottom: MediaQuery.of(context).viewInsets.bottom),
+  //                       child: Column(
+  //                         children: [
+  //                           const SizedBox(height: 10.0),
+  //                           _buildEmailFT(),
+  //                           // const SizedBox(height: 40.0),
+  //                           // _buildSendEmailResetPwdBtn(),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //               // Center(
+  //               //   child: Column(
+  //               //     mainAxisAlignment: MainAxisAlignment.center,
+  //               //     mainAxisSize: MainAxisSize.min,
+  //               //     children: <Widget>[
+  //               //       const Text('Modal BottomSheet'),
+  //               //       ElevatedButton(
+  //               //         child: const Text('Close BottomSheet'),
+  //               //         onPressed: () => Navigator.pop(context),
+  //               //       )
+  //               //     ],
+  //               //   ),
+  //               // ),
+  //             );
+  //           },
+  //         );
+  //       },
+  //       child: const Text('Esqueceu a senha?',
+  //           style: TextStyle(
+  //             color: Colors.white70,
+  //             fontStyle: FontStyle.italic,
+  //             fontSize: 12.0,
+  //           )),
+  //     ),
+  //   );
+  // }
+
+  // Widget _buildSendEmailResetPwdBtn() {
+  //   return Row(
+  //     children: [
+  //       Expanded(
+  //         child: Container(
+  //           decoration: BoxDecoration(
+  //             borderRadius: BorderRadius.circular(10.0),
+  //             color: const Color(0xFF5767FE),
+  //             boxShadow: const [
+  //               BoxShadow(
+  //                 color: Colors.black,
+  //                 blurRadius: 15.0,
+  //               )
+  //             ],
+  //           ),
+  //           child: TextButton(
+  //             onPressed: () => resetPassword(context),
+  //             child: const Text(
+  //               'Recuperar senha',
+  //               style: TextStyle(
+  //                 color: Colors.white,
+  //                 fontSize: 18.0,
+  //                 fontWeight: FontWeight.bold,
+  //                 fontFamily: 'OpenSans',
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _buildSignupBtn() {
     return GestureDetector(
@@ -492,7 +532,7 @@ class _LoginPageState extends State<LoginPage> {
                         _buildEmailFT(),
                         const SizedBox(height: 10.0),
                         _buildPasswordFT(),
-                        _buildForgotPasswordBtn(),
+                        // _buildForgotPasswordBtn(),
                         const SizedBox(height: 40.0),
                         _buildLoginBtn(),
                         const SizedBox(height: 40.0),

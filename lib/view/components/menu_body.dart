@@ -1,16 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:menu_on/view/details/details-screen.dart';
-// import 'package:shop_app/constants.dart';
-// import 'package:shop_app/models/Product.dart';
-// import 'package:shop_app/screens/details/details_screen.dart';
-// import '../../models/ProductMenu.dart';
 
 import '../../constants.dart';
 import '../../models/ProductTeste.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import '../product_detail/details_screen.dart';
-// import 'categories.dart';
 import 'category_item.dart';
 import 'item_card2.dart';
 import 'dart:convert' as convert;
@@ -25,14 +19,9 @@ class MenuBody extends StatefulWidget {
 }
 
 class _MenuBodyState extends State<MenuBody> {
-  // FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final firestore = FirebaseFirestore.instance;
-
-  // final testeCtrl = TextEditingController();
   String testeCtrl = '';
   late Future<Map<String, dynamic>> company;
   final _categories = Categories();
-  // int? _category;
   final _products = Products();
   String getProductsStatus = 'loading';
   String getCategoriesStatus = 'loading';
@@ -65,35 +54,24 @@ class _MenuBodyState extends State<MenuBody> {
   }
 
   Future<Map<String, dynamic>> getProducts() async {
-    // getProductsStatus = 'loading';
-    print('getProducts==================================');
+    // setState(() {
+    //   getProductsStatus = 'loading';
+    // });
     getProductsStatus = 'loading';
     final prefs = await SharedPreferences.getInstance();
     final companyPrefs = prefs.getString('company');
     final categoryPrefs = prefs.getInt('category');
     int? selectedCategory;
 
-    // if (companyPrefs == null || categoryPrefs == null) {
-    //   await getCategories();
-    // }
-
     if (companyPrefs != null && categoryPrefs != null) {
       var companyJson = convert.jsonDecode(companyPrefs);
-      // if (_category != 0) {
-      //   selectedCategory = _category;
-      // } else {
-      //   selectedCategory = categoryPrefs;
-      // }
       selectedCategory = categoryPrefs;
       final response = await _products.getProducts(
           companyJson['id_company'], selectedCategory);
-
-      // setState(() {
-      //   getProductsStatus = 'ready';
-      // });
-      // print('response');
-      // print(response['products']);
       if (response['products'] != null) {
+        // setState(() {
+        //   getProductsStatus = 'ready';
+        // });
         getProductsStatus = 'ready';
 
         return response;
@@ -106,21 +84,7 @@ class _MenuBodyState extends State<MenuBody> {
     }
   }
 
-  // void felipe(String carlos) {
-  //   print(carlos);
-  //   setState(() {
-  //     testeCtrl = carlos;
-  //   });
-  // }
-
-  // List<String> categories = ["Entradas", "Bebidas", "Sobremesas"];
   int selectedIndex = 0;
-  // String category = 'entradas';
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -194,7 +158,10 @@ class _MenuBodyState extends State<MenuBody> {
                                       getProductsStatus == 'loading') {
                                     print('NAO TEM DADOS');
                                     return const Center(
-                                      child: CircularProgressIndicator(),
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2.5,
+                                      ),
                                       widthFactor: 30,
                                       heightFactor: 30,
                                     );

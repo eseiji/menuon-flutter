@@ -11,20 +11,21 @@ class ItemCard extends StatelessWidget {
   ItemCard(this.model, {this.press});
 
   String formatSize(dynamic size) {
-    String result;
-    if (num.tryParse('$size') != null) {
-      if (size >= 1000 && size > 0) {
-        size = (size / 1000).round();
-        result = "${model.nome} - ${size}L";
-      } else if (size > 0 && size < 1000) {
-        result = "${model.nome} - ${model.tamanho}ml";
-      } else {
-        result = model.nome;
-      }
-    } else {
-      result = "${model.nome} - ${model.tamanho}";
-    }
-    return result;
+    // String result;
+    // if (num.tryParse('$size') != null) {
+    //   if (size >= 1000 && size > 0) {
+    //     size = (size / 1000).round();
+    //     result = "${model.nome} - ${size}L";
+    //   } else if (size > 0 && size < 1000) {
+    //     result = "${model.nome} - ${model.tamanho}ml";
+    //   } else {
+    //     result = model.nome;
+    //   }
+    // } else {
+    //   result = "${model.nome} - ${model.tamanho}";
+    // }
+    // return result;
+    return model.nome;
   }
 
   @override
@@ -47,7 +48,7 @@ class ItemCard extends StatelessWidget {
                 // height: 180,
                 // width: 160,
                 decoration: const BoxDecoration(
-                  color: Colors.white70,
+                  color: Colors.white,
                   // color: product!.color,
                   // borderRadius: BorderRadius.circular(16),
                   borderRadius: BorderRadius.only(
@@ -56,8 +57,11 @@ class ItemCard extends StatelessWidget {
                   ),
                 ),
                 child: Center(
-                  child: Image.network("https://${model.imagemUrl}",
-                      fit: BoxFit.fitHeight),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.network("https://${model.imagemUrl}",
+                        fit: BoxFit.fitHeight),
+                  ),
                 ),
               ),
             ),

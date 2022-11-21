@@ -10,7 +10,7 @@ class ProductModel {
 
   ProductModel.fromMap(Map<String, dynamic> map) {
     // imagemUrl = 'https://ibb.co/njkYvVJ';
-    // imagemUrl = map['imagemUrl'] != null ? map['imagemUrl'] : null;
+    imagemUrl = map['image_url'];
     idProduct = map['id_product'];
     nome = map['name'];
     descricao = map['description'];

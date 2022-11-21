@@ -21,9 +21,9 @@ class Body2 extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
-          // ItemImage(
-          //   imgSrc: model.imagemUrl,
-          // ),
+          ItemImage(
+            imgSrc: model.imagemUrl,
+          ),
           Expanded(
             child: ItemInfo(
               idProduct: model.idProduct,
@@ -31,7 +31,8 @@ class Body2 extends StatelessWidget {
               nome: model.nome,
               preco: model.preco,
               descricao: model.descricao,
-              tamanho: model.tamanho,
+              // imagemUrl: model.imagemUrl,
+              // tamanho: model.tamanho,
             ),
           ),
         ],
@@ -46,7 +47,7 @@ class ItemInfo extends StatefulWidget {
   final String preco;
   final String nome;
   final String descricao;
-  final dynamic tamanho;
+  // final dynamic tamanho;
   const ItemInfo({
     Key? key,
     required this.idProduct,
@@ -54,7 +55,7 @@ class ItemInfo extends StatefulWidget {
     required this.nome,
     required this.preco,
     required this.descricao,
-    required this.tamanho,
+    // required this.tamanho,
   }) : super(key: key);
 
   @override
@@ -66,6 +67,18 @@ class _ItemInfoState extends State<ItemInfo> {
   int numOfItems = 1;
   List<Map<String, dynamic>> product = [];
   String status = 'none';
+
+  Future<String> getCompany() async {
+    final prefs = await SharedPreferences.getInstance();
+    final companyPrefs = prefs.getString('company');
+
+    if (companyPrefs != null) {
+      var companyJson = convert.jsonDecode(companyPrefs);
+      return companyJson['name'];
+    } else {
+      return Future.error('Nenhum produto foi encontrado.');
+    }
+  }
 
   void addToCart() async {
     setState(() {
@@ -118,11 +131,23 @@ class _ItemInfoState extends State<ItemInfo> {
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          shopeName(widget.company),
+          FutureBuilder(
+              future: getCompany(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return shopeName(snapshot.data);
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                    widthFactor: 30,
+                    heightFactor: 30,
+                  );
+                }
+              }),
           TitlePriceRating(
             nome: widget.nome,
             preco: widget.preco,
-            tamanho: widget.tamanho,
+            // tamanho: widget.tamanho,
           ),
           Align(
             alignment: Alignment.centerLeft,

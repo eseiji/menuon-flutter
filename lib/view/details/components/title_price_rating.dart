@@ -3,30 +3,30 @@ import 'package:flutter/material.dart';
 class TitlePriceRating extends StatelessWidget {
   final String preco;
   final String nome;
-  final dynamic tamanho;
+  // final dynamic tamanho;
   const TitlePriceRating({
     Key? key,
     required this.preco,
     required this.nome,
-    required this.tamanho,
+    // required this.tamanho,
   }) : super(key: key);
 
-  String formatSize(dynamic size) {
-    String result;
-    if (num.tryParse('$size') != null) {
-      if (size >= 1000 && size > 0) {
-        size = (size / 1000).round();
-        result = "${size}L";
-      } else if (size > 0 && size < 1000) {
-        result = "${tamanho}ml";
-      } else {
-        result = nome;
-      }
-    } else {
-      result = "$tamanho";
-    }
-    return result;
-  }
+  // String formatSize(dynamic size) {
+  //   String result;
+  //   if (num.tryParse('$size') != null) {
+  //     if (size >= 1000 && size > 0) {
+  //       size = (size / 1000).round();
+  //       result = "${size}L";
+  //     } else if (size > 0 && size < 1000) {
+  //       result = "${tamanho}ml";
+  //     } else {
+  //       result = nome;
+  //     }
+  //   } else {
+  //     result = "$tamanho";
+  //   }
+  //   return result;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -49,17 +49,17 @@ class TitlePriceRating extends StatelessWidget {
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    formatSize(tamanho),
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.5),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 10,
-                    ),
-                  ),
-                ),
+                // Align(
+                //   alignment: Alignment.centerLeft,
+                //   child: Text(
+                //     formatSize(tamanho),
+                //     style: TextStyle(
+                //       color: Colors.white.withOpacity(0.5),
+                //       fontWeight: FontWeight.bold,
+                //       fontSize: 10,
+                //     ),
+                //   ),
+                // ),
                 const SizedBox(height: 10),
               ],
             ),
@@ -77,7 +77,7 @@ class TitlePriceRating extends StatelessWidget {
         alignment: Alignment.topCenter,
         padding: const EdgeInsets.symmetric(vertical: 15),
         height: 66,
-        width: 65,
+        width: 75,
         color: Color(0xFF5767FE),
         // color: Colors.white,
         child: Text(
@@ -85,7 +85,7 @@ class TitlePriceRating extends StatelessWidget {
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: 14,
           ),
         ),
       ),
