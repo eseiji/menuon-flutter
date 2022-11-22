@@ -25,6 +25,8 @@ class _MenuBodyState extends State<MenuBody> {
   final _products = Products();
   String getProductsStatus = 'loading';
   String getCategoriesStatus = 'loading';
+  Map<String, dynamic> sortedProducts = {};
+  String selectedKey = '';
 
   Future<Map<String, dynamic>> getCategories() async {
     final prefs = await SharedPreferences.getInstance();
@@ -67,13 +69,34 @@ class _MenuBodyState extends State<MenuBody> {
       var companyJson = convert.jsonDecode(companyPrefs);
       selectedCategory = categoryPrefs;
       final response = await _products.getProducts(
-          companyJson['id_company'], selectedCategory);
+        companyJson['id_company'],
+        selectedCategory,
+      );
       if (response['products'] != null) {
         // setState(() {
         //   getProductsStatus = 'ready';
         // });
-        getProductsStatus = 'ready';
 
+        // List<Map<String, dynamic>> sim =
+        // (response['products'] as List<dynamic>).where((element) =>
+        //     (element['name'] as String).toLowerCase().contains('l'));
+
+        // sort2(response);
+        // sortedProducts = response;
+        // sortedProducts['products'].sort((a, b) {
+        //   String nameA = a['name'];
+        //   String nameB = b['name'];
+        //   int intA = nameA.codeUnitAt(0);
+        //   int intB = nameB.codeUnitAt(0);
+        //   print(nameA);
+        //   print(intA);
+        //   print(nameB);
+        //   print(intB);
+        //   return intA.compareTo(intB);
+        // });
+        // print(sortedProducts);
+        getProductsStatus = 'ready';
+        // return sortedProducts;
         return response;
       } else {
         // return Future.error('Nenhum produto foi encontrado.');
@@ -82,6 +105,36 @@ class _MenuBodyState extends State<MenuBody> {
     } else {
       throw Exception();
     }
+  }
+
+  void sort2(String key) {
+    setState(() {
+      selectedKey = key;
+    });
+    // products['products'].forEach((value) => print(value['name']));
+    // products['products'].sort((a, b) {
+    //   String nameA = a['name'];
+    //   String nameB = b['name'];
+    //   int intA = nameA.codeUnitAt(0);
+    //   int intB = nameB.codeUnitAt(0);
+    //   print(nameA);
+    //   print(intA);
+    //   print(nameB);
+    //   print(intB);
+    //   return intA.compareTo(intB);
+    // });
+    // products['products'].sort(
+    //   (a, b) => a['name'].codeUnitAt(0).compareTo(
+    //         b['name'].codeUnitAt(0),
+    //       ),
+    // );
+    // .sort(
+    //     (a, b) => a['name'].codeUnitAt(0).compareTo(b['name'].codeUnitAt(0)));
+//     final numbers = <String>['carne', 'dado', 'abelha'];
+// // Sort from shortest to longest.
+//     numbers.sort((a, b) => a.codeUnitAt(0).compareTo(b.codeUnitAt(0)));
+//     print('sort2');
+//     print(numbers);
   }
 
   int selectedIndex = 0;
@@ -104,8 +157,8 @@ class _MenuBodyState extends State<MenuBody> {
               color: const Color(0xFF252A34),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const TextField(
-              // onChanged: (value) => felipe(value),
+            child: TextField(
+              onChanged: (value) => sort2(value),
               style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 border: InputBorder.none,
@@ -141,9 +194,10 @@ class _MenuBodyState extends State<MenuBody> {
                               scrollDirection: Axis.horizontal,
                               itemCount: categories.length,
                               itemBuilder: (context, index) => buildCategory(
-                                  index,
-                                  categories[index]['name'],
-                                  categories[index]['id_category']),
+                                index,
+                                categories[index]['name'],
+                                categories[index]['id_category'],
+                              ),
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -174,8 +228,15 @@ class _MenuBodyState extends State<MenuBody> {
                                     print('ENTROU');
                                     final Map<String, dynamic> data =
                                         snapshot.data as Map<String, dynamic>;
+                                    // final List<dynamic> products =
+                                    //     data['products'];
                                     final List<dynamic> products =
-                                        data['products'];
+                                        (data['products'] as List<dynamic>)
+                                            .where((element) =>
+                                                (element['name'] as String)
+                                                    .toLowerCase()
+                                                    .contains(selectedKey))
+                                            .toList();
                                     return GridView.builder(
                                       itemCount: products.length,
                                       gridDelegate:

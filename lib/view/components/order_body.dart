@@ -61,6 +61,7 @@ class _BodyState extends State<Body> {
                       onDismissed: (direction) {
                         setState(() {
                           demoCarts.removeAt(index);
+                          print('REMOVER DO CARRINHO');
                         });
                       },
                       background: Container(

@@ -119,10 +119,6 @@ class _CheckoutCardState extends State<CheckoutCard> {
             'Sua localização atual não está de acordo com a localização do restaurante.',
           ),
           actions: <Widget>[
-            // TextButton(
-            //   onPressed: () => Navigator.pop(context, 'Cancel'),
-            //   child: const Text('Cancel'),
-            // ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context, 'OK');
@@ -135,31 +131,8 @@ class _CheckoutCardState extends State<CheckoutCard> {
           ],
         ),
       );
-      // snackbarKey.currentState?.showSnackBar(
-      //   SnackBar(
-      //     backgroundColor: Colors.red,
-      //     content: Container(height: 300, child: Text(message)),
-      //   ),
-      // );
-      // final SnackBar snackBar =
-      //     SnackBar(content: Text("your snackbar message"));
-      // snackbarKey.currentState?.showSnackBar(snackBar);
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     backgroundColor: Colors.red,
-      //     content: Container(height: 300, child: Text(message)),
-      //   ),
-      // );
-      // final scaffold = Scaffold.of(context);
-      // scaffold.showSnackBar(
-      //   SnackBar(
-      //     content: const Text('Updating..'),
-      //   ),
-      // );
     }
 
-    final GlobalKey<ScaffoldState> _scaffoldKey =
-        new GlobalKey<ScaffoldState>();
     Future<void> postOrder() async {
       setState(() {
         status = 'pending';

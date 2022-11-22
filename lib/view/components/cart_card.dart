@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:menu_on/services/products.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
+
+import '../../models/ProductTeste.dart';
 /* import 'package:shop_app/models/Cart.dart'; */
 
 /* import '../../../constants.dart'; */
@@ -58,12 +60,17 @@ class _CartCardState extends State<CartCard> {
                       child: AspectRatio(
                         aspectRatio: 1,
                         child: Container(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF5F6F9),
+                            // color: const Color(0xFFF5F6F9),
                             borderRadius: BorderRadius.circular(15),
                           ),
-                          // child: Image.asset(cart.product.images[0]),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              "https://${data['image_url']}",
+                            ),
+                          ),
                         ),
                       ),
                     ),
