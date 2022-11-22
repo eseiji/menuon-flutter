@@ -10,6 +10,8 @@ import './view/qr_scan.view.dart';
 import './view/register.view.dart';
 import './view/menu.view.dart';
 import './view/pix.view.dart';
+// import 'globals.dart';
+import 'package:menu_on/globals.dart';
 import 'view/product_details/details_screen.dart';
 
 Future<void> main() async {
@@ -27,6 +29,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       enableLog: true,
       title: 'Menu ON',
+      scaffoldMessengerKey: snackbarKey,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,

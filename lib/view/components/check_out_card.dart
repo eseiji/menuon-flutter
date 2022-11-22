@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:menu_on/globals.dart';
 import 'package:menu_on/models/ProductTeste.dart';
 import 'package:menu_on/services/companies.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -109,8 +110,57 @@ class _CheckoutCardState extends State<CheckoutCard> {
       }
     }
 
+    void messageAlert(String message) {
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Erro de localização'),
+          content: const Text(
+            'Sua localização atual não está de acordo com a localização do restaurante.',
+          ),
+          actions: <Widget>[
+            // TextButton(
+            //   onPressed: () => Navigator.pop(context, 'Cancel'),
+            //   child: const Text('Cancel'),
+            // ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, 'OK');
+                setState(() {
+                  status = 'none';
+                });
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+      // snackbarKey.currentState?.showSnackBar(
+      //   SnackBar(
+      //     backgroundColor: Colors.red,
+      //     content: Container(height: 300, child: Text(message)),
+      //   ),
+      // );
+      // final SnackBar snackBar =
+      //     SnackBar(content: Text("your snackbar message"));
+      // snackbarKey.currentState?.showSnackBar(snackBar);
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     backgroundColor: Colors.red,
+      //     content: Container(height: 300, child: Text(message)),
+      //   ),
+      // );
+      // final scaffold = Scaffold.of(context);
+      // scaffold.showSnackBar(
+      //   SnackBar(
+      //     content: const Text('Updating..'),
+      //   ),
+      // );
+    }
+
+    final GlobalKey<ScaffoldState> _scaffoldKey =
+        new GlobalKey<ScaffoldState>();
     Future<void> postOrder() async {
-      // print(status);
       setState(() {
         status = 'pending';
       });
@@ -138,11 +188,14 @@ class _CheckoutCardState extends State<CheckoutCard> {
           status = 'done';
         });
       } else {
-        print("VOCÊ NÃO ESTÁ NOI RESTAURANTE");
+        // _scaffoldKey.currentState?.showSnackBar(SnackBar(
+        //   content: Text(
+        //     'Welcome',
+        //   ),
+        //   duration: Duration(seconds: 2),
+        // ));
+        messageAlert("Sua localização não está de acordo com a do restaurante");
       }
-      // print('status');
-      // print(status);
-      // print(orderResponse);
     }
 
     // Future<String> getProducts() async {
