@@ -36,6 +36,8 @@ class _CartCardState extends State<CartCard> {
     }
   }
 
+  // caso tenha usuário ou company na SharedPreferences, ir para o menu direto
+
   // final Cart cart;
   @override
   Widget build(BuildContext context) {

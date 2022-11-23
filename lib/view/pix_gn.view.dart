@@ -36,7 +36,7 @@ class _PixChargeViewState extends State<PixChargeView> {
 
     Map<String, dynamic> body = {
       "calendario": {
-        "expiracao": int.parse("2022-12-18"),
+        "expiracao": int.parse("3600"),
       },
       "valor": {
         "original": int.parse("10000"),
@@ -45,10 +45,12 @@ class _PixChargeViewState extends State<PixChargeView> {
     };
 
     gn.call("pixCreateImmediateCharge", body: body).then((value) {
-      gn.call("pixGenerateQRCode", params: {"id": value['loc']['id']}).then(
-          (value) {
-        setState(() {});
-      });
+      // gn.call("pixGenerateQRCode", params: {"id": value['loc']['id']}).then(
+      //   (value) {
+      //     setState(() {});
+      //   },
+      // );
+      print(value);
     }).catchError((onError) => print(onError));
   }
 }

@@ -1,6 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:gerencianet/gerencianet.dart';
 import 'package:menu_on/globals.dart';
 import 'package:menu_on/models/ProductTeste.dart';
+import 'package:menu_on/optons.dart';
 import 'package:menu_on/services/companies.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:menu_on/services/orders.dart';
@@ -28,6 +32,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
   String status = 'none';
   final _orders = Orders();
   final _companies = Companies();
+  Uint8List _byteImage = Uint8List(0);
   Widget build(BuildContext context) {
     Future<String> getOrderProducts() async {
       final prefs = await SharedPreferences.getInstance();
@@ -133,40 +138,64 @@ class _CheckoutCardState extends State<CheckoutCard> {
       );
     }
 
+    Widget _qrCode() {
+      return Image.memory(_byteImage.buffer.asUint8List());
+    }
+
+    void _createCharge() {
+      Gerencianet gn = Gerencianet(OPTIONS);
+
+      Map<String, dynamic> body = {
+        "calendario": {
+          "expiracao": int.parse("3600"),
+        },
+        "valor": {
+          "original": "100.00",
+        },
+        "chave": "9132e2ec-b7b2-45c0-8edc-8648b1051bc2",
+      };
+
+      gn.call("pixCreateImmediateCharge", body: body).then((value) {
+        gn.call("pixGenerateQRCode", params: {"id": value['loc']['id']}).then(
+          (value) {
+            setState(() {
+              this._byteImage = convert.Base64Decoder()
+                  .convert(value['imagemQrcode'].split(',').last);
+            });
+          },
+        );
+        print(value);
+      }).catchError((onError) => print(onError));
+    }
+
     Future<void> postOrder() async {
       setState(() {
         status = 'pending';
       });
       var diferenca = await validandoLocalizacao();
-      // print(status);
       if (diferenca != null && diferenca < 100) {
-        double total = 0;
-        String formattedPrice;
-        final prefs = await SharedPreferences.getInstance();
-        var orderProducts = prefs.getString('order_products');
-        List<dynamic> orderProductsParsed =
-            convert.jsonDecode(orderProducts as String);
+        _createCharge();
+        // double total = 0;
+        // String formattedPrice;
+        // final prefs = await SharedPreferences.getInstance();
+        // var orderProducts = prefs.getString('order_products');
+        // List<dynamic> orderProductsParsed =
+        //     convert.jsonDecode(orderProducts as String);
 
-        for (var e in orderProductsParsed) {
-          {
-            if (e['unitPrice'] != null && e['numOfItems'] != null) {
-              formattedPrice = (e['unitPrice'] as String).replaceAll("\$", '');
-              total = total +
-                  (double.parse(formattedPrice) * (e['numOfItems'] as int));
-            }
-          }
-        }
-        var orderResponse = await _orders.postOrder(total, 0, 1, 4, 1);
+        // for (var e in orderProductsParsed) {
+        //   {
+        //     if (e['unitPrice'] != null && e['numOfItems'] != null) {
+        //       formattedPrice = (e['unitPrice'] as String).replaceAll("\$", '');
+        //       total = total +
+        //           (double.parse(formattedPrice) * (e['numOfItems'] as int));
+        //     }
+        //   }
+        // }
+        // var orderResponse = await _orders.postOrder(total, 0, 1, 4, 1);
         setState(() {
           status = 'done';
         });
       } else {
-        // _scaffoldKey.currentState?.showSnackBar(SnackBar(
-        //   content: Text(
-        //     'Welcome',
-        //   ),
-        //   duration: Duration(seconds: 2),
-        // ));
         messageAlert("Sua localização não está de acordo com a do restaurante");
       }
     }
@@ -316,6 +345,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
                       ),
                     ],
                   ),
+                  _byteImage != null ? _qrCode() : Container(),
                   // TextButton(
                   //   // onPressed: () => status = 'done',
                   //   onPressed: () => postOrder(),
