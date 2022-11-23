@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gerencianet/gerencianet.dart';
 import 'package:menu_on/globals.dart';
 import 'package:menu_on/models/ProductTeste.dart';
-import 'package:menu_on/optons.dart';
+import 'package:menu_on/options.dart';
 import 'package:menu_on/services/companies.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:menu_on/services/orders.dart';

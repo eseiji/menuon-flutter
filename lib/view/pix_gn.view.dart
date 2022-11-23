@@ -4,7 +4,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:gerencianet/gerencianet.dart';
 
-import '../optons.dart';
+import '../options.dart';
 
 class PixChargeView extends StatefulWidget {
   const PixChargeView({Key? key}) : super(key: key);
