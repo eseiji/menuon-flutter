@@ -150,7 +150,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
           "expiracao": int.parse("3600"),
         },
         "valor": {
-          "original": "100.00",
+          "original": "0.01",
         },
         "chave": "9132e2ec-b7b2-45c0-8edc-8648b1051bc2",
       };
@@ -333,7 +333,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
                           onPressed: () => postOrder(),
                           child: status == 'none'
                               ? const Text(
-                                  'Finalizar pedido',
+                                  'Realizar pedido',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 15.0,

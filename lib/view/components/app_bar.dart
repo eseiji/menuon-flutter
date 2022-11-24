@@ -35,38 +35,39 @@ AppBar appBar(context) {
     elevation: 2,
     centerTitle: true,
     title: FutureBuilder(
-        future: getCompany(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final String company = snapshot.data as String;
-            print(company);
-            return RichText(
-              text: TextSpan(
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-                children: [
-                  TextSpan(
-                    text: company,
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      // color: Color(t),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 19,
-                    ),
-                  )
-                ],
+      future: getCompany(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final String company = snapshot.data as String;
+          print(company);
+          return RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
               ),
-            );
-          } else {
-            return Text('A Companhia não foi encontrada.');
-          }
-        }),
+              children: [
+                TextSpan(
+                  text: company,
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    // color: Color(t),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 19,
+                  ),
+                )
+              ],
+            ),
+          );
+        } else {
+          return Text('A Companhia não foi encontrada.');
+        }
+      },
+    ),
     actions: [
-      IconButton(
-        onPressed: () => signout(context),
-        icon: Icon(Icons.logout, size: 20),
-      ),
+      // IconButton(
+      //   onPressed: () => signout(context),
+      //   icon: Icon(Icons.logout, size: 20),
+      // ),
       IconButton(
         onPressed: () => Get.toNamed(
           '/cart',

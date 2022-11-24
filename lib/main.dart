@@ -5,6 +5,7 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:menu_on/view/components/teste.dart';
 import 'package:menu_on/view/order.view.dart';
+import 'package:menu_on/view/order_history.view.dart';
 import './view/login.view.dart';
 import './view/qr_scan.view.dart';
 import './view/register.view.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
         '/teste': (context) => DetailsScreen(),
         '/teste2': (context) => Teste(),
         '/payment': (context) => Pix(),
+        '/order_history': (context) => const OrderHistoryView(),
       },
     );
   }

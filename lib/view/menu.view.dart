@@ -71,37 +71,6 @@ class _MenuPageState extends State<MenuPage> {
     ],
   );
 
-  // void main() async {
-  //   company = await getCompany();
-  //   color = await buscarCorPersonalizada();
-  // }
-
-  // void getCompany() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   print('JA PASSOU');
-  //   final arguments = (ModalRoute.of(context)?.settings.arguments ??
-  //       <String, dynamic>{}) as Map;
-
-  //   final companyFromSharedPref = prefs.getString('company');
-
-  //   if (arguments['company'] != null) {
-  //     company = arguments['company'];
-  //   } else {
-  //     company = companyFromSharedPref!;
-  //   }
-  //   buscarCorPersonalizada();
-  // }
-
-  // Future<String> buscarCorPersonalizada(String company) async {
-  //   var collection = FirebaseFirestore.instance.collection('cardapio');
-  //   var docSnapshot = await collection.doc(company).get();
-  //   if (docSnapshot.exists) {
-  //     Map<String, dynamic>? data = docSnapshot.data();
-  //     color = data?['corPersonalizada'];
-  //   }
-  //   return color;
-  // }
-
   // GET PRODUCTS & GET CATEGORIES ======================================================================================================
 
   Future<String> getCategories() async {
@@ -121,42 +90,41 @@ class _MenuPageState extends State<MenuPage> {
     } else {
       return 'company';
     }
-
-    // if (arguments['company'] != null) {
-    //   company = arguments['company'];
-    // } else if (companyFromSharedPref != null) {
-    //   company = companyFromSharedPref;
-    // } else {
-    //   await auth.signOut();
-    // }
-    // return company;
   }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   // getCompany();
-  //   company = getCompany();
-  //   // final company = getCompany();
-  //   // final color = buscarCorPersonalizada();
-  //   print("EXECUTANDO O RESTO");
-  //   // getCompany();
-  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
+      drawer: _drawer(context),
       appBar: appBar(context),
-      body: MenuBody(),
-      // bottomNavigationBar: const BottomBar(),
+      body: const MenuBody(),
     );
-    // Scaffold(
-    //   extendBody: true,
-    //   appBar: appBar(context, company, color),
-    //   body: MenuBody(company: company),
-    //   bottomNavigationBar: const BottomBar(),
-    // );
+  }
+
+  void signout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+
+    Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+  }
+
+  Widget _drawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.receipt_long_rounded),
+            title: const Text('Pedidos'),
+            onTap: () => Navigator.pushNamed(context, '/order_history'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.logout_rounded),
+            title: const Text('Sair'),
+            onTap: () => signout(context),
+          )
+        ],
+      ),
+    );
   }
 }

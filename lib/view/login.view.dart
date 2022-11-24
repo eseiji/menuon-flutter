@@ -92,12 +92,12 @@ class _LoginPageState extends State<LoginPage> {
       //   email: email,
       //   password: senha,
       // );
-      if (response['id_user'] != null) {
+      if (response[0]['id_user'] != null) {
         setState(() {
           _loginStatus = 'done';
         });
         final prefs = await SharedPreferences.getInstance();
-        prefs.setString('user', convert.jsonEncode(response));
+        prefs.setString('user', convert.jsonEncode(response[0]));
         messageAlert('Login realizado com sucesso.');
         Navigator.of(context).pushNamed('/scan');
       } else {

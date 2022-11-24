@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
 class Authentication {
-  Future<Map<String, dynamic>> login(String email, String password) async {
+  Future<List<dynamic>> login(String email, String password) async {
     var url = Uri.parse('https://menuon-api.herokuapp.com/login');
     final response = await http.post(
       url,
@@ -15,7 +15,7 @@ class Authentication {
       var jsonResponse = await convert.jsonDecode(response.body);
       return jsonResponse;
     } else {
-      return {"statusCode": response.statusCode};
+      return Future.error('Nenhum usuário foi encontrado.');
       // throw Exception('Error status code: ${response.statusCode}');
     }
   }

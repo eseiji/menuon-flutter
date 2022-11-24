@@ -53,6 +53,28 @@ class Scanner extends StatelessWidget {
       }
     }
 
+    // void checkTable(String idCompany) async {
+    //   // setState(() {
+    //   //   status = 'loading';
+    //   // });
+    //   // status = 'loading';
+    //   final response = await _companies.getCompany(idCompany);
+    //   if (response['id_company'] != null) {
+    //     final prefs = await SharedPreferences.getInstance();
+    //     prefs.setString('company', convert.jsonEncode(response));
+    //     // messageAlert('Estabelecimento encontrado.');
+    //     // await cameraController.stop();
+    //     // Navigator.of(context)
+    //     //     .pushNamedAndRemoveUntil('/menu', (route) => false);
+    //   } else {
+    //     // setState(() {
+    //     //   status = 'reading';
+    //     // });
+    //     // status = 'reading';
+    //     // messageAlert('Mesa não encontrada.');
+    //   }
+    // }
+
     Widget buildQrView(BuildContext context) {
       return Scaffold(
         appBar: AppBar(
