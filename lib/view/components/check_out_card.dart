@@ -174,27 +174,29 @@ class _CheckoutCardState extends State<CheckoutCard> {
       });
       var diferenca = await validandoLocalizacao();
       if (diferenca != null && diferenca < 100) {
-        _createCharge();
-        // double total = 0;
-        // String formattedPrice;
-        // final prefs = await SharedPreferences.getInstance();
-        // var orderProducts = prefs.getString('order_products');
-        // List<dynamic> orderProductsParsed =
-        //     convert.jsonDecode(orderProducts as String);
+        // _createCharge();
+        double total = 0;
+        String formattedPrice;
+        final prefs = await SharedPreferences.getInstance();
+        var orderProducts = prefs.getString('order_products');
+        List<dynamic> orderProductsParsed =
+            convert.jsonDecode(orderProducts as String);
 
-        // for (var e in orderProductsParsed) {
-        //   {
-        //     if (e['unitPrice'] != null && e['numOfItems'] != null) {
-        //       formattedPrice = (e['unitPrice'] as String).replaceAll("\$", '');
-        //       total = total +
-        //           (double.parse(formattedPrice) * (e['numOfItems'] as int));
-        //     }
-        //   }
-        // }
-        // var orderResponse = await _orders.postOrder(total, 0, 1, 4, 1);
+        for (var e in orderProductsParsed) {
+          {
+            if (e['unitPrice'] != null && e['numOfItems'] != null) {
+              formattedPrice = (e['unitPrice'] as String).replaceAll("\$", '');
+              total = total +
+                  (double.parse(formattedPrice) * (e['numOfItems'] as int));
+            }
+          }
+        }
+        var orderResponse = await _orders.postOrder(total, 0, 1, 4, 1);
         setState(() {
           status = 'done';
         });
+        messageAlert(
+            "Pedido realizado com sucesso!\nEle será servido em breve.");
       } else {
         messageAlert("Sua localização não está de acordo com a do restaurante");
       }
@@ -306,13 +308,13 @@ class _CheckoutCardState extends State<CheckoutCard> {
                       }
                     },
                   ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  const DropdownButtonExample(),
-                  const SizedBox(
-                    height: 30,
-                  ),
+                  // const SizedBox(
+                  //   height: 30,
+                  // ),
+                  // const DropdownButtonExample(),
+                  // const SizedBox(
+                  //   height: 30,
+                  // ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -345,7 +347,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
                       ),
                     ],
                   ),
-                  _byteImage != null ? _qrCode() : Container(),
+                  // _byteImage != null ? _qrCode() : Container(),
                   // TextButton(
                   //   // onPressed: () => status = 'done',
                   //   onPressed: () => postOrder(),

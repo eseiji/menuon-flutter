@@ -19,7 +19,7 @@ class CartScreen extends StatelessWidget {
       extendBody: true,
       appBar: appBar(context),
       body: Body(),
-      bottomNavigationBar: const CheckoutCard(),
+      // bottomNavigationBar: const CheckoutCard(),
     );
   }
 }
