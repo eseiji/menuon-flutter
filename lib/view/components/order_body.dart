@@ -191,6 +191,11 @@ class _BodyState extends State<Body> {
       String formattedPrice;
       final prefs = await SharedPreferences.getInstance();
       var orderProducts = prefs.getString('order_products');
+      var company = prefs.getString('company');
+      Map<String, dynamic> parsedCompany =
+          convert.jsonDecode(company as String);
+      Map<String, dynamic> user =
+          convert.jsonDecode(prefs.getString('user') as String);
       List<dynamic> orderProductsParsed =
           convert.jsonDecode(orderProducts as String);
 
@@ -203,15 +208,48 @@ class _BodyState extends State<Body> {
           }
         }
       }
-      var orderResponse = await _orders.postOrder(total, 0, 1, 4, 1);
-      // var orderResponse = await _orders.postOrderProducts(total, 0, 1, 4, 1);
+      var orderResponse = await _orders.postOrder(
+        total,
+        0,
+        1,
+        user['id_user'],
+        1,
+        parsedCompany['id_company'],
+      );
+      for (var element in orderProductsParsed) {
+        await _orders.postOrderProducts(
+          orderResponse['id'],
+          element['productId'],
+          element['numOfItems'],
+          double.parse(element['unitPrice'] as String),
+          0,
+        );
+      }
       setState(() {
         status = 'done';
       });
     } else {
+      // PEGAR O ID_TABLE PELO QRCODE
       messageAlert('Localização inválida',
           "Sua localização não está de acordo com a localização do restaurante");
     }
+  }
+
+  Future<void> removeFromCart(int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    var orderProducts = prefs.getString('order_products');
+    List<dynamic> orderProductsParsed =
+        convert.jsonDecode(orderProducts as String);
+    orderProductsParsed.removeAt(index);
+
+    setState(() {
+      if (orderProductsParsed.isEmpty) {
+        prefs.remove('order_products');
+      } else {
+        prefs.setString(
+            'order_products', convert.jsonEncode(orderProductsParsed));
+      }
+    });
   }
 
   @override
@@ -227,8 +265,10 @@ class _BodyState extends State<Body> {
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return const Center(
-                  child: Text('Nenhum produto encontrado',
-                      style: TextStyle(color: Colors.white)),
+                  child: Text(
+                    'Nenhum produto encontrado',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 );
               }
               if (snapshot.hasError) {
@@ -248,13 +288,44 @@ class _BodyState extends State<Body> {
                         itemBuilder: (context, index) => Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: Dismissible(
-                            key: Key(data[index]['productId'].toString()),
+                            key: UniqueKey(),
                             direction: DismissDirection.endToStart,
-                            onDismissed: (direction) {
-                              setState(() {
-                                demoCarts.removeAt(index);
-                                print('REMOVER DO CARRINHO');
-                              });
+                            onDismissed: (direction) async {
+                              AwesomeDialog(
+                                context: context,
+                                animType: AnimType.leftSlide,
+                                headerAnimationLoop: false,
+                                // dialogType: DialogType.success,
+                                customHeader: const Icon(
+                                  Icons.info,
+                                  size: 110,
+                                  color: Color(0xFF5767FE),
+                                ),
+                                showCloseIcon: false,
+                                title: 'Remover item do carrinho',
+                                desc:
+                                    'Tem certeza que deseja remover o item ${data[index]["numOfItems"]} do carrinho?',
+                                btnOkOnPress: () {
+                                  removeFromCart(index);
+                                  debugPrint('OnClcik');
+                                },
+                                btnCancelOnPress: () {
+                                  // setState(() {});
+                                  debugPrint('OnClcik');
+                                },
+                                btnCancelText: 'Não',
+                                btnOkText: 'Sim',
+
+                                btnOkIcon: Icons.check_circle,
+                                onDismissCallback: (type) {
+                                  debugPrint(
+                                      'Dialog Dissmiss from callback $type');
+                                },
+                              ).show();
+                              // setState(() {
+                              //   // demoCarts.removeAt(index);
+                              //   // print('REMOVER DO CARRINHO');
+                              // });
                             },
                             background: Container(
                               padding:
@@ -307,7 +378,14 @@ class _BodyState extends State<Body> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     )
-                                  : const CircularProgressIndicator(),
+                                  : const SizedBox(
+                                      width: 30,
+                                      height: 30,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2.5,
+                                      ),
+                                    ),
                             ),
                           ),
                         ),

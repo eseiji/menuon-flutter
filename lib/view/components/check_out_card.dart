@@ -168,39 +168,39 @@ class _CheckoutCardState extends State<CheckoutCard> {
       }).catchError((onError) => print(onError));
     }
 
-    Future<void> postOrder() async {
-      setState(() {
-        status = 'pending';
-      });
-      var diferenca = await validandoLocalizacao();
-      if (diferenca != null && diferenca < 100) {
-        // _createCharge();
-        double total = 0;
-        String formattedPrice;
-        final prefs = await SharedPreferences.getInstance();
-        var orderProducts = prefs.getString('order_products');
-        List<dynamic> orderProductsParsed =
-            convert.jsonDecode(orderProducts as String);
+    // Future<void> postOrder() async {
+    //   setState(() {
+    //     status = 'pending';
+    //   });
+    //   var diferenca = await validandoLocalizacao();
+    //   if (diferenca != null && diferenca < 100) {
+    //     // _createCharge();
+    //     double total = 0;
+    //     String formattedPrice;
+    //     final prefs = await SharedPreferences.getInstance();
+    //     var orderProducts = prefs.getString('order_products');
+    //     List<dynamic> orderProductsParsed =
+    //         convert.jsonDecode(orderProducts as String);
 
-        for (var e in orderProductsParsed) {
-          {
-            if (e['unitPrice'] != null && e['numOfItems'] != null) {
-              formattedPrice = (e['unitPrice'] as String).replaceAll("\$", '');
-              total = total +
-                  (double.parse(formattedPrice) * (e['numOfItems'] as int));
-            }
-          }
-        }
-        var orderResponse = await _orders.postOrder(total, 0, 1, 4, 1);
-        setState(() {
-          status = 'done';
-        });
-        messageAlert(
-            "Pedido realizado com sucesso!\nEle será servido em breve.");
-      } else {
-        messageAlert("Sua localização não está de acordo com a do restaurante");
-      }
-    }
+    //     for (var e in orderProductsParsed) {
+    //       {
+    //         if (e['unitPrice'] != null && e['numOfItems'] != null) {
+    //           formattedPrice = (e['unitPrice'] as String).replaceAll("\$", '');
+    //           total = total +
+    //               (double.parse(formattedPrice) * (e['numOfItems'] as int));
+    //         }
+    //       }
+    //     }
+    //     var orderResponse = await _orders.postOrder(total, 0, 1, 4, 1);
+    //     setState(() {
+    //       status = 'done';
+    //     });
+    //     messageAlert(
+    //         "Pedido realizado com sucesso!\nEle será servido em breve.");
+    //   } else {
+    //     messageAlert("Sua localização não está de acordo com a do restaurante");
+    //   }
+    // }
 
     // Future<String> getProducts() async {
     //   final prefs = await SharedPreferences.getInstance();
@@ -331,8 +331,8 @@ class _CheckoutCardState extends State<CheckoutCard> {
                           ],
                         ),
                         child: TextButton(
-                          // onPressed: () => status = 'done',
-                          onPressed: () => postOrder(),
+                          onPressed: () => status = 'done',
+                          // onPressed: () => postOrder(),
                           child: status == 'none'
                               ? const Text(
                                   'Realizar pedido',
