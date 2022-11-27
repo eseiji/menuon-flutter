@@ -6,11 +6,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:menu_on/view/components/teste.dart';
 import 'package:menu_on/view/order.view.dart';
 import 'package:menu_on/view/order_history.view.dart';
+import 'package:menu_on/view/order_history_details.view.dart';
+import 'package:menu_on/view/payment.view.dart';
 import './view/login.view.dart';
 import './view/qr_scan.view.dart';
 import './view/register.view.dart';
 import './view/menu.view.dart';
-import './view/pix.view.dart';
+import 'view/pix_errado.view.dart';
 // import 'globals.dart';
 import 'package:menu_on/globals.dart';
 import 'view/product_details/details_screen.dart';
@@ -49,8 +51,9 @@ class MyApp extends StatelessWidget {
         '/cart': (context) => CartScreen(),
         '/teste': (context) => DetailsScreen(),
         '/teste2': (context) => Teste(),
-        '/payment': (context) => Pix(),
+        '/payment': (context) => PaymentView(),
         '/order_history': (context) => const OrderHistoryView(),
+        '/order_history_details': (context) => OrderHistoryDetailsView(),
       },
     );
   }

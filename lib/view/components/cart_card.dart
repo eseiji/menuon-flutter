@@ -27,13 +27,19 @@ class _CartCardState extends State<CartCard> {
   Future<Map<String, dynamic>> getProductInfo() async {
     // print('widget.product');
     // print(widget.product);
-    final response = await _products.getProduct(widget.product['productId']);
-
-    if (response != null) {
-      return response;
+    final Map<String, dynamic> response;
+    if (widget.product['productId'] != null) {
+      response = await _products.getProduct(widget.product['productId']);
     } else {
-      return Future.error('Nenhum produto foi encontrado.');
+      response = await _products.getProduct(widget.product['id_product']);
     }
+
+    return response;
+    // if (response != null) {
+    //   return response;
+    // } else {
+    //   return Future.error('Nenhum produto foi encontrado.');
+    // }
   }
 
   // caso tenha usuário ou company na SharedPreferences, ir para o menu direto
@@ -106,7 +112,9 @@ class _CartCardState extends State<CartCard> {
                                     color: Colors.white,
                                   )),
                               Text(
-                                " x${widget.product['numOfItems']}",
+                                widget.product['numOfItems'] != null
+                                    ? " x${widget.product['numOfItems']}"
+                                    : " x${widget.product['sales']['quantity_sold']}",
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontStyle: FontStyle.normal,

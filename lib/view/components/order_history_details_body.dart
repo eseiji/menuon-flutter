@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:menu_on/services/order_history.dart';
 /* import 'package:flutter_svg/svg.dart'; */
 
 import '../../models/Cart.dart';
@@ -10,27 +11,37 @@ import 'package:menu_on/services/companies.dart';
 import 'package:menu_on/services/orders.dart';
 import 'dart:convert' as convert;
 
-class Body extends StatefulWidget {
+class OrderHistoryDetailsBody extends StatefulWidget {
   @override
-  _BodyState createState() => _BodyState();
+  _OrderHistoryDetailsBodyState createState() =>
+      _OrderHistoryDetailsBodyState();
 }
 
-class _BodyState extends State<Body> {
-  late String order_products;
+class _OrderHistoryDetailsBodyState extends State<OrderHistoryDetailsBody> {
+  late Map<String, dynamic> order_history_products;
   String status = 'none';
-  final _companies = Companies();
-  final _orders = Orders();
-  Future<String> getProducts() async {
+  final _orderHistory = OrderHistory();
+  late double orderTotal = 0;
+  Future<Map<String, dynamic>> getOrderHistoryProducts() async {
+    setState(() {
+      status = 'pending';
+    });
     final prefs = await SharedPreferences.getInstance();
-    // product = {'idProduct': widget.idProduct, 'numOfItems': numOfItems};
-    order_products = prefs.getString('order_products') as String;
-    // print('order_products');
-    // print(order_products);
-    return order_products;
-    // return convert.jsonDecode(order_products);
+    var id_order = prefs.getString('id_order') as String;
+    order_history_products =
+        await _orderHistory.getOrderHistoryProducts(int.parse(id_order));
+    prefs.setString(
+      'order_history_products',
+      convert.jsonEncode(order_history_products),
+    );
+    setState(() {
+      orderTotal = double.parse(order_history_products['total']);
+      status = 'done';
+    });
+    return order_history_products;
   }
 
-  Future<Position> _determinePosition() async {
+  /*Future<Position> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -276,214 +287,127 @@ class _BodyState extends State<Body> {
             'order_products', convert.jsonEncode(orderProductsParsed));
       }
     });
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      // height: double.infinity,
-      // width: double.infinity,
       color: const Color(0xff181920),
-      child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: FutureBuilder(
-            future: getProducts(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: Text(
-                    'Nenhum produto encontrado',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                );
-              }
-              if (snapshot.hasError) {
-                return const Text('Erro ao carregar os produtos.');
-              }
-              if (snapshot.hasData) {
-                final List<dynamic> data = convert
-                    .jsonDecode(snapshot.data as String) as List<dynamic>;
-                print(data);
-                // final List<dynamic> products = data['products'];
-                return Column(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: ListView.builder(
-                        itemCount: data.length,
-                        itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Dismissible(
-                            key: UniqueKey(),
-                            direction: DismissDirection.endToStart,
-                            onDismissed: (direction) async {
-                              AwesomeDialog(
-                                dismissOnTouchOutside: false,
-                                context: context,
-                                animType: AnimType.leftSlide,
-                                headerAnimationLoop: false,
-                                // dialogType: DialogType.success,
-                                customHeader: const Icon(
-                                  Icons.info,
-                                  size: 110,
-                                  color: Color(0xFF5767FE),
-                                ),
-                                showCloseIcon: false,
-                                title: 'Remover item do carrinho',
-                                desc:
-                                    'Tem certeza que deseja remover o item ${data[index]["numOfItems"]} do carrinho?',
-                                btnOkOnPress: () {
-                                  removeFromCart(index);
-                                },
-                                btnCancelOnPress: () {
-                                  setState(() {});
-                                  debugPrint('OnClcik');
-                                },
-                                btnCancelText: 'Não',
-                                btnOkText: 'Sim',
-
-                                btnOkIcon: Icons.check_circle,
-                                onDismissCallback: (type) {
-                                  debugPrint(
-                                      'Dialog Dissmiss from callback $type');
-                                },
-                              ).show();
-                              // setState(() {
-                              //   // demoCarts.removeAt(index);
-                              //   // print('REMOVER DO CARRINHO');
-                              // });
-                            },
-                            background: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              decoration: BoxDecoration(
-                                color: const Color(0xff181920),
-                                // color: Color(0xFFFFE6E6),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Row(
-                                children: const [
-                                  Spacer(),
-                                  /* SvgPicture.asset("assets/icons/Trash.svg"), */
-                                ],
-                              ),
-                            ),
-                            child: CartCard(product: data[index]),
-                          ),
-                        ),
+      child: FutureBuilder(
+        future: getOrderHistoryProducts(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData && status == 'done') {
+            return const Center(
+              child: Text(
+                'Nenhum produto encontrado',
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          }
+          if (snapshot.hasError) {
+            return const Text('Erro ao carregar os produtos.');
+          }
+          if (snapshot.hasData) {
+            final Map<String, dynamic> data =
+                snapshot.data as Map<String, dynamic>;
+            return Column(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ListView.builder(
+                      itemCount: data['Products'].length,
+                      itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: CartCard(product: data['Products'][index]),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                ),
+                Container(
+                  height: 150,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF252A34),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.only(
-                              top: 20,
-                              bottom: 20.0,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Total:',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
                             ),
-                            // padding: const EdgeInsets.all(1),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: const Color(0xFF5767FE),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black,
-                                  blurRadius: 15.0,
-                                )
-                              ],
+                            Text(
+                              'R\$ $orderTotal',
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
                             ),
-                            child: TextButton(
-                              onPressed: () {
-                                postOrder();
-                              },
-                              child: status == 'none'
-                                  ? const Text(
-                                      'Realizar pedido',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                // margin: const EdgeInsets.only(
+                                //   top: 20,
+                                //   bottom: 20.0,
+                                // ),
+                                // padding: const EdgeInsets.all(1),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: const Color(0xFF5767FE),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black,
+                                      blurRadius: 15.0,
                                     )
-                                  : status == 'pending'
-                                      ? const SizedBox(
-                                          width: 30,
-                                          height: 30,
-                                          child: CircularProgressIndicator(
-                                            color: Colors.white,
-                                            strokeWidth: 2.5,
-                                          ),
-                                        )
-                                      : Center(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(100.0),
-                                              color: const Color(0xFF5767FE),
-                                              boxShadow: const [
-                                                BoxShadow(
-                                                  color: Colors.black,
-                                                  blurRadius: 1.0,
-                                                )
-                                              ],
-                                            ),
-                                            width: 30,
-                                            height: 30,
-                                            child: const Icon(
-                                              Icons.done,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
+                                  ],
+                                ),
+                                child: TextButton(
+                                  onPressed: () {
+                                    // postOrder();
+                                    Navigator.pushNamed(context, '/payment');
+                                  },
+                                  child: const Text(
+                                    'Ir para pagamento',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2.5,
                   ),
-                );
-              }
-            },
-          )
-          // ListView.builder(
-          //   itemCount: demoCarts.length,
-          //   itemBuilder: (context, index) => Padding(
-          //     padding: const EdgeInsets.symmetric(vertical: 10),
-          //     child: Dismissible(
-          //       key: Key(demoCarts[index].product.id.toString()),
-          //       direction: DismissDirection.endToStart,
-          //       onDismissed: (direction) {
-          //         setState(() {
-          //           demoCarts.removeAt(index);
-          //         });
-          //       },
-          //       background: Container(
-          //         padding: const EdgeInsets.symmetric(horizontal: 20),
-          //         decoration: BoxDecoration(
-          //           color: const Color(0xff181920),
-          //           // color: Color(0xFFFFE6E6),
-          //           borderRadius: BorderRadius.circular(15),
-          //         ),
-          //         child: Row(
-          //           children: const [
-          //             Spacer(),
-          //             /* SvgPicture.asset("assets/icons/Trash.svg"), */
-          //           ],
-          //         ),
-          //       ),
-          //       child: CartCard(cart: demoCarts[index]),
-          //     ),
-          //   ),
-          // ),
-          ),
+                ),
+              ],
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 2.5,
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 

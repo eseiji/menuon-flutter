@@ -116,7 +116,7 @@ class _MenuPageState extends State<MenuPage> {
           ListTile(
             leading: const Icon(Icons.receipt_long_rounded),
             title: const Text('Pedidos'),
-            onTap: () => Navigator.pushNamed(context, '/order_history'),
+            onTap: () => Navigator.popAndPushNamed(context, '/order_history'),
           ),
           ListTile(
             leading: const Icon(Icons.logout_rounded),

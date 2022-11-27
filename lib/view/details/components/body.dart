@@ -108,7 +108,7 @@ class _ItemInfoState extends State<ItemInfo> {
       print(product);
       await prefs.setString('order_products', convert.jsonEncode(product));
     }
-    await Future.delayed(const Duration(milliseconds: 2000));
+    await Future.delayed(const Duration(milliseconds: 800));
     setState(() {
       status = 'done';
     });

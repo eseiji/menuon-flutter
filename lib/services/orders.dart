@@ -10,9 +10,7 @@ class Orders {
     int id_employee,
     int id_company,
   ) async {
-    print(total.runtimeType);
     var url = Uri.https('menuon-api.herokuapp.com', '/order');
-    // var url = Uri.http('10.0.2.2:3000', '/order');
     final response = await http.post(url, body: {
       'total': '$total',
       'status': '$status',
