@@ -289,6 +289,14 @@ class _OrderHistoryDetailsBodyState extends State<OrderHistoryDetailsBody> {
     });
   }*/
 
+  String formatDate(String value) {
+    var splittedDate = value.split(' ');
+    var date = splittedDate[0].split('/');
+    var formattedYear = date[2].substring(2);
+    var hour = splittedDate[1].split(':');
+    return "${date[0]}/${date[1]}/$formattedYear - ${hour[0]}:${hour[1]}";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -325,77 +333,232 @@ class _OrderHistoryDetailsBodyState extends State<OrderHistoryDetailsBody> {
                     ),
                   ),
                 ),
-                Container(
-                  height: 150,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF252A34),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Total:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              'R\$ $orderTotal',
-                              style: const TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                data['Payment']['status'] == 0
+                    ? Container(
+                        height: 180,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF252A34),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                // margin: const EdgeInsets.only(
-                                //   top: 20,
-                                //   bottom: 20.0,
-                                // ),
-                                // padding: const EdgeInsets.all(1),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: const Color(0xFF5767FE),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Colors.black,
-                                      blurRadius: 15.0,
-                                    )
-                                  ],
-                                ),
-                                child: TextButton(
-                                  onPressed: () {
-                                    // postOrder();
-                                    Navigator.pushNamed(context, '/payment');
-                                  },
-                                  child: const Text(
-                                    'Ir para pagamento',
-                                    style: TextStyle(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Pedido n° ${data['id_order']}",
+                                    style: const TextStyle(
+                                      fontSize: 16,
                                       color: Colors.white,
-                                      fontSize: 15.0,
+                                    ),
+                                  ),
+                                  Text(
+                                    formatDate(data['insertion_date']),
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Total:',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                ),
+                                  Text(
+                                    'R\$ $orderTotal',
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(4),
+                                        color: const Color(0xFF5767FE),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Colors.black,
+                                            blurRadius: 15.0,
+                                          )
+                                        ],
+                                      ),
+                                      child: TextButton(
+                                        onPressed: () {
+                                          // postOrder();
+                                          Navigator.pushNamed(
+                                              context, '/payment');
+                                        },
+                                        child: const Text(
+                                          'Ir para pagamento',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      )
+                    : Container(
+                        height: 180,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF252A34),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Pedido n° ${data['id_order']}",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Text(
+                                    formatDate(data['insertion_date']),
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    "Data de pagamento:",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Text(
+                                    formatDate(data['Payment']['payment_date']),
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: const [
+                                  Text(
+                                    "Meio de pagamento:",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Text(
+                                    "PIX",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Total:',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    'R\$ $orderTotal',
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              // Row(
+                              //   mainAxisAlignment: MainAxisAlignment.center,
+                              //   children: [
+                              //     Expanded(
+                              //       child: Container(
+                              //         // margin: const EdgeInsets.only(
+                              //         //   top: 20,
+                              //         //   bottom: 20.0,
+                              //         // ),
+                              //         // padding: const EdgeInsets.all(1),
+                              //         decoration: BoxDecoration(
+                              //           borderRadius: BorderRadius.circular(4),
+                              //           color: const Color(0xFF5767FE),
+                              //           boxShadow: const [
+                              //             BoxShadow(
+                              //               color: Colors.black,
+                              //               blurRadius: 15.0,
+                              //             )
+                              //           ],
+                              //         ),
+                              //         child: TextButton(
+                              //           onPressed: () {
+                              //             // postOrder();
+                              //             Navigator.pushNamed(
+                              //                 context, '/payment');
+                              //           },
+                              //           child: const Text(
+                              //             'Ir para pagamento',
+                              //             style: TextStyle(
+                              //               color: Colors.white,
+                              //               fontSize: 15.0,
+                              //               fontWeight: FontWeight.bold,
+                              //             ),
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
+                            ],
+                          ),
+                        ),
+                      ),
               ],
             );
           } else {

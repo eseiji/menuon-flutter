@@ -17,10 +17,14 @@ class OrderHistory {
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = await convert.jsonDecode(response.body);
       for (var element in jsonResponse) {
-        if (element['identification'] != null) {
+        if (element['identification'] != null && element['status'] == 0) {
           var paymentInfo = await getPaymentStatus(element['identification']);
           if (paymentInfo['status'] == 'CONCLUIDA') {
-            await updatePaymentStatus(element['id_payment'], status: 1);
+            await updatePaymentStatus(
+              element['id_payment'],
+              status: 1,
+              paymentDate: paymentInfo['pix'][0]['horario'],
+            );
             element['status'] = 1;
           }
         }
@@ -42,14 +46,14 @@ class OrderHistory {
 
   Future<void> updatePaymentStatus(
     int id_payment, {
-    String? identification,
     int? status,
+    String? paymentDate,
   }) async {
     var url = Uri.https('menuon-api.herokuapp.com', '/update_payment');
     await http.post(url, body: {
       'id_payment': '$id_payment',
-      'identification': identification,
       'status': '$status',
+      'paymentDate': '$paymentDate',
     });
     // if (response.statusCode == 200) {
     //   var jsonResponse = await convert.jsonDecode(response.body);
