@@ -30,7 +30,7 @@ class _OrderHistoryDetailsBodyState extends State<OrderHistoryDetailsBody> {
     var id_order = prefs.getString('id_order') as String;
     order_history_products =
         await _orderHistory.getOrderHistoryProducts(int.parse(id_order));
-    prefs.setString(
+    await prefs.setString(
       'order_history_products',
       convert.jsonEncode(order_history_products),
     );

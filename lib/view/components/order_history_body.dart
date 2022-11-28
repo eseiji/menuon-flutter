@@ -39,6 +39,28 @@ class _OrderHistoryBodyState extends State<OrderHistoryBody> {
     }
   }
 
+  // Gerencianet gn = Gerencianet(OPTIONS);
+  //             var sim = await gn.call('pixDetailCharge',
+  //                 params: {"txid": "f5bef847d1844e3aa3c730049b7f4849"});
+
+  //   TextButton(
+  //   onPressed: () async {
+  // Gerencianet gn = Gerencianet(OPTIONS);
+  // var sim = await gn.call('pixDetailCharge',
+  //     params: {"txid": "f5bef847d1844e3aa3c730049b7f4849"});
+  //     print('REVISAR COBRANÇA');
+  //     print(sim);
+  //   },
+  //   child: const Text(
+  //     'Consultar cobrança',
+  //     style: TextStyle(
+  //       color: Colors.white,
+  //       fontSize: 15.0,
+  //       fontWeight: FontWeight.bold,
+  //     ),
+  //   ),
+  // ),
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -91,30 +113,6 @@ class _OrderHistoryBodyState extends State<OrderHistoryBody> {
                       },
                       child: OrderHistoryCard(order_history: data[index]),
                     ),
-                    // Dismissible(
-                    //   key: UniqueKey(),
-                    //   direction: DismissDirection.none,
-                    //   onDismissed: (direction) {
-                    //     setState(() {
-                    //       demoCarts.removeAt(index);
-                    //       print('REMOVER DO CARRINHO');
-                    //     });
-                    //   },
-                    //   background: Container(
-                    //     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    //     decoration: BoxDecoration(
-                    //       color: const Color(0xff181920),
-                    //       // color: Color(0xFFFFE6E6),
-                    //       borderRadius: BorderRadius.circular(15),
-                    //     ),
-                    //     child: Row(
-                    //       children: const [
-                    //         Spacer(),
-                    //       ],
-                    //     ),
-                    //   ),
-                    //   child: OrderHistoryCard(order_history: data[index]),
-                    // ),
                   ),
                 );
               } else {

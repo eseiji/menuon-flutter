@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:menu_on/services/payments.dart';
 /* import 'package:flutter_svg/svg.dart'; */
 
 import '../../models/Cart.dart';
@@ -20,6 +21,7 @@ class _BodyState extends State<Body> {
   String status = 'none';
   final _companies = Companies();
   final _orders = Orders();
+  final _payments = Payments();
   Future<String> getProducts() async {
     final prefs = await SharedPreferences.getInstance();
     // product = {'idProduct': widget.idProduct, 'numOfItems': numOfItems};
@@ -208,23 +210,27 @@ class _BodyState extends State<Body> {
           }
         }
       }
-      // var orderResponse = await _orders.postOrder(
-      //   total,
-      //   0,
-      //   1,
-      //   user['id_user'],
-      //   1,
-      //   parsedCompany['id_company'],
-      // );
-      // for (var element in orderProductsParsed) {
-      //   await _orders.postOrderProducts(
-      //     orderResponse['id'],
-      //     element['productId'],
-      //     element['numOfItems'],
-      //     double.parse(element['unitPrice'] as String),
-      //     0,
-      //   );
-      // }
+      var orderResponse = await _orders.postOrder(
+        total,
+        0,
+        1,
+        user['id_user'],
+        1,
+        parsedCompany['id_company'],
+      );
+      await _payments.createPayment(
+        orderResponse['id'],
+        0,
+      );
+      for (var element in orderProductsParsed) {
+        await _orders.postOrderProducts(
+          orderResponse['id'],
+          element['productId'],
+          element['numOfItems'],
+          double.parse(element['unitPrice'] as String),
+          0,
+        );
+      }
       setState(() {
         status = 'done';
       });

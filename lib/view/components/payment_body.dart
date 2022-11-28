@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:gerencianet/gerencianet.dart';
 import 'package:menu_on/options.dart';
 import 'package:menu_on/services/order_history.dart';
+import 'package:menu_on/services/payments.dart';
 import 'dart:typed_data';
 /* import 'package:flutter_svg/svg.dart'; */
 
@@ -21,9 +22,9 @@ class PaymentBody extends StatefulWidget {
 }
 
 class _PaymentBodyState extends State<PaymentBody> {
-  late Map<String, dynamic> order_history_products;
+  late Map<String, dynamic> orderHistoryProducts;
   String status = 'none';
-  final _orderHistory = OrderHistory();
+  final _payments = Payments();
   late double orderTotal = 0;
   late Uint8List _byteImage;
   late String _copyAndPastePix;
@@ -51,10 +52,10 @@ class _PaymentBodyState extends State<PaymentBody> {
     //   status = 'pending';
     // });
     final prefs = await SharedPreferences.getInstance();
-    String order_history_products =
+    String orderHistoryProducts =
         prefs.getString('order_history_products') as String;
-    Map<String, dynamic> parsed_order_history_products =
-        convert.jsonDecode(order_history_products);
+    Map<String, dynamic> parsedOrderHistoryProducts =
+        convert.jsonDecode(orderHistoryProducts);
 
     Gerencianet gn = Gerencianet(OPTIONS);
 
@@ -63,21 +64,14 @@ class _PaymentBodyState extends State<PaymentBody> {
         "expiracao": int.parse("3600"),
       },
       "valor": {
-        "original": (parsed_order_history_products['total'] as String).padRight(
-            (parsed_order_history_products['total'] as String).length + 1,
+        "original": (parsedOrderHistoryProducts['total'] as String).padRight(
+            (parsedOrderHistoryProducts['total'] as String).length + 1,
             "0"), // string
       },
-      // "valor": {
-      //   "original": (parsed_order_history_products['total'] as String)
-      //       .replaceAll(".", "")
-      //       .padRight(
-      //           (parsed_order_history_products['total'] as String).length + 1,
-      //           "0"), // string
-      // },
       "chave": "9132e2ec-b7b2-45c0-8edc-8648b1051bc2",
     };
 
-    gn.call("pixCreateImmediateCharge", body: body).then((value) {
+    gn.call("pixCreateImmediateCharge", body: body).then((value) async {
       gn.call("pixGenerateQRCode", params: {"id": value['loc']['id']}).then(
         (value) {
           setState(() {
@@ -87,13 +81,16 @@ class _PaymentBodyState extends State<PaymentBody> {
           });
         },
       );
-      prefs.setString('payment', value);
+      await _payments.updatePayment(
+        parsedOrderHistoryProducts['Payment']['id_payment'],
+        value['txid'],
+        0,
+      );
     }).catchError((onError) => print(onError));
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     _createCharge();
     super.initState();
   }
