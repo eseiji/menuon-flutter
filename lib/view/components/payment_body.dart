@@ -65,7 +65,7 @@ class _PaymentBodyState extends State<PaymentBody> {
       },
       "valor": {
         "original": (parsedOrderHistoryProducts['total'] as String).padRight(
-            (parsedOrderHistoryProducts['total'] as String).length + 1,
+            (parsedOrderHistoryProducts['total'] as String).length,
             "0"), // string
       },
       "chave": "9132e2ec-b7b2-45c0-8edc-8648b1051bc2",

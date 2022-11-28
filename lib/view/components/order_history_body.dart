@@ -15,12 +15,11 @@ class OrderHistoryBody extends StatefulWidget {
 
 class _OrderHistoryBodyState extends State<OrderHistoryBody> {
   String getOrderHistoryStatus = 'none';
-  // late String order_products;
   final _orderHistory = OrderHistory();
+
   Future<List<dynamic>> getOrderHistory() async {
     getOrderHistoryStatus = 'pending';
     final prefs = await SharedPreferences.getInstance();
-    // product = {'idProduct': widget.idProduct, 'numOfItems': numOfItems};
     Map<String, dynamic> company =
         convert.jsonDecode(prefs.getString('company') as String);
     Map<String, dynamic> user =
@@ -30,8 +29,25 @@ class _OrderHistoryBodyState extends State<OrderHistoryBody> {
       company["id_company"],
       1,
     );
-    print(response);
     getOrderHistoryStatus = 'done';
+    if (response.isNotEmpty) {
+      return response;
+    } else {
+      return Future.error('');
+    }
+  }
+
+  Future<List<dynamic>> getPaymentStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> company =
+        convert.jsonDecode(prefs.getString('company') as String);
+    Map<String, dynamic> user =
+        convert.jsonDecode(prefs.getString('user') as String);
+    final response = await _orderHistory.getOrderHistory(
+      user["id_user"],
+      company["id_company"],
+      1,
+    );
     if (response.isNotEmpty) {
       return response;
     } else {

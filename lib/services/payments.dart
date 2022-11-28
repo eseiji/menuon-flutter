@@ -18,7 +18,7 @@ class Payments {
     return response.statusCode;
   }
 
-  Future<dynamic> updatePayment(
+  Future<void> updatePayment(
     int id_payment,
     String? identification,
     int? status,
@@ -29,10 +29,10 @@ class Payments {
       'identification': '$identification',
       'status': '$status',
     });
-    if (response.statusCode == 200) {
-      var jsonResponse = await convert.jsonDecode(response.body);
-      return jsonResponse;
-    }
-    return response.statusCode;
+    // if (response.statusCode == 200) {
+    //   var jsonResponse = await convert.jsonDecode(response.body);
+    //   return jsonResponse;
+    // }
+    // return response.statusCode;
   }
 }
