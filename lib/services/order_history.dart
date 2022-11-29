@@ -20,10 +20,15 @@ class OrderHistory {
         if (element['identification'] != null && element['status'] == 0) {
           var paymentInfo = await getPaymentStatus(element['identification']);
           if (paymentInfo['status'] == 'CONCLUIDA') {
+            var value = paymentInfo['pix'][0]['horario'];
+            var splittedDate = value.split("T");
+            var date = splittedDate[0];
+            var hour = splittedDate[1].split(".");
+            var formattedDate = '$date ${hour[0]}';
             await updatePaymentStatus(
               element['id_payment'],
               status: 1,
-              paymentDate: paymentInfo['pix'][0]['horario'],
+              paymentDate: formattedDate,
             );
             element['status'] = 1;
           }
@@ -53,7 +58,7 @@ class OrderHistory {
     await http.post(url, body: {
       'id_payment': '$id_payment',
       'status': '$status',
-      'paymentDate': '$paymentDate',
+      'payment_date': '$paymentDate',
     });
     // if (response.statusCode == 200) {
     //   var jsonResponse = await convert.jsonDecode(response.body);

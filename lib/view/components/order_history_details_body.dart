@@ -291,10 +291,10 @@ class _OrderHistoryDetailsBodyState extends State<OrderHistoryDetailsBody> {
 
   String formatDate(String value) {
     var splittedDate = value.split(' ');
-    var date = splittedDate[0].split('/');
-    var formattedYear = date[2].substring(2);
+    var date = splittedDate[0].split('-');
+    var formattedYear = date[0].substring(2);
     var hour = splittedDate[1].split(':');
-    return "${date[0]}/${date[1]}/$formattedYear - ${hour[0]}:${hour[1]}";
+    return "${date[2]}/${date[1]}/$formattedYear - ${hour[0]}:${hour[1]}";
   }
 
   @override
