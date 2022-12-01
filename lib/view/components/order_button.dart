@@ -98,136 +98,114 @@ class _OrderButtonState extends State<OrderButton> {
     }
 
     Future<void> postOrder() async {
-      AwesomeDialog(
-        dismissOnTouchOutside: false,
-        context: context,
-        animType: AnimType.leftSlide,
-        headerAnimationLoop: false,
-        // dialogType: DialogType.success,
-        customHeader: const Icon(
-          Icons.error,
-          size: 110,
-          color: Color(0xFF5767FE),
-        ),
-        showCloseIcon: false,
-        title: 'Localização inválida',
-        desc:
-            'Sua localização não está de acordo com a localização do restaurante',
-        btnOkOnPress: () async {
-          // await Future.delayed(const Duration(milliseconds: 500));
-          // Navigator.pop(context);
-          // prefs.remove('order_products');
-        },
-        btnOkIcon: Icons.check_circle,
-        btnOkColor: const Color(0xFF5767FE),
-        onDismissCallback: (type) {
-          debugPrint('Dialog Dissmiss from callback $type');
-        },
-      ).show();
-      // setState(() {
-      //   status = 'pending';
-      // });
-      // var diferenca = await validandoLocalizacao();
-      // if (diferenca != null && diferenca < 100) {
-      //   double total = 0;
-      //   String formattedPrice;
-      //   final prefs = await SharedPreferences.getInstance();
-      //   var orderProducts = prefs.getString('order_products');
-      //   var company = prefs.getString('company');
-      //   Map<String, dynamic> parsedCompany =
-      //       convert.jsonDecode(company as String);
-      //   Map<String, dynamic> user =
-      //       convert.jsonDecode(prefs.getString('user') as String);
-      //   List<dynamic> orderProductsParsed =
-      //       convert.jsonDecode(orderProducts as String);
+      setState(() {
+        status = 'pending';
+      });
+      var diferenca = await validandoLocalizacao();
+      if (diferenca != null && diferenca < 100) {
+        double total = 0;
+        String formattedPrice;
+        final prefs = await SharedPreferences.getInstance();
+        var orderProducts = prefs.getString('order_products');
+        var company = prefs.getString('company');
+        Map<String, dynamic> parsedCompany =
+            convert.jsonDecode(company as String);
+        Map<String, dynamic> user =
+            convert.jsonDecode(prefs.getString('user') as String);
+        List<dynamic> orderProductsParsed =
+            convert.jsonDecode(orderProducts as String);
 
-      //   for (var e in orderProductsParsed) {
-      //     {
-      //       if (e['unitPrice'] != null && e['numOfItems'] != null) {
-      //         formattedPrice = (e['unitPrice'] as String).replaceAll("\$", '');
-      //         total = total +
-      //             (double.parse(formattedPrice) * (e['numOfItems'] as int));
-      //       }
-      //     }
-      //   }
-      //   var orderResponse = await _orders.postOrder(
-      //     total,
-      //     0,
-      //     1,
-      //     user['id_user'],
-      //     1,
-      //     parsedCompany['id_company'],
-      //   );
-      //   await _payments.createPayment(
-      //     orderResponse['id'],
-      //     0,
-      //   );
-      //   for (var element in orderProductsParsed) {
-      //     await _orders.postOrderProducts(
-      //       orderResponse['id'],
-      //       element['productId'],
-      //       element['numOfItems'],
-      //       double.parse(element['unitPrice'] as String),
-      //       0,
-      //     );
-      //   }
-      //   setState(() {
-      //     status = 'done';
-      //   });
+        for (var e in orderProductsParsed) {
+          {
+            if (e['unitPrice'] != null && e['numOfItems'] != null) {
+              formattedPrice = (e['unitPrice'] as String).replaceAll("\$", '');
+              total = total +
+                  (double.parse(formattedPrice) * (e['numOfItems'] as int));
+            }
+          }
+        }
+        var orderResponse = await _orders.postOrder(
+          total,
+          0,
+          1,
+          user['id_user'],
+          1,
+          parsedCompany['id_company'],
+        );
+        await _payments.createPayment(
+          orderResponse['id'],
+          0,
+        );
+        for (var element in orderProductsParsed) {
+          await _orders.postOrderProducts(
+            orderResponse['id'],
+            element['productId'],
+            element['numOfItems'],
+            double.parse(element['unitPrice'] as String),
+            0,
+          );
+        }
+        setState(() {
+          status = 'done';
+        });
 
-      //   AwesomeDialog(
-      //     dismissOnTouchOutside: false,
-      //     context: context,
-      //     animType: AnimType.leftSlide,
-      //     headerAnimationLoop: false,
-      //     // dialogType: DialogType.success,
-      //     customHeader: const Icon(
-      //       Icons.check_circle,
-      //       size: 110,
-      //       color: Color(0xFF5767FE),
-      //     ),
-      //     showCloseIcon: false,
-      //     title: 'Pedido realizado com sucesso',
-      //     desc:
-      //         'Seu pedido foi realizado com sucesso e ele será servido em breve.\nPara realizar o pagamento, acesse o Menu na página inicial, selecione o pedido e realize o pagamento',
-      //     btnOkOnPress: () async {
-      //       await Future.delayed(const Duration(milliseconds: 500));
-      //       Navigator.pop(context);
-      //       prefs.remove('order_products');
-      //     },
-      //     btnOkIcon: Icons.check_circle,
-      //     onDismissCallback: (type) {
-      //       debugPrint('Dialog Dissmiss from callback $type');
-      //     },
-      //   ).show();
-      // } else {
-      //   // PEGAR O ID_TABLE PELO QRCODE
-      //   AwesomeDialog(
-      //     dismissOnTouchOutside: false,
-      //     context: context,
-      //     animType: AnimType.leftSlide,
-      //     headerAnimationLoop: false,
-      //     // dialogType: DialogType.success,
-      //     customHeader: const Icon(
-      //       Icons.dangerous_rounded,
-      //       size: 110,
-      //       color: Color(0xFF5767FE),
-      //     ),
-      //     showCloseIcon: false,
-      //     title: 'Localização inválida',
-      //     desc:
-      //         'Sua localização não está de acordo com a localização do restaurante',
-      //     btnOkOnPress: () async {
-      //       // await Future.delayed(const Duration(milliseconds: 500));
-      //       // Navigator.pop(context);
-      //       // prefs.remove('order_products');
-      //     },
-      //     btnOkIcon: Icons.check_circle,
-      //     onDismissCallback: (type) {
-      //       debugPrint('Dialog Dissmiss from callback $type');
-      //     },
-      //   ).show();
-      // }
+        AwesomeDialog(
+          dismissOnTouchOutside: false,
+          context: context,
+          animType: AnimType.leftSlide,
+          headerAnimationLoop: false,
+          // dialogType: DialogType.success,
+          customHeader: const Icon(
+            Icons.check_circle,
+            size: 110,
+            color: Color(0xFF5767FE),
+          ),
+          showCloseIcon: false,
+          title: 'Pedido realizado com sucesso',
+          desc:
+              'Seu pedido foi realizado com sucesso e ele será servido em breve.\nPara realizar o pagamento, acesse o Menu na página inicial, selecione o pedido e realize o pagamento',
+          btnOkOnPress: () async {
+            await Future.delayed(const Duration(milliseconds: 500));
+            Navigator.pop(context);
+            prefs.remove('order_products');
+          },
+          btnOkIcon: Icons.check_circle,
+          onDismissCallback: (type) {
+            debugPrint('Dialog Dissmiss from callback $type');
+          },
+        ).show();
+      } else {
+        // PEGAR O ID_TABLE PELO QRCODE
+        AwesomeDialog(
+          dismissOnTouchOutside: false,
+          context: context,
+          animType: AnimType.leftSlide,
+          headerAnimationLoop: false,
+          // dialogType: DialogType.success,
+          customHeader: const Icon(
+            Icons.error,
+            size: 110,
+            color: Color(0xFF5767FE),
+          ),
+          showCloseIcon: false,
+          title: 'Localização inválida',
+          desc:
+              'Sua localização não está de acordo com a localização do restaurante',
+          btnOkOnPress: () async {
+            // await Future.delayed(const Duration(milliseconds: 500));
+            // Navigator.pop(context);
+            // prefs.remove('order_products');
+          },
+          btnOkIcon: Icons.check_circle,
+          btnOkColor: const Color(0xFF5767FE),
+          onDismissCallback: (type) {
+            debugPrint('Dialog Dissmiss from callback $type');
+          },
+        ).show();
+        setState(() {
+          status = 'none';
+        });
+      }
     }
 
     return Row(
@@ -246,7 +224,7 @@ class _OrderButtonState extends State<OrderButton> {
               boxShadow: const [
                 BoxShadow(
                   color: Colors.black,
-                  blurRadius: 15.0,
+                  blurRadius: 5.0,
                 )
               ],
             ),

@@ -397,7 +397,7 @@ class _OrderHistoryDetailsBodyState extends State<OrderHistoryDetailsBody> {
                                         boxShadow: const [
                                           BoxShadow(
                                             color: Colors.black,
-                                            blurRadius: 15.0,
+                                            blurRadius: 5.0,
                                           )
                                         ],
                                       ),

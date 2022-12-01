@@ -326,7 +326,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
                           boxShadow: const [
                             BoxShadow(
                               color: Colors.black,
-                              blurRadius: 15.0,
+                              blurRadius: 5.0,
                             )
                           ],
                         ),

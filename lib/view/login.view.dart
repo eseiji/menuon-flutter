@@ -232,7 +232,7 @@ class _LoginPageState extends State<LoginPage> {
               boxShadow: const [
                 BoxShadow(
                   color: Colors.black,
-                  blurRadius: 15.0,
+                  blurRadius: 5.0,
                 )
               ],
             ),

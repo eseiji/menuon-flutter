@@ -133,10 +133,14 @@ class _CartCardState extends State<CartCard> {
                 child: Container(
                     height: 75,
                     child: Center(
-                      child: Container(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2.0)),
+                      child: SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2.5,
+                        ),
+                      ),
                     )),
               );
             }

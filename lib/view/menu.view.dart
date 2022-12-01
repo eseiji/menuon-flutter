@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:menu_on/view/login.view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../models/Product.dart';
 import '../models/ProductMenu.dart';
@@ -111,16 +112,39 @@ class _MenuPageState extends State<MenuPage> {
 
   Widget _drawer(BuildContext context) {
     return Drawer(
+      width: 230,
+      elevation: 5,
+      backgroundColor: const Color(0xff181920),
+      // backgroundColor: const Color(0xFF252A34),
       child: ListView(
         children: [
           ListTile(
-            leading: const Icon(Icons.receipt_long_rounded),
-            title: const Text('Pedidos'),
+            leading: const Icon(
+              Icons.receipt_long_rounded,
+              color: Colors.white,
+            ),
+            title: Text(
+              'Pedidos',
+              style: GoogleFonts.roboto(),
+              // TextStyle(
+              //   color: Colors.white,
+              //   fontWeight: FontWeight.bold,
+              // ),
+            ),
             onTap: () => Navigator.popAndPushNamed(context, '/order_history'),
           ),
           ListTile(
-            leading: const Icon(Icons.logout_rounded),
-            title: const Text('Sair'),
+            leading: const Icon(
+              Icons.logout_rounded,
+              color: Colors.white,
+            ),
+            title: const Text(
+              'Sair',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             onTap: () => signout(context),
           )
         ],
