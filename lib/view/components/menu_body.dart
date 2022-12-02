@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:menu_on/view/details/details-screen.dart';
 
 import '../../constants.dart';
@@ -148,6 +149,7 @@ class _MenuBodyState extends State<MenuBody> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
+            // height: 50,
             margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
             padding: const EdgeInsets.symmetric(
               horizontal: 25,
@@ -159,8 +161,13 @@ class _MenuBodyState extends State<MenuBody> {
             ),
             child: TextField(
               onChanged: (value) => sort2(value),
-              style: TextStyle(color: Colors.white),
-              decoration: InputDecoration(
+              // style: TextStyle(color: Colors.white),
+              // style: GoogleFonts.harmattan(
+              //   // fontWeight: FontWeight.bold,
+              //   fontSize: 20,
+              //   color: Colors.white,
+              // ),
+              decoration: const InputDecoration(
                 border: InputBorder.none,
                 icon: Icon(
                   Icons.search,
@@ -169,6 +176,7 @@ class _MenuBodyState extends State<MenuBody> {
                 hintText: "Pesquisar",
                 hintStyle: TextStyle(
                   color: Colors.white,
+                  fontSize: 13,
                 ),
               ),
             ),
@@ -377,7 +385,12 @@ class _MenuBodyState extends State<MenuBody> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              category as String,
+              category,
+              // style: GoogleFonts.roboto(
+              //   fontWeight: FontWeight.bold,
+              //   fontSize: 15,
+              //   color: selectedIndex == index ? kTextLightColor : kTextColor,
+              // ),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 15,

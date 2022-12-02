@@ -33,12 +33,16 @@ class MyApp extends StatelessWidget {
       enableLog: true,
       title: 'Menu ON',
       scaffoldMessengerKey: snackbarKey,
+      // theme: GoogleFonts.harmattan(),
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         textTheme: GoogleFonts.cantarellTextTheme(
           Theme.of(context).textTheme,
         ),
+        // textTheme: GoogleFonts.cantarellTextTheme(
+        //   Theme.of(context).textTheme,
+        // ),
       ),
       home: LoginPage(),
       // home: auth.currentUser == null ? LoginPage() : MenuPage(),

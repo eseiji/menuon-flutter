@@ -33,13 +33,13 @@ class _LoginPageState extends State<LoginPage> {
 
   final kHintTextStyle = const TextStyle(
     color: Colors.white54,
-    fontFamily: 'OpenSans',
+    // fontFamily: 'OpenSans',
   );
 
   final kLabelStyle = const TextStyle(
     color: Colors.white,
     fontWeight: FontWeight.bold,
-    fontFamily: 'OpenSans',
+    // fontFamily: 'OpenSans',
   );
 
   final kBoxDecorationStyle = BoxDecoration(
@@ -186,7 +186,7 @@ class _LoginPageState extends State<LoginPage> {
           obscureText: true,
           style: const TextStyle(
             color: Colors.white,
-            fontFamily: 'OpenSans',
+            // fontFamily: 'OpenSans',
           ),
           decoration: InputDecoration(
             filled: true,
@@ -245,7 +245,7 @@ class _LoginPageState extends State<LoginPage> {
                         color: Colors.white,
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
-                        fontFamily: 'OpenSans',
+                        // fontFamily: 'OpenSans',
                       ),
                     )
                   : _loginStatus == 'done'

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:menu_on/services/define_company.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
@@ -48,7 +49,12 @@ AppBar appBar(context) {
               children: [
                 TextSpan(
                   text: company,
-                  style: TextStyle(
+                  // style: GoogleFonts.harmattan(
+                  //   color: Colors.white,
+                  //   fontWeight: FontWeight.bold,
+                  //   fontSize: 25,
+                  // ),
+                  style: const TextStyle(
                     color: Color.fromARGB(255, 255, 255, 255),
                     // color: Color(t),
                     fontWeight: FontWeight.bold,

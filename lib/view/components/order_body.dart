@@ -254,26 +254,132 @@ class _BodyState extends State<Body> {
                                 context: context,
                                 animType: AnimType.leftSlide,
                                 headerAnimationLoop: false,
-                                // dialogType: DialogType.success,
-                                customHeader: const Icon(
-                                  Icons.info,
-                                  size: 110,
-                                  color: Color(0xFF5767FE),
-                                ),
+                                dialogType: DialogType.noHeader,
+                                // customHeader: const Icon(
+                                //   Icons.info,
+                                //   size: 110,
+                                //   color: Color(0xFF5767FE),
+                                // ),
                                 showCloseIcon: false,
                                 title: 'Remover item do carrinho',
                                 desc:
                                     'Tem certeza que deseja remover o item ${data[index]["numOfItems"]} do carrinho?',
-                                btnOkOnPress: () {
-                                  removeFromCart(index);
-                                },
-                                btnCancelOnPress: () {
-                                  setState(() {});
-                                  debugPrint('OnClcik');
-                                },
-                                btnCancelText: 'Não',
-                                btnOkText: 'Sim',
+                                // btnOkOnPress: () {
+                                //   removeFromCart(index);
+                                // },
+                                // btnCancelOnPress: () {
+                                //   setState(() {});
+                                //   debugPrint('OnClcik');
+                                // },
+                                // btnCancelText: 'Não',
+                                // btnOkText: 'Sim',
+                                btnOk: TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    removeFromCart(index);
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                    primary: Color.fromARGB(255, 206, 210, 252),
+                                    backgroundColor: Color(0xFF5767FE),
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(16),
+                                      ),
+                                    ),
+                                    side: const BorderSide(
+                                      color: Color(0xFF5767FE),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Sim',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                // GestureDetector(
+                                //   onTap: () {
+                                //     Navigator.of(context).pop();
+                                //     removeFromCart(index);
+                                //   },
+                                //   child: Container(
+                                //     padding: const EdgeInsets.all(5.0),
+                                //     decoration: BoxDecoration(
+                                //       color: const Color(0xFF5767FE),
+                                //       border: Border.all(
+                                //         color: const Color(0xFF5767FE),
+                                //         width: 1.0,
+                                //         style: BorderStyle.solid,
+                                //       ),
+                                //       borderRadius: BorderRadius.circular(100),
+                                //     ),
+                                //     child: const Center(
+                                //       child: Text(
+                                //         'Sim',
+                                //         style: TextStyle(
+                                //           color: Colors.white,
+                                //           fontWeight: FontWeight.bold,
+                                //         ),
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
+                                btnCancel: OutlinedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    setState(() {});
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                    primary: Color(0xFF5767FE),
+                                    // shadowColor: Color(0xFF5767FE),
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(16),
+                                      ),
+                                    ),
+                                    side: const BorderSide(
+                                      color: Color(0xFF5767FE),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Não',
+                                    style: TextStyle(
+                                      color: Color(0xFF5767FE),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
 
+                                // GestureDetector(
+                                //   onTap: () {
+                                // Navigator.of(context).pop();
+                                // setState(() {});
+                                //   },
+                                //   child: Container(
+                                //     padding: const EdgeInsets.all(5.0),
+                                //     decoration: BoxDecoration(
+                                //       color: const Color.fromARGB(
+                                //           255, 188, 195, 255),
+                                //       border: Border.all(
+                                //         color: const Color(0xFF5767FE),
+                                //         width: 1.0,
+                                //         style: BorderStyle.solid,
+                                //       ),
+                                //       borderRadius: BorderRadius.circular(100),
+                                //     ),
+                                //     child: const Center(
+                                //       child: Text(
+                                //         'Não',
+                                //         style: TextStyle(
+                                //           color: Color(0xFF5767FE),
+                                //           fontWeight: FontWeight.bold,
+                                //         ),
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
+                                btnOkColor: const Color(0xFF5767FE),
                                 btnOkIcon: Icons.check_circle,
                                 onDismissCallback: (type) {
                                   debugPrint(

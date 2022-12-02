@@ -34,13 +34,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final kHintTextStyle = const TextStyle(
     color: Colors.white54,
-    fontFamily: 'OpenSans',
+    // fontFamily: 'OpenSans',
   );
 
   final kLabelStyle = const TextStyle(
     color: Colors.white,
     fontWeight: FontWeight.bold,
-    fontFamily: 'OpenSans',
+    // fontFamily: 'OpenSans',
   );
 
   final kBoxDecorationStyle = BoxDecoration(
@@ -327,7 +327,7 @@ class _RegisterPageState extends State<RegisterPage> {
           obscureText: true,
           style: const TextStyle(
             color: Colors.white,
-            fontFamily: 'OpenSans',
+            // fontFamily: 'OpenSans',
           ),
           decoration: InputDecoration(
             filled: true,
@@ -386,7 +386,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   color: Colors.white,
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'OpenSans',
+                  // fontFamily: 'OpenSans',
                 ),
               ),
             ),

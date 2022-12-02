@@ -51,13 +51,13 @@ class _MenuPageState extends State<MenuPage> {
 
   final kHintTextStyle = const TextStyle(
     color: Colors.white54,
-    fontFamily: 'OpenSans',
+    // fontFamily: 'OpenSans',
   );
 
   final kLabelStyle = const TextStyle(
     color: Colors.white,
     fontWeight: FontWeight.bold,
-    fontFamily: 'OpenSans',
+    // fontFamily: 'OpenSans',
   );
 
   final kBoxDecorationStyle = BoxDecoration(
@@ -123,13 +123,11 @@ class _MenuPageState extends State<MenuPage> {
               Icons.receipt_long_rounded,
               color: Colors.white,
             ),
-            title: Text(
+            title: const Text(
               'Pedidos',
-              style: GoogleFonts.roboto(),
-              // TextStyle(
-              //   color: Colors.white,
-              //   fontWeight: FontWeight.bold,
-              // ),
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
             onTap: () => Navigator.popAndPushNamed(context, '/order_history'),
           ),
@@ -142,7 +140,6 @@ class _MenuPageState extends State<MenuPage> {
               'Sair',
               style: TextStyle(
                 color: Colors.white,
-                fontWeight: FontWeight.bold,
               ),
             ),
             onTap: () => signout(context),
