@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+// import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
-import 'package:menu_on/view/login.view.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import '../models/Product.dart';
-import '../models/ProductMenu.dart';
 import 'components/app_bar.dart';
-import 'components/bottom_bar.dart';
-import 'components/category_item.dart';
 import 'components/menu_body.dart';
-
-import 'package:menu_on/services/define_company.dart';
 
 import "dart:async";
 import 'dart:convert' as convert;
@@ -117,29 +107,103 @@ class _MenuPageState extends State<MenuPage> {
       backgroundColor: const Color(0xff181920),
       // backgroundColor: const Color(0xFF252A34),
       child: ListView(
+        // padding: EdgeInsets.zero,
         children: [
+          Container(
+            height: 65,
+            decoration: const BoxDecoration(
+                // boxShadow: [
+                //   BoxShadow(
+                //     color: Color(0xff181920),
+                //     spreadRadius: 10,
+                //     blurRadius: 7,
+                //     offset: Offset(0, 3), // changes position of shadow
+                //   )
+                // ],
+                // border: Border(
+                //   bottom: BorderSide(color: Color(0xFF7F7F7F)),
+                // ),
+                ),
+            child: DrawerHeader(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: const BoxDecoration(
+                color: Color(0xFF5767FE),
+              ),
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    FaIcon(
+                      FontAwesomeIcons.wineGlass,
+                      color: Colors.white,
+                      size: 25,
+                    ),
+                    // Icon(
+                    //   // FontAwesomeIcons.martiniGlass,
+                    //   FontAwesomeIcons.wineGlassEmpty,
+                    //   color: Colors.white,
+                    // ),
+                  ],
+                ),
+                title: const Text(
+                  'MENU ON',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+              // Text(
+              //   'MENU ON',
+              //   style: TextStyle(
+              //     color: Colors.white,
+              //     fontWeight: FontWeight.bold,
+              //     fontSize: 20,
+              //   ),
+              // ),
+            ),
+          ),
           ListTile(
-            leading: const Icon(
-              Icons.receipt_long_rounded,
-              color: Colors.white,
+            leading: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                FaIcon(
+                  FontAwesomeIcons.receipt,
+                  color: Colors.white,
+                  size: 18,
+                ),
+              ],
             ),
             title: const Text(
-              'Pedidos',
+              'Meus pedidos',
               style: TextStyle(
                 color: Colors.white,
+                fontSize: 15,
               ),
             ),
             onTap: () => Navigator.popAndPushNamed(context, '/order_history'),
           ),
           ListTile(
-            leading: const Icon(
-              Icons.logout_rounded,
-              color: Colors.white,
+            leading: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                FaIcon(
+                  FontAwesomeIcons.rightFromBracket,
+                  color: Colors.white,
+                  size: 16,
+                )
+              ],
             ),
             title: const Text(
               'Sair',
               style: TextStyle(
                 color: Colors.white,
+                fontSize: 15,
               ),
             ),
             onTap: () => signout(context),

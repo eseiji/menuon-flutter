@@ -1,12 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:menu_on/view/details/details-screen.dart';
 
 import '../../constants.dart';
 import '../../models/ProductTeste.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'category_item.dart';
 import 'item_card2.dart';
 import 'dart:convert' as convert;
 import 'package:menu_on/services/categories.dart';

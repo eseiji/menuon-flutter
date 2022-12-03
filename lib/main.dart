@@ -12,7 +12,6 @@ import './view/login.view.dart';
 import './view/qr_scan.view.dart';
 import './view/register.view.dart';
 import './view/menu.view.dart';
-import 'view/pix_errado.view.dart';
 // import 'globals.dart';
 import 'package:menu_on/globals.dart';
 import 'view/product_details/details_screen.dart';
@@ -37,7 +36,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        textTheme: GoogleFonts.cantarellTextTheme(
+        textTheme: GoogleFonts.rubikTextTheme(
           Theme.of(context).textTheme,
         ),
         // textTheme: GoogleFonts.cantarellTextTheme(
@@ -49,12 +48,12 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
-        '/scan': (context) => Scanner(),
+        '/scan': (context) => const Scanner(),
         // '/scan': (context) => QRScanpage(),
-        '/menu': (context) => MenuPage(),
+        '/menu': (context) => const MenuPage(),
         '/cart': (context) => CartScreen(),
         '/teste': (context) => DetailsScreen(),
-        '/teste2': (context) => Teste(),
+        '/teste2': (context) => const Teste(),
         '/payment': (context) => PaymentView(),
         '/order_history': (context) => const OrderHistoryView(),
         '/order_history_details': (context) => OrderHistoryDetailsView(),

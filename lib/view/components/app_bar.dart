@@ -1,18 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:menu_on/services/define_company.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
 
 void signout(BuildContext context) async {
-  // FirebaseAuth auth = FirebaseAuth.instance;
   final prefs = await SharedPreferences.getInstance();
-  // await prefs.remove('company');
-  // await prefs.remove('user');
   await prefs.clear();
-  // await auth.signOut();
 
   Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
 }
@@ -29,8 +24,26 @@ Future<String> getCompany() async {
   }
 }
 
+String getCurrentRoute(BuildContext context) {
+  String? route = ModalRoute.of(context)!.settings.name;
+  String title = '';
+  switch (route) {
+    case '/cart':
+      title = 'Carrinho';
+      break;
+    case '/order_history':
+      title = 'Meus pedidos';
+      break;
+    case '/order_history_details':
+      title = 'Meus pedidos';
+      break;
+    default:
+      title = '';
+  }
+  return title;
+}
+
 AppBar appBar(context) {
-  // var t = int.parse(color);
   return AppBar(
     backgroundColor: const Color(0xff181920),
     elevation: 2,
@@ -40,7 +53,6 @@ AppBar appBar(context) {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final String company = snapshot.data as String;
-          print(company);
           return RichText(
             text: TextSpan(
               style: const TextStyle(
@@ -48,39 +60,43 @@ AppBar appBar(context) {
               ),
               children: [
                 TextSpan(
-                  text: company,
-                  // style: GoogleFonts.harmattan(
+                  text: ModalRoute.of(context)!.settings.name == '/menu'
+                      ? company
+                      : getCurrentRoute(context),
+                  style: GoogleFonts.rubik(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                  // style: const TextStyle(
                   //   color: Colors.white,
                   //   fontWeight: FontWeight.bold,
-                  //   fontSize: 25,
+                  //   fontSize: 19,
                   // ),
-                  style: const TextStyle(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    // color: Color(t),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 19,
-                  ),
                 )
               ],
             ),
           );
         } else {
-          return Text('A Companhia não foi encontrada.');
+          return const Text('A Companhia não foi encontrada.');
         }
       },
     ),
     actions: [
-      // IconButton(
-      //   onPressed: () => signout(context),
-      //   icon: Icon(Icons.logout, size: 20),
-      // ),
-      IconButton(
-        onPressed: () => Get.toNamed(
-          '/cart',
-          arguments: {'company': 'company'},
-        ),
-        icon: Icon(Icons.shopping_basket_rounded),
-      )
+      ModalRoute.of(context)!.settings.name == '/menu'
+          ? IconButton(
+              onPressed: () => Get.toNamed(
+                '/cart',
+                arguments: {'company': 'company'},
+              ),
+              icon: const FaIcon(
+                FontAwesomeIcons.basketShopping,
+                color: Colors.white,
+                size: 20,
+              ),
+              // const Icon(Icons.shopping_bag),
+            )
+          : Container()
     ],
   );
 }

@@ -8,7 +8,7 @@ class ItemCard extends StatelessWidget {
   final ProductModel model;
   final Function()? press;
 
-  ItemCard(this.model, {this.press});
+  const ItemCard(this.model, {this.press});
 
   String formatSize(dynamic size) {
     // String result;
@@ -42,15 +42,14 @@ class ItemCard extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: Container(
-                padding: EdgeInsets.all(kDefaultPaddin),
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                 // For  demo we use fixed height  and width
                 // Now we dont need them
                 // height: 180,
                 // width: 160,
                 decoration: const BoxDecoration(
-                  color: Colors.white,
-                  // color: product!.color,
-                  // borderRadius: BorderRadius.circular(16),
+                  // color: Color.fromARGB(255, 62, 66, 73),
+                  color: Color.fromARGB(255, 66, 71, 82),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(16),
                     topRight: Radius.circular(16),
@@ -58,9 +57,15 @@ class ItemCard extends StatelessWidget {
                 ),
                 child: Center(
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.network("https://${model.imagemUrl}",
-                        fit: BoxFit.fitHeight),
+                    // borderRadius: BorderRadius.circular(16.0),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
+                    ),
+                    child: Image.network(
+                      "https://${model.imagemUrl}",
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
               ),
@@ -107,7 +112,10 @@ class ItemCard extends StatelessWidget {
                     formatSize(model.tamanho),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: kTextLightColor),
+                    style: const TextStyle(
+                      color: kTextLightColor,
+                      // fontSize: 15,
+                    ),
                   ),
                   Text(
                     "R\$ ${model.preco}",

@@ -1,9 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:menu_on/models/ProductTeste.dart';
 import 'package:menu_on/view/details/components/item_image.dart';
-import 'package:menu_on/view/details/components/order_button.dart';
 import 'package:menu_on/view/details/components/title_price_rating.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
@@ -12,7 +10,7 @@ class Body2 extends StatelessWidget {
   final ProductModel model;
   // final String company;
 
-  Body2(this.model);
+  const Body2(this.model);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -116,6 +114,7 @@ class _ItemInfoState extends State<ItemInfo> {
     print(prefs.getString('order_products'));
   }
 
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
@@ -163,7 +162,7 @@ class _ItemInfoState extends State<ItemInfo> {
           // const SizedBox(height: 25),
           const Spacer(),
           Container(
-            margin: EdgeInsets.only(bottom: 15),
+            margin: const EdgeInsets.only(bottom: 15),
             child: Row(
               children: [
                 SizedBox(
@@ -171,7 +170,7 @@ class _ItemInfoState extends State<ItemInfo> {
                   height: 25,
                   child: TextButton(
                       style: TextButton.styleFrom(
-                        backgroundColor: Color(0xFF5767FE),
+                        backgroundColor: const Color(0xFF5767FE),
                         primary: Colors.white,
                         padding: EdgeInsets.zero,
                         shape: RoundedRectangleBorder(
@@ -191,15 +190,21 @@ class _ItemInfoState extends State<ItemInfo> {
                       },
                       child: const Icon(Icons.remove)),
                 ),
-                Padding(
+                Container(
+                  width: 35,
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "${numOfItems}",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "$numOfItems",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(
@@ -207,7 +212,7 @@ class _ItemInfoState extends State<ItemInfo> {
                   height: 25,
                   child: TextButton(
                       style: TextButton.styleFrom(
-                        backgroundColor: Color(0xFF5767FE),
+                        backgroundColor: const Color(0xFF5767FE),
                         primary: Colors.white,
                         padding: EdgeInsets.zero,
                         shape: RoundedRectangleBorder(
@@ -246,10 +251,15 @@ class _ItemInfoState extends State<ItemInfo> {
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                              Icons.shopping_cart,
+                            // const Icon(
+                            //   Icons.shopping_cart,
+                            //   color: Colors.white,
+                            // ),
+                            const FaIcon(
+                              FontAwesomeIcons.basketShopping,
                               color: Colors.white,
                             ),
+                            const SizedBox(width: 10),
                             TextButton(
                               onPressed: () => addToCart(),
                               child: const Text(
@@ -318,14 +328,14 @@ class _ItemInfoState extends State<ItemInfo> {
   Row shopeName(name) {
     return Row(
       children: <Widget>[
-        Icon(
+        const Icon(
           Icons.location_on,
           color: Color(0xFF5767FE),
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Text(
           name,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
       ],
     );

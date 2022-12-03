@@ -269,7 +269,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         )
-                      : Center(
+                      : const Center(
                           child: SizedBox(
                             width: 20,
                             height: 20,
@@ -425,7 +425,7 @@ class _LoginPageState extends State<LoginPage> {
       onTap: () => Get.toNamed('/register'),
       child: RichText(
         textAlign: TextAlign.center,
-        text: TextSpan(
+        text: const TextSpan(
           children: [
             TextSpan(
               text: 'Ainda não possui uma conta?  ',
@@ -438,7 +438,7 @@ class _LoginPageState extends State<LoginPage> {
             TextSpan(
               text: 'Cadastre-se',
               style: TextStyle(
-                color: const Color(0xFF5767FE),
+                color: Color(0xFF5767FE),
                 fontSize: 15.0,
                 fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.bold,
@@ -459,7 +459,7 @@ class _LoginPageState extends State<LoginPage> {
         title: Container(
           child: Row(
             children: const [
-              Icon(FontAwesomeIcons.wineGlassAlt),
+              Icon(FontAwesomeIcons.wineGlassEmpty),
               SizedBox(width: 5.0),
               Text(
                 'MENU ON',
@@ -489,7 +489,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: double.infinity,
                 width: double.infinity,
               ),
-              Container(
+              SizedBox(
                 height: double.infinity,
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
