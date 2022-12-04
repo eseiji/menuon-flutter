@@ -11,7 +11,7 @@ class DetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: appBar(context),
+      appBar: AppBarComponent(),
       body: Body(),
     );
   }

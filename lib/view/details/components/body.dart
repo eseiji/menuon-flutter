@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:menu_on/models/ProductTeste.dart';
+import 'package:menu_on/stores/order_product_counter.dart';
 import 'package:menu_on/view/details/components/item_image.dart';
 import 'package:menu_on/view/details/components/title_price_rating.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,6 +62,7 @@ class ItemInfo extends StatefulWidget {
 }
 
 class _ItemInfoState extends State<ItemInfo> {
+  final productCounterStore = OrderProductCounterStore();
   @override
   int numOfItems = 1;
   List<Map<String, dynamic>> product = [];
@@ -110,6 +112,9 @@ class _ItemInfoState extends State<ItemInfo> {
     setState(() {
       status = 'done';
     });
+    await productCounterStore.getOrderProducts();
+    print('productCounterStore');
+    print(productCounterStore);
     print('ADD TO CART');
     print(prefs.getString('order_products'));
   }

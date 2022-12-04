@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../models/Cart.dart';
 import 'components/app_bar.dart';
-import 'components/order_body.dart';
-import 'components/check_out_card.dart';
 import 'components/payment_body.dart';
 
 class PaymentView extends StatefulWidget {
@@ -23,7 +18,7 @@ class _PaymentViewState extends State<PaymentView> {
 
     return Scaffold(
       extendBody: true,
-      appBar: appBar(context),
+      appBar: AppBarComponent(),
       body: PaymentBody(),
     );
   }

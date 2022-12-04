@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// import 'components/appBarTeste.dart';
 import 'components/app_bar.dart';
 import 'components/menu_body.dart';
 
@@ -88,7 +89,7 @@ class _MenuPageState extends State<MenuPage> {
     return Scaffold(
       extendBody: true,
       drawer: _drawer(context),
-      appBar: appBar(context),
+      appBar: AppBarComponent(),
       body: const MenuBody(),
     );
   }

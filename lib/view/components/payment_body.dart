@@ -1,19 +1,11 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gerencianet/gerencianet.dart';
 import 'package:menu_on/options.dart';
-import 'package:menu_on/services/order_history.dart';
 import 'package:menu_on/services/payments.dart';
 import 'dart:typed_data';
 /* import 'package:flutter_svg/svg.dart'; */
-import 'package:skeletons/skeletons.dart';
-import '../../models/Cart.dart';
-import 'cart_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:menu_on/services/companies.dart';
-import 'package:menu_on/services/orders.dart';
 import 'dart:convert' as convert;
 
 class PaymentBody extends StatefulWidget {
@@ -71,29 +63,29 @@ class _PaymentBodyState extends State<PaymentBody> {
       "chave": "9132e2ec-b7b2-45c0-8edc-8648b1051bc2",
     };
     await Future.delayed(const Duration(seconds: 2), () => 'Complete');
-    setState(() {
-      _byteImage = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
-      _copyAndPastePix = '23281938d9jqhjjd79hd';
-    });
+    // setState(() {
+    //   _byteImage = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
+    //   _copyAndPastePix = '23281938d9jqhjjd79hd';
+    // });
 
-    // gn.call("pixCreateImmediateCharge", body: body).then((value) async {
-    //   gn.call("pixGenerateQRCode", params: {"id": value['loc']['id']}).then(
-    //     (value) {
-    //       setState(() {
-    //         _byteImage = const convert.Base64Decoder()
-    //             .convert(value['imagemQrcode'].split(',').last);
-    //         _copyAndPastePix = value['qrcode'];
-    //       });
-    //       print('_byteImage');
-    //       print(_byteImage);
-    //     },
-    //   );
-    //   await _payments.updatePayment(
-    //     parsedOrderHistoryProducts['Payment']['id_payment'],
-    //     value['txid'],
-    //     0,
-    //   );
-    // }).catchError((onError) => print(onError));
+    gn.call("pixCreateImmediateCharge", body: body).then((value) async {
+      gn.call("pixGenerateQRCode", params: {"id": value['loc']['id']}).then(
+        (value) {
+          setState(() {
+            _byteImage = const convert.Base64Decoder()
+                .convert(value['imagemQrcode'].split(',').last);
+            _copyAndPastePix = value['qrcode'];
+          });
+          print('_byteImage');
+          print(_byteImage);
+        },
+      );
+      await _payments.updatePayment(
+        parsedOrderHistoryProducts['Payment']['id_payment'],
+        value['txid'],
+        0,
+      );
+    }).catchError((onError) => print(onError));
   }
 
   @override

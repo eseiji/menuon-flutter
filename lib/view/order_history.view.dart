@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../models/Cart.dart';
 import 'components/app_bar.dart';
 import 'components/order_history_body.dart';
-import 'components/check_out_card.dart';
 
 class OrderHistoryView extends StatelessWidget {
   const OrderHistoryView({Key? key}) : super(key: key);
@@ -17,7 +13,7 @@ class OrderHistoryView extends StatelessWidget {
 
     return Scaffold(
       // extendBody: true,
-      appBar: appBar(context),
+      appBar: AppBarComponent(),
       body: OrderHistoryBody(),
       // bottomNavigationBar: const CheckoutCard(),
     );
