@@ -2,11 +2,16 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:menu_on/redux/app_store.dart';
 import 'package:menu_on/stores/order_product_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
+
+class AppRoute {
+  String title;
+  Widget action;
+  AppRoute({required this.title, required this.action});
+}
 
 class AppBarComponent extends StatefulWidget implements PreferredSizeWidget {
   const AppBarComponent({Key? key})
@@ -46,24 +51,93 @@ class _AppBarComponentState extends State<AppBarComponent> {
     }
   }
 
-  String getCurrentRoute(BuildContext context) {
+  Future<AppRoute> getCurrentRoute() async {
+    await appStore.dispatcher(AppAction.increment);
     String? route = ModalRoute.of(context)!.settings.name;
-    String title = '';
+    late String title = '';
+    late Widget action;
     switch (route) {
+      case '/menu':
+        var companyName = await getCompany();
+        title = companyName;
+        if (appStore.state.value > 0) {
+          action = IconButton(
+            onPressed: () => Get.toNamed(
+              '/cart',
+              arguments: {'company': 'company'},
+            ),
+            icon: Badge(
+              badgeColor: const Color(0xFF5767FE),
+              badgeContent: AnimatedBuilder(
+                  animation: appStore,
+                  builder: (_, __) {
+                    return Text(
+                      '${appStore.state.value}',
+                      style: const TextStyle(color: Colors.white),
+                    );
+                  }),
+              child: const FaIcon(
+                FontAwesomeIcons.basketShopping,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+          );
+        } else {
+          action = IconButton(
+            onPressed: () => Get.toNamed(
+              '/cart',
+              arguments: {'company': 'company'},
+            ),
+            icon: const FaIcon(
+              FontAwesomeIcons.basketShopping,
+              color: Colors.white,
+              size: 20,
+            ),
+          );
+        }
+        break;
       case '/cart':
         title = 'Carrinho';
+        action = Container();
         break;
       case '/order_history':
         title = 'Meus pedidos';
+        action = IconButton(
+            onPressed: () {
+              appStore.refreshOrderHistory();
+              // setState(() {
+              //   print('SETstate');
+              // });
+            },
+            icon: const Icon(Icons.refresh_rounded)
+            // const FaIcon(
+            //   FontAwesomeIcons.arrowsRotate,
+            //   color: Colors.white,
+            //   size: 20,
+            // ),
+            );
         break;
       case '/order_history_details':
         title = 'Meus pedidos';
+        action = Container();
         break;
       default:
         title = '';
     }
-    return title;
+    return AppRoute(title: title, action: action);
   }
+
+  Future<void> geta() async {
+    await appStore.dispatcher(AppAction.increment);
+  }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   geta();
+  //   // appStore.dispatcher(AppAction.increment);
+  // }
 
   // Future<String> getOrderProducts() async {
   //   final prefs = await SharedPreferences.getInstance();
@@ -91,6 +165,7 @@ class _AppBarComponentState extends State<AppBarComponent> {
 
   @override
   Widget build(BuildContext context) {
+    // geta();
     // print('provider');
     // print(provider.value);
     // final teste = Provider.of<AppBarComponent>(context);
@@ -101,131 +176,35 @@ class _AppBarComponentState extends State<AppBarComponent> {
       elevation: 2,
       centerTitle: true,
       title: FutureBuilder(
-        future: getCompany(),
+        future: getCurrentRoute(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            final String company = snapshot.data as String;
-            return RichText(
-              text: TextSpan(
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-                children: [
-                  TextSpan(
-                    text: ModalRoute.of(context)!.settings.name == '/menu'
-                        ? company
-                        : getCurrentRoute(context),
-                    style: GoogleFonts.rubik(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.white,
-                    ),
-                    // style: const TextStyle(
-                    //   color: Colors.white,
-                    //   fontWeight: FontWeight.bold,
-                    //   fontSize: 19,
-                    // ),
-                  )
-                ],
+            final AppRoute companyName = snapshot.data as AppRoute;
+            return Text(
+              companyName.title,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
               ),
             );
           } else {
-            return const Text('A Companhia não foi encontrada.');
+            return Container();
           }
         },
       ),
       actions: [
-        ModalRoute.of(context)!.settings.name == '/menu'
-            ? IconButton(
-                onPressed: () => Get.toNamed(
-                      '/cart',
-                      arguments: {'company': 'company'},
-                    ),
-                icon: Badge(
-                  badgeColor: const Color(0xFF5767FE),
-                  badgeContent: AnimatedBuilder(
-                      animation: appStore,
-                      builder: (_, __) {
-                        return Text(
-                          '${appStore.state.value}',
-                          style: const TextStyle(color: Colors.white),
-                        );
-                      }),
-                  child: const FaIcon(
-                    FontAwesomeIcons.basketShopping,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ))
-            // const Icon(Icons.shopping_bag),
-            : Container()
+        FutureBuilder(
+          future: getCurrentRoute(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final AppRoute actions = snapshot.data as AppRoute;
+              return actions.action;
+            } else {
+              return Container();
+            }
+          },
+        )
       ],
+      // [getCurrentRoute().action],
     );
   }
 }
-
-// AppBar appBar(context) {
-//   return AppBar(
-//     backgroundColor: const Color(0xff181920),
-//     elevation: 2,
-//     centerTitle: true,
-//     title: FutureBuilder(
-//       future: getCompany(),
-//       builder: (context, snapshot) {
-//         if (snapshot.hasData) {
-//           final String company = snapshot.data as String;
-//           return RichText(
-//             text: TextSpan(
-//               style: const TextStyle(
-//                 fontWeight: FontWeight.bold,
-//               ),
-//               children: [
-//                 TextSpan(
-//                   text: ModalRoute.of(context)!.settings.name == '/menu'
-//                       ? company
-//                       : getCurrentRoute(context),
-//                   style: GoogleFonts.rubik(
-//                     fontWeight: FontWeight.bold,
-//                     fontSize: 20,
-//                     color: Colors.white,
-//                   ),
-//                   // style: const TextStyle(
-//                   //   color: Colors.white,
-//                   //   fontWeight: FontWeight.bold,
-//                   //   fontSize: 19,
-//                   // ),
-//                 )
-//               ],
-//             ),
-//           );
-//         } else {
-//           return const Text('A Companhia não foi encontrada.');
-//         }
-//       },
-//     ),
-//     actions: [
-//       ModalRoute.of(context)!.settings.name == '/menu'
-//           ? IconButton(
-//               onPressed: () => Get.toNamed(
-//                     '/cart',
-//                     arguments: {'company': 'company'},
-//                   ),
-//               icon: Badge(
-//                 badgeColor: const Color(0xFF5767FE),
-//                 badgeContent: const Text(
-//                   '1',
-//                   style: TextStyle(color: Colors.white),
-//                 ),
-//                 child: const FaIcon(
-//                   FontAwesomeIcons.basketShopping,
-//                   color: Colors.white,
-//                   size: 20,
-//                 ),
-//               )
-
-//               // const Icon(Icons.shopping_bag),
-//               )
-//           : Container()
-//     ],
-//   );
-// }

@@ -12,7 +12,6 @@ import './view/register.view.dart';
 import './view/menu.view.dart';
 // import 'globals.dart';
 import 'package:menu_on/globals.dart';
-import 'view/product_details/details_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,7 +47,7 @@ class MyApp extends StatelessWidget {
         // '/scan': (context) => QRScanpage(),
         '/menu': (context) => const MenuPage(),
         '/cart': (context) => CartScreen(),
-        '/teste': (context) => DetailsScreen(),
+        // '/teste': (context) => DetailsScreen2(),
         '/teste2': (context) => const Teste(),
         '/payment': (context) => PaymentView(),
         '/order_history': (context) => const OrderHistoryView(),

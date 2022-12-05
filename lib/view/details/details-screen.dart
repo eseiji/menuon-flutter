@@ -6,7 +6,7 @@ class DetailsScreen2 extends StatelessWidget {
   final ProductModel model;
   // final String company;
 
-  DetailsScreen2(this.model);
+  const DetailsScreen2(this.model);
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +14,9 @@ class DetailsScreen2 extends StatelessWidget {
       // backgroundColor: Colors.lightBlue,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Color(0xff181920),
+        backgroundColor: const Color(0xff181920),
       ),
+      // appBar: const AppBarComponent(),
       body: Body2(model),
     );
   }

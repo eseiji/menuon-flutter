@@ -23,8 +23,9 @@ class OrderHistory {
             var value = paymentInfo['pix'][0]['horario'];
             var splittedDate = value.split("T");
             var date = splittedDate[0];
-            var hour = splittedDate[1].split(".");
-            var formattedDate = '$date ${hour[0]}';
+            var hour = splittedDate[1];
+            // .split(".");
+            var formattedDate = '$date $hour';
             await updatePaymentStatus(
               element['id_payment'],
               status: 1,
@@ -50,13 +51,13 @@ class OrderHistory {
   }
 
   Future<void> updatePaymentStatus(
-    int id_payment, {
+    int idPayment, {
     int? status,
     String? paymentDate,
   }) async {
     var url = Uri.https('menuon-api.herokuapp.com', '/update_payment');
     await http.post(url, body: {
-      'id_payment': '$id_payment',
+      'id_payment': '$idPayment',
       'status': '$status',
       'payment_date': '$paymentDate',
     });

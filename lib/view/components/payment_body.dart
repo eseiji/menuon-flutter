@@ -62,7 +62,7 @@ class _PaymentBodyState extends State<PaymentBody> {
       },
       "chave": "9132e2ec-b7b2-45c0-8edc-8648b1051bc2",
     };
-    await Future.delayed(const Duration(seconds: 2), () => 'Complete');
+    // await Future.delayed(const Duration(seconds: 2), () => 'Complete');
     // setState(() {
     //   _byteImage = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
     //   _copyAndPastePix = '23281938d9jqhjjd79hd';

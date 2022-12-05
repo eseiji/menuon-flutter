@@ -3,12 +3,13 @@ import 'package:menu_on/services/order_history.dart';
 import 'package:menu_on/view/components/order_history_card.dart';
 /* import 'package:flutter_svg/svg.dart'; */
 
-import '../../models/Cart.dart';
-import 'cart_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
+import 'package:menu_on/redux/app_store.dart';
 
 class OrderHistoryBody extends StatefulWidget {
+  const OrderHistoryBody({Key? key}) : super(key: key);
+
   @override
   _OrderHistoryBodyState createState() => _OrderHistoryBodyState();
 }
@@ -18,6 +19,7 @@ class _OrderHistoryBodyState extends State<OrderHistoryBody> {
   final _orderHistory = OrderHistory();
 
   Future<List<dynamic>> getOrderHistory() async {
+    print("PASSANDO NO getOrderHistory");
     getOrderHistoryStatus = 'pending';
     final prefs = await SharedPreferences.getInstance();
     Map<String, dynamic> company =
@@ -84,8 +86,10 @@ class _OrderHistoryBodyState extends State<OrderHistoryBody> {
       // width: double.infinity,
       color: const Color(0xff181920),
       child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: FutureBuilder(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: AnimatedBuilder(
+          animation: appStore,
+          builder: (_, __) => FutureBuilder(
             future: getOrderHistory(),
             builder: (context, snapshot) {
               if (!snapshot.hasData && getOrderHistoryStatus == 'done') {
@@ -96,7 +100,7 @@ class _OrderHistoryBodyState extends State<OrderHistoryBody> {
                   ),
                 );
               }
-              if (!snapshot.hasData && getOrderHistoryStatus == 'pending') {
+              if (!snapshot.hasData || getOrderHistoryStatus == 'pending') {
                 return const Center(
                   child: SizedBox(
                     width: 30,
@@ -144,7 +148,9 @@ class _OrderHistoryBodyState extends State<OrderHistoryBody> {
                 );
               }
             },
-          )),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -1,14 +1,9 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:menu_on/services/order_history.dart';
 /* import 'package:flutter_svg/svg.dart'; */
 
-import '../../models/Cart.dart';
 import 'cart_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:menu_on/services/companies.dart';
-import 'package:menu_on/services/orders.dart';
 import 'dart:convert' as convert;
 
 class OrderHistoryDetailsBody extends StatefulWidget {
@@ -27,9 +22,9 @@ class _OrderHistoryDetailsBodyState extends State<OrderHistoryDetailsBody> {
       status = 'pending';
     });
     final prefs = await SharedPreferences.getInstance();
-    var id_order = prefs.getString('id_order') as String;
+    var idOrder = prefs.getString('id_order') as String;
     order_history_products =
-        await _orderHistory.getOrderHistoryProducts(int.parse(id_order));
+        await _orderHistory.getOrderHistoryProducts(int.parse(idOrder));
     await prefs.setString(
       'order_history_products',
       convert.jsonEncode(order_history_products),
@@ -294,7 +289,12 @@ class _OrderHistoryDetailsBodyState extends State<OrderHistoryDetailsBody> {
     var date = splittedDate[0].split('-');
     var formattedYear = date[0].substring(2);
     var hour = splittedDate[1].split(':');
-    return "${date[2]}/${date[1]}/$formattedYear - ${hour[0]}:${hour[1]}";
+
+    var parseHour = DateTime.parse(value);
+    var localHour = parseHour.toLocal();
+    // var formattedDate = (localHour as String).split(' ');
+    return '$localHour';
+    // return "${date[2]}/${date[1]}/$formattedYear - ${hour[0]}:${hour[1]}";
   }
 
   @override

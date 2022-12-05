@@ -11,27 +11,19 @@ class AppState {
 }
 
 Future<AppState> _reducer(AppState state, AppAction action) async {
-  // Future<void> getOrderProducts() async {
   final prefs = await SharedPreferences.getInstance();
-  // product = {'idProduct': widget.idProduct, 'numOfItems': numOfItems};
-  List<dynamic> orderProducts =
-      convert.jsonDecode(prefs.getString('order_products') as String);
-  // print('order_products');
-  // print(order_products);
-  // return order_products;
-  // value = orderProducts.length;
+  String? asim = prefs.getString('order_products');
+  if (asim != null) {
+    List<dynamic> orderProducts = convert.jsonDecode(asim);
 
-  // print('value');
-  // print(value);
-  return AppState(value: orderProducts.length);
-  // if (action == AppAction.increment) {
-  //   return AppState(value: state.value + 1);
-  // } else {
-  //   return AppState(value: state.value - 1);
-  // }
+    return AppState(value: orderProducts.length);
+  }
+  return AppState(value: 0);
+}
+
+void _refresh(AppState state) async {
+  // return AppState();
 }
 
 final appStore = ReduxStore<AppAction, AppState>(
-  initialState: AppState(),
-  reducer: _reducer,
-);
+    initialState: AppState(), reducer: _reducer, refresh: _refresh);

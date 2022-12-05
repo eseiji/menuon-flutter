@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:menu_on/redux/app_store.dart';
 import 'package:menu_on/services/payments.dart';
 import 'package:menu_on/view/components/order_button.dart';
 /* import 'package:flutter_svg/svg.dart'; */
@@ -208,6 +209,8 @@ class _BodyState extends State<Body> {
             'order_products', convert.jsonEncode(orderProductsParsed));
       }
     });
+
+    appStore.dispatcher(AppAction.increment);
   }
 
   @override
@@ -279,8 +282,9 @@ class _BodyState extends State<Body> {
                                     removeFromCart(index);
                                   },
                                   style: OutlinedButton.styleFrom(
-                                    primary: Color.fromARGB(255, 206, 210, 252),
-                                    backgroundColor: Color(0xFF5767FE),
+                                    primary: const Color.fromARGB(
+                                        255, 206, 210, 252),
+                                    backgroundColor: const Color(0xFF5767FE),
                                     shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
                                         Radius.circular(16),
@@ -331,7 +335,7 @@ class _BodyState extends State<Body> {
                                     setState(() {});
                                   },
                                   style: OutlinedButton.styleFrom(
-                                    primary: Color(0xFF5767FE),
+                                    primary: const Color(0xFF5767FE),
                                     // shadowColor: Color(0xFF5767FE),
                                     shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
