@@ -1,10 +1,10 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:menu_on/stores/order_product_counter.dart';
+import 'package:menu_on/redux/app_store.dart';
+import 'package:menu_on/stores/order_product_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
 
@@ -22,10 +22,11 @@ class AppBarComponent extends StatefulWidget implements PreferredSizeWidget {
 
 class _AppBarComponentState extends State<AppBarComponent> {
   int numOfItems = 0;
-  final productCounterStore = OrderProductCounterStore();
+  // final _productCounterStore = OrderProductCounter();
+  // final controller = Store(0);
   // late String order_products;
   // final AppBar appBar;
-  // final productCounterStore = OrderProductCounter();
+  final provider = OrderProductStore();
   void signout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
@@ -64,26 +65,37 @@ class _AppBarComponentState extends State<AppBarComponent> {
     return title;
   }
 
-  Future<String> getOrderProducts() async {
-    final prefs = await SharedPreferences.getInstance();
-    // product = {'idProduct': widget.idProduct, 'numOfItems': numOfItems};
-    // order_products = prefs.getString('order_products') as String;
-    // print('order_products');
-    // print(order_products);
-    // return order_products;
-    return convert.jsonDecode(prefs.getString('order_products') as String);
-  }
+  // Future<String> getOrderProducts() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   // product = {'idProduct': widget.idProduct, 'numOfItems': numOfItems};
+  //   // order_products = prefs.getString('order_products') as String;
+  //   // print('order_products');
+  //   // print(order_products);
+  //   // return order_products;
+  //   return convert.jsonDecode(prefs.getString('order_products') as String);
+  // }
 
-  void updateCartItems() async {
-    var orderProducts = await getOrderProducts();
+  // void updateCartItems() async {
+  //   var orderProducts = await getOrderProducts();
 
-    setState(() {
-      numOfItems = orderProducts.length;
-    });
-  }
+  //   setState(() {
+  //     numOfItems = orderProducts.length;
+  //   });
+  // }
+
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
+    // print('provider');
+    // print(provider.value);
+    // final teste = Provider.of<AppBarComponent>(context);
+    // final bloc = Provider.of<OrderProductStore>(context);
+    // final todo = teste.;
     return AppBar(
       backgroundColor: const Color(0xff181920),
       elevation: 2,
@@ -131,23 +143,21 @@ class _AppBarComponentState extends State<AppBarComponent> {
                     ),
                 icon: Badge(
                   badgeColor: const Color(0xFF5767FE),
-                  badgeContent: Observer(builder: (_) {
-                    return Text(
-                      '${productCounterStore.value}',
-                      style: const TextStyle(color: Colors.white),
-                    );
-                  }
-                      // child:
-                      ),
+                  badgeContent: AnimatedBuilder(
+                      animation: appStore,
+                      builder: (_, __) {
+                        return Text(
+                          '${appStore.state.value}',
+                          style: const TextStyle(color: Colors.white),
+                        );
+                      }),
                   child: const FaIcon(
                     FontAwesomeIcons.basketShopping,
                     color: Colors.white,
                     size: 20,
                   ),
-                )
-
-                // const Icon(Icons.shopping_bag),
-                )
+                ))
+            // const Icon(Icons.shopping_bag),
             : Container()
       ],
     );

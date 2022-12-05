@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 // import 'package:fluttericon/font_awesome5_icons.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,7 +19,7 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPageState extends State<MenuPage> {
   var formKey = GlobalKey<FormState>();
-  final firestore = FirebaseFirestore.instance;
+  // final firestore = FirebaseFirestore.instance;
 
   // late String company = '';
   late String color = '';
@@ -89,7 +88,8 @@ class _MenuPageState extends State<MenuPage> {
     return Scaffold(
       extendBody: true,
       drawer: _drawer(context),
-      appBar: AppBarComponent(),
+      // appBar: const AppBarStateless(),
+      appBar: const AppBarComponent(),
       body: const MenuBody(),
     );
   }
