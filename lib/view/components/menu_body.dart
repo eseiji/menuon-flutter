@@ -157,6 +157,7 @@ class _MenuBodyState extends State<MenuBody> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: TextField(
+              style: const TextStyle(color: Colors.white),
               onChanged: (value) => sort2(value),
               // style: TextStyle(color: Colors.white),
               // style: GoogleFonts.harmattan(
@@ -172,6 +173,10 @@ class _MenuBodyState extends State<MenuBody> {
                 ),
                 hintText: "Pesquisar",
                 hintStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                ),
+                helperStyle: TextStyle(
                   color: Colors.white,
                   fontSize: 13,
                 ),

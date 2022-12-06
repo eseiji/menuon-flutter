@@ -17,7 +17,9 @@ class OrderHistory {
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = await convert.jsonDecode(response.body);
       for (var element in jsonResponse) {
-        if (element['identification'] != null && element['status'] == 0) {
+        if ((element['identification'] != null &&
+                element['identification'] != "") &&
+            element['status'] == 0) {
           var paymentInfo = await getPaymentStatus(element['identification']);
           if (paymentInfo['status'] == 'CONCLUIDA') {
             var value = paymentInfo['pix'][0]['horario'];

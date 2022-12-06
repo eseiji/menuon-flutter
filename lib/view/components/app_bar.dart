@@ -51,8 +51,17 @@ class _AppBarComponentState extends State<AppBarComponent> {
     }
   }
 
+  void run() {
+    appStore.addListener(() async {
+      print('VALUE');
+      print(appStore.state.value);
+      await getCurrentRoute();
+    });
+  }
+
   Future<AppRoute> getCurrentRoute() async {
     await appStore.dispatcher(AppAction.increment);
+//
     String? route = ModalRoute.of(context)!.settings.name;
     late String title = '';
     late Widget action;
@@ -60,7 +69,7 @@ class _AppBarComponentState extends State<AppBarComponent> {
       case '/menu':
         var companyName = await getCompany();
         title = companyName;
-        if (appStore.state.value >= 1) {
+        if (appStore.state.value > 0) {
           action = IconButton(
             onPressed: () => Get.toNamed(
               '/cart',
@@ -129,9 +138,9 @@ class _AppBarComponentState extends State<AppBarComponent> {
     return AppRoute(title: title, action: action);
   }
 
-  Future<void> geta() async {
-    await appStore.dispatcher(AppAction.increment);
-  }
+  // Future<void> geta() async {
+  //   await appStore.dispatcher(AppAction.increment);
+  // }
 
   // @override
   // void initState() {
@@ -193,17 +202,87 @@ class _AppBarComponentState extends State<AppBarComponent> {
         },
       ),
       actions: [
-        FutureBuilder(
-          future: getCurrentRoute(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final AppRoute actions = snapshot.data as AppRoute;
-              return actions.action;
-            } else {
-              return Container();
-            }
-          },
-        )
+        ModalRoute.of(context)!.settings.name == '/menu'
+            ? IconButton(
+                onPressed: () => Get.toNamed(
+                  '/cart',
+                  arguments: {'company': 'company'},
+                ),
+                icon: AnimatedBuilder(
+                  animation: appStore,
+                  builder: (_, __) {
+                    if (appStore.state.value > 0) {
+                      return Badge(
+                        badgeColor: const Color(0xFF5767FE),
+                        badgeContent: Text(
+                          '${appStore.state.value}',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        child: const FaIcon(
+                          FontAwesomeIcons.basketShopping,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      );
+                    } else {
+                      return const FaIcon(
+                        FontAwesomeIcons.basketShopping,
+                        color: Colors.white,
+                        size: 20,
+                      );
+                    }
+                  },
+                ),
+              )
+            // IconButton(
+            //     onPressed: () => Get.toNamed(
+            //       '/cart',
+            //       arguments: {'company': 'company'},
+            //     ),
+            //     icon: Badge(
+            //       badgeColor: const Color(0xFF5767FE),
+            //       badgeContent: AnimatedBuilder(
+            //           animation: appStore,
+            //           builder: (_, __) {
+            //             return Text(
+            //               '${appStore.state.value}',
+            //               style: const TextStyle(color: Colors.white),
+            //             );
+            //           }),
+            //       child: const FaIcon(
+            //         FontAwesomeIcons.basketShopping,
+            //         color: Colors.white,
+            //         size: 20,
+            //       ),
+            //     ),
+            //   )
+            : ModalRoute.of(context)!.settings.name == '/order_history'
+                ? IconButton(
+                    onPressed: () {
+                      appStore.refreshOrderHistory();
+                      // setState(() {
+                      //   print('SETstate');
+                      // });
+                    },
+                    icon: const Icon(Icons.refresh_rounded)
+                    // const FaIcon(
+                    //   FontAwesomeIcons.arrowsRotate,
+                    //   color: Colors.white,
+                    //   size: 20,
+                    // ),
+                    )
+                : Container()
+        // FutureBuilder(
+        //   future: getCurrentRoute(),
+        //   builder: (context, snapshot) {
+        //     if (snapshot.hasData) {
+        //       final AppRoute actions = snapshot.data as AppRoute;
+        //       return actions.action;
+        //     } else {
+        //       return Container();
+        //     }
+        //   },
+        // )
       ],
       // [getCurrentRoute().action],
     );

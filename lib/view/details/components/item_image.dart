@@ -11,12 +11,12 @@ class ItemImage extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8.0), // Image border
           child: Image.network(
             "https://$imgSrc",
-            width: 180,
+            width: 160,
           ),
         )
         //     ClipRRect(

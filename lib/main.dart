@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
         // '/scan': (context) => QRScanpage(),
         '/menu': (context) => const MenuPage(),
         '/cart': (context) => CartScreen(),
-        // '/teste': (context) => DetailsScreen2(),
+        // '/product_details': (context) => DetailsScreen2(),
         '/teste2': (context) => const Teste(),
         '/payment': (context) => PaymentView(),
         '/order_history': (context) => const OrderHistoryView(),
@@ -57,10 +57,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/**
-* appBar na tela de detalhes do produto (menu)
-* refresh na tela de pagamentos (histórico) -- FEITO
-* badge do carrinho
-* data do pagamento do pix
+/** 
+* appBar na tela de detalhes do produto (menu) - FEITO
+* refresh na tela de pagamentos (histórico) - FEITO
+* badge do carrinho - FEITO
+* data do pagamento do pix - FEITO
 * botões do awesome dialog
  */

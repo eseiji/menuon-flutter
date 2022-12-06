@@ -1,14 +1,10 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:menu_on/services/companies.dart';
 // import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:url_launcher/url_launcher.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'dart:convert' as convert;
-
-import 'dart:io' show Platform;
 
 class Scanner extends StatelessWidget {
   const Scanner({Key? key}) : super(key: key);
@@ -78,7 +74,16 @@ class Scanner extends StatelessWidget {
     Widget buildQrView(BuildContext context) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Escaneie o QRCode'),
+          backgroundColor: const Color(0xff181920),
+          elevation: 2,
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          title: const Text(
+            'Escaneie o QRCode',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           actions: [
             IconButton(
               color: Colors.white,
@@ -96,22 +101,22 @@ class Scanner extends StatelessWidget {
               iconSize: 32.0,
               onPressed: () => cameraController.toggleTorch(),
             ),
-            IconButton(
-              color: Colors.white,
-              icon: ValueListenableBuilder(
-                valueListenable: cameraController.cameraFacingState,
-                builder: (context, state, child) {
-                  switch (state as CameraFacing) {
-                    case CameraFacing.front:
-                      return const Icon(Icons.camera_front);
-                    case CameraFacing.back:
-                      return const Icon(Icons.camera_rear);
-                  }
-                },
-              ),
-              iconSize: 32.0,
-              onPressed: () => cameraController.switchCamera(),
-            ),
+            // IconButton(
+            //   color: Colors.white,
+            //   icon: ValueListenableBuilder(
+            //     valueListenable: cameraController.cameraFacingState,
+            //     builder: (context, state, child) {
+            //       switch (state as CameraFacing) {
+            //         case CameraFacing.front:
+            //           return const Icon(Icons.camera_front);
+            //         case CameraFacing.back:
+            //           return const Icon(Icons.camera_rear);
+            //       }
+            //     },
+            //   ),
+            //   iconSize: 32.0,
+            //   onPressed: () => cameraController.switchCamera(),
+            // ),
           ],
         ),
         body: Container(
@@ -120,10 +125,12 @@ class Scanner extends StatelessWidget {
           ),
           child: Center(
             child: Container(
-                margin: const EdgeInsets.all(10.0),
-                // color: Colors.amber[600],
-                width: 300.0,
-                height: 300.0,
+              margin: const EdgeInsets.all(10.0),
+              // color: Colors.amber[600],
+              width: 300.0,
+              height: 300.0,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
                 child: MobileScanner(
                   allowDuplicates: true,
                   controller: cameraController,
@@ -137,7 +144,9 @@ class Scanner extends StatelessWidget {
                       debugPrint('Barcode found! $code');
                     }
                   },
-                )),
+                ),
+              ),
+            ),
           ),
         ),
       );

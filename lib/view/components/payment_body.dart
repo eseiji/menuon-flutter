@@ -51,14 +51,29 @@ class _PaymentBodyState extends State<PaymentBody> {
 
     Gerencianet gn = Gerencianet(OPTIONS);
 
+    if (double.parse(parsedOrderHistoryProducts['total']) < 1) {
+      parsedOrderHistoryProducts['total'] =
+          (parsedOrderHistoryProducts['total'] as String).padRight(
+        (parsedOrderHistoryProducts['total'] as String).length,
+        "0",
+      );
+    } else {
+      parsedOrderHistoryProducts['total'] =
+          (parsedOrderHistoryProducts['total'] as String).padRight(
+        (parsedOrderHistoryProducts['total'] as String).length + 1,
+        "0",
+      );
+    }
+
     Map<String, dynamic> body = {
       "calendario": {
         "expiracao": int.parse("3600"),
       },
       "valor": {
         "original": (parsedOrderHistoryProducts['total'] as String).padRight(
-            (parsedOrderHistoryProducts['total'] as String).length,
-            "0"), // string
+          (parsedOrderHistoryProducts['total'] as String).length,
+          "0",
+        ), // string
       },
       "chave": "9132e2ec-b7b2-45c0-8edc-8648b1051bc2",
     };
@@ -135,6 +150,7 @@ class _PaymentBodyState extends State<PaymentBody> {
             const SizedBox(height: 50),
             _copyAndPastePix != null
                 ? Container(
+                    width: 180,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
                       color: const Color(0xFF5767FE),
@@ -146,19 +162,19 @@ class _PaymentBodyState extends State<PaymentBody> {
                       ],
                     ),
                     child: TextButton(
-                      onPressed: () async {
-                        await Clipboard.setData(
-                            ClipboardData(text: _copyAndPastePix));
-                      },
-                      child: const Text(
-                        'Copiar PIX copia e cola',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                        onPressed: () async {
+                          await Clipboard.setData(
+                            ClipboardData(text: _copyAndPastePix),
+                          );
+                        },
+                        child: const Text(
+                          'PIX copia e cola',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )),
                   )
                 : Container(),
           ],

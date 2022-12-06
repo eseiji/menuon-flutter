@@ -130,9 +130,9 @@ class _CartCardState extends State<CartCard> {
               );
             } else {
               return Expanded(
-                child: Container(
+                child: SizedBox(
                     height: 75,
-                    child: Center(
+                    child: const Center(
                       child: SizedBox(
                         height: 20,
                         width: 20,

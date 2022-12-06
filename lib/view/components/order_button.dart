@@ -1,5 +1,4 @@
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:menu_on/redux/app_store.dart';
 import 'package:menu_on/services/payments.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geolocator/geolocator.dart';
@@ -154,22 +153,51 @@ class _OrderButtonState extends State<OrderButton> {
           context: context,
           animType: AnimType.leftSlide,
           headerAnimationLoop: false,
-          // dialogType: DialogType.success,
-          customHeader: const Icon(
-            Icons.check_circle,
-            size: 110,
-            color: Color(0xFF5767FE),
-          ),
+          dialogType: DialogType.success,
+          // customHeader: const Icon(
+          //   Icons.check_circle,
+          //   size: 110,
+          //   color: Color(0xFF5767FE),
+          // ),
           showCloseIcon: false,
           title: 'Pedido realizado com sucesso',
           desc:
-              'Seu pedido foi realizado com sucesso e ele será servido em breve.\nPara realizar o pagamento, acesse o Menu na página inicial, selecione o pedido e realize o pagamento',
-          btnOkOnPress: () async {
-            await Future.delayed(const Duration(milliseconds: 500));
-            Navigator.pop(context);
-            prefs.remove('order_products');
-          },
-          btnOkIcon: Icons.check_circle,
+              'Seu pedido foi realizado com sucesso.\nAcesse o Menu na página inicial e realize o pagamento.',
+          // btnOkOnPress: () async {
+          //   await Future.delayed(const Duration(milliseconds: 500));
+          //   Navigator.pop(context);
+          //   prefs.remove('order_products');
+          // },
+          // btnOkIcon: Icons.check_circle,
+          btnOk: TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              await Future.delayed(const Duration(milliseconds: 500));
+              Navigator.pop(context);
+              // Navigator.of(context).popAndPushNamed('/menu');
+              prefs.remove('order_products');
+              await appStore.dispatcher(AppAction.increment);
+            },
+            style: OutlinedButton.styleFrom(
+              primary: const Color.fromARGB(255, 206, 210, 252),
+              backgroundColor: const Color(0xFF5767FE),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(16),
+                ),
+              ),
+              side: const BorderSide(
+                color: Color(0xFF5767FE),
+              ),
+            ),
+            child: const Text(
+              'OK',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
           onDismissCallback: (type) {
             debugPrint('Dialog Dissmiss from callback $type');
           },
@@ -181,12 +209,12 @@ class _OrderButtonState extends State<OrderButton> {
           context: context,
           animType: AnimType.leftSlide,
           headerAnimationLoop: false,
-          // dialogType: DialogType.success,
-          customHeader: const Icon(
-            Icons.error,
-            size: 110,
-            color: Color(0xFF5767FE),
-          ),
+          dialogType: DialogType.error,
+          // customHeader: const Icon(
+          //   Icons.error,
+          //   size: 110,
+          //   color: Color(0xFF5767FE),
+          // ),
           showCloseIcon: false,
           title: 'Localização inválida',
           desc:
@@ -198,6 +226,31 @@ class _OrderButtonState extends State<OrderButton> {
           },
           btnOkIcon: Icons.check_circle,
           btnOkColor: const Color(0xFF5767FE),
+          btnOk: TextButton(
+            onPressed: () async {
+              await Future.delayed(const Duration(milliseconds: 500));
+              Navigator.pop(context);
+            },
+            style: OutlinedButton.styleFrom(
+              primary: const Color.fromARGB(255, 206, 210, 252),
+              backgroundColor: const Color(0xFF5767FE),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(16),
+                ),
+              ),
+              side: const BorderSide(
+                color: Color(0xFF5767FE),
+              ),
+            ),
+            child: const Text(
+              'OK',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
           onDismissCallback: (type) {
             debugPrint('Dialog Dissmiss from callback $type');
           },
@@ -214,8 +267,8 @@ class _OrderButtonState extends State<OrderButton> {
         Expanded(
           child: Container(
             margin: const EdgeInsets.only(
-              top: 20,
-              bottom: 20.0,
+              // top: 20,
+              bottom: 10.0,
             ),
             // padding: const EdgeInsets.all(1),
             decoration: BoxDecoration(

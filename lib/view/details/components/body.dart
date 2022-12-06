@@ -115,9 +115,9 @@ class _ItemInfoState extends State<ItemInfo> {
     setState(() {
       status = 'done';
     });
+    await appStore.dispatcher(AppAction.increment);
     // await _productCounterStore.getOrderProducts();
     // controller.sim();
-    appStore.dispatcher(AppAction.increment);
   }
 
   @override

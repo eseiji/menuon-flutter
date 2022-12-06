@@ -287,19 +287,29 @@ class _OrderHistoryDetailsBodyState extends State<OrderHistoryDetailsBody> {
     });
   }*/
 
-  String formatDate(String value) {
+  String formatDate(String value, String type) {
     // var splittedDate = value.split(' ');
     // var date = splittedDate[0].split('-');
     // var formattedYear = date[0].substring(2);
     // var hour = splittedDate[1].split(':');
 
     var parseHour = DateTime.parse(value);
-    var localHour = parseHour.toLocal().toString().split(' ');
+    var localHour = parseHour.toString().split(' ');
+    // var localHour = parseHour.toLocal().toString().split(' ');
 
     var date = localHour[0].split('-');
     var hour = localHour[1].split(':');
 
     date[0] = date[0].substring(2);
+
+    if (type == 'payment') {
+      hour[0] = (int.parse(hour[0]) - 3).toString();
+    }
+
+    // hour[0] = (int.parse(hour[0]) - 3).toString();
+    if (hour[0].length < 2) {
+      hour[0] = hour[0].padLeft(hour[0].length + 1, '0');
+    }
 
     // var sim = DateTime.parse('2022-12-06 12:52:48');
 
@@ -379,7 +389,8 @@ class _OrderHistoryDetailsBodyState extends State<OrderHistoryDetailsBody> {
                                     ),
                                   ),
                                   Text(
-                                    formatDate(data['insertion_date']),
+                                    formatDate(
+                                        data['insertion_date'], 'normal'),
                                     style: const TextStyle(
                                       fontSize: 16,
                                       color: Colors.white,
@@ -469,7 +480,8 @@ class _OrderHistoryDetailsBodyState extends State<OrderHistoryDetailsBody> {
                                     ),
                                   ),
                                   Text(
-                                    formatDate(data['insertion_date']),
+                                    formatDate(
+                                        data['insertion_date'], 'normal'),
                                     style: const TextStyle(
                                       fontSize: 16,
                                       color: Colors.white,
@@ -489,7 +501,10 @@ class _OrderHistoryDetailsBodyState extends State<OrderHistoryDetailsBody> {
                                     ),
                                   ),
                                   Text(
-                                    formatDate(data['Payment']['payment_date']),
+                                    formatDate(
+                                      data['Payment']['payment_date'],
+                                      'payment',
+                                    ),
                                     style: const TextStyle(
                                       fontSize: 16,
                                       color: Colors.white,

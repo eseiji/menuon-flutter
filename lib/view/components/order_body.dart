@@ -5,10 +5,8 @@ import 'package:menu_on/services/payments.dart';
 import 'package:menu_on/view/components/order_button.dart';
 /* import 'package:flutter_svg/svg.dart'; */
 
-import '../../models/Cart.dart';
 import 'cart_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:menu_on/services/companies.dart';
 import 'package:menu_on/services/orders.dart';
 import 'dart:convert' as convert;
@@ -219,314 +217,297 @@ class _BodyState extends State<Body> {
       // height: double.infinity,
       // width: double.infinity,
       color: const Color(0xff181920),
-      child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: FutureBuilder(
-            future: getProducts(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: Text(
-                    'Nenhum produto encontrado',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                );
+      child: FutureBuilder(
+        future: getProducts(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: Text(
+                'Nenhum produto encontrado',
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          }
+          if (snapshot.hasError) {
+            return const Text('Erro ao carregar os produtos.');
+          }
+          if (snapshot.hasData) {
+            final List<dynamic> data =
+                convert.jsonDecode(snapshot.data as String) as List<dynamic>;
+            print(data);
+            print('DATAAAAAAA=====================================');
+            // final List<dynamic> products = data['products'];
+            double total = 0;
+            String formattedPrice;
+            for (var e in data) {
+              {
+                if (e['unitPrice'] != null && e['numOfItems'] != null) {
+                  formattedPrice =
+                      (e['unitPrice'] as String).replaceAll("\$", '');
+                  total = total +
+                      (double.parse(formattedPrice) * (e['numOfItems'] as int));
+                }
               }
-              if (snapshot.hasError) {
-                return const Text('Erro ao carregar os produtos.');
-              }
-              if (snapshot.hasData) {
-                final List<dynamic> data = convert
-                    .jsonDecode(snapshot.data as String) as List<dynamic>;
-                print(data);
-                // final List<dynamic> products = data['products'];
-                return Column(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: ListView.builder(
-                        itemCount: data.length,
-                        itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Dismissible(
-                            key: UniqueKey(),
-                            direction: DismissDirection.endToStart,
-                            onDismissed: (direction) async {
-                              AwesomeDialog(
-                                dismissOnTouchOutside: false,
-                                context: context,
-                                animType: AnimType.leftSlide,
-                                headerAnimationLoop: false,
-                                dialogType: DialogType.noHeader,
-                                // customHeader: const Icon(
-                                //   Icons.info,
-                                //   size: 110,
-                                //   color: Color(0xFF5767FE),
-                                // ),
-                                showCloseIcon: false,
-                                title: 'Remover item do carrinho',
-                                desc:
-                                    'Tem certeza que deseja remover o item ${data[index]["numOfItems"]} do carrinho?',
-                                // btnOkOnPress: () {
-                                //   removeFromCart(index);
-                                // },
-                                // btnCancelOnPress: () {
-                                //   setState(() {});
-                                //   debugPrint('OnClcik');
-                                // },
-                                // btnCancelText: 'Não',
-                                // btnOkText: 'Sim',
-                                btnOk: TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    removeFromCart(index);
-                                  },
-                                  style: OutlinedButton.styleFrom(
-                                    primary: const Color.fromARGB(
-                                        255, 206, 210, 252),
-                                    backgroundColor: const Color(0xFF5767FE),
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(16),
-                                      ),
-                                    ),
-                                    side: const BorderSide(
-                                      color: Color(0xFF5767FE),
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    'Sim',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                // GestureDetector(
-                                //   onTap: () {
-                                //     Navigator.of(context).pop();
-                                //     removeFromCart(index);
-                                //   },
-                                //   child: Container(
-                                //     padding: const EdgeInsets.all(5.0),
-                                //     decoration: BoxDecoration(
-                                //       color: const Color(0xFF5767FE),
-                                //       border: Border.all(
-                                //         color: const Color(0xFF5767FE),
-                                //         width: 1.0,
-                                //         style: BorderStyle.solid,
-                                //       ),
-                                //       borderRadius: BorderRadius.circular(100),
-                                //     ),
-                                //     child: const Center(
-                                //       child: Text(
-                                //         'Sim',
-                                //         style: TextStyle(
-                                //           color: Colors.white,
-                                //           fontWeight: FontWeight.bold,
-                                //         ),
-                                //       ),
-                                //     ),
-                                //   ),
-                                // ),
-                                btnCancel: OutlinedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    setState(() {});
-                                  },
-                                  style: OutlinedButton.styleFrom(
-                                    primary: const Color(0xFF5767FE),
-                                    // shadowColor: Color(0xFF5767FE),
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(16),
-                                      ),
-                                    ),
-                                    side: const BorderSide(
-                                      color: Color(0xFF5767FE),
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    'Não',
-                                    style: TextStyle(
-                                      color: Color(0xFF5767FE),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-
-                                // GestureDetector(
-                                //   onTap: () {
-                                // Navigator.of(context).pop();
-                                // setState(() {});
-                                //   },
-                                //   child: Container(
-                                //     padding: const EdgeInsets.all(5.0),
-                                //     decoration: BoxDecoration(
-                                //       color: const Color.fromARGB(
-                                //           255, 188, 195, 255),
-                                //       border: Border.all(
-                                //         color: const Color(0xFF5767FE),
-                                //         width: 1.0,
-                                //         style: BorderStyle.solid,
-                                //       ),
-                                //       borderRadius: BorderRadius.circular(100),
-                                //     ),
-                                //     child: const Center(
-                                //       child: Text(
-                                //         'Não',
-                                //         style: TextStyle(
-                                //           color: Color(0xFF5767FE),
-                                //           fontWeight: FontWeight.bold,
-                                //         ),
-                                //       ),
-                                //     ),
-                                //   ),
-                                // ),
-                                btnOkColor: const Color(0xFF5767FE),
-                                btnOkIcon: Icons.check_circle,
-                                onDismissCallback: (type) {
-                                  debugPrint(
-                                      'Dialog Dissmiss from callback $type');
+            }
+            return Column(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Dismissible(
+                          key: UniqueKey(),
+                          direction: DismissDirection.endToStart,
+                          onDismissed: (direction) async {
+                            AwesomeDialog(
+                              dismissOnTouchOutside: false,
+                              context: context,
+                              animType: AnimType.leftSlide,
+                              headerAnimationLoop: false,
+                              dialogType: DialogType.infoReverse,
+                              // customHeader: const Icon(
+                              //   Icons.info,
+                              //   size: 110,
+                              //   color: Color(0xFF5767FE),
+                              // ),
+                              showCloseIcon: false,
+                              title: 'Remover item do carrinho',
+                              desc:
+                                  'Tem certeza que deseja remover o item do carrinho?',
+                              btnOk: TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  removeFromCart(index);
                                 },
-                              ).show();
-                              // setState(() {
-                              //   // demoCarts.removeAt(index);
-                              //   // print('REMOVER DO CARRINHO');
-                              // });
-                            },
-                            background: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              decoration: BoxDecoration(
-                                color: const Color(0xff181920),
-                                // color: Color(0xFFFFE6E6),
-                                borderRadius: BorderRadius.circular(15),
+                                style: OutlinedButton.styleFrom(
+                                  primary:
+                                      const Color.fromARGB(255, 206, 210, 252),
+                                  backgroundColor: const Color(0xFF5767FE),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(16),
+                                    ),
+                                  ),
+                                  side: const BorderSide(
+                                    color: Color(0xFF5767FE),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Sim',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
-                              child: Row(
-                                children: const [
-                                  Spacer(),
-                                  /* SvgPicture.asset("assets/icons/Trash.svg"), */
-                                ],
+                              btnCancel: OutlinedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  setState(() {});
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  primary: const Color(0xFF5767FE),
+                                  // shadowColor: Color(0xFF5767FE),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(16),
+                                    ),
+                                  ),
+                                  side: const BorderSide(
+                                    color: Color(0xFF5767FE),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Não',
+                                  style: TextStyle(
+                                    color: Color(0xFF5767FE),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
+
+                              // GestureDetector(
+                              //   onTap: () {
+                              // Navigator.of(context).pop();
+                              // setState(() {});
+                              //   },
+                              //   child: Container(
+                              //     padding: const EdgeInsets.all(5.0),
+                              //     decoration: BoxDecoration(
+                              //       color: const Color.fromARGB(
+                              //           255, 188, 195, 255),
+                              //       border: Border.all(
+                              //         color: const Color(0xFF5767FE),
+                              //         width: 1.0,
+                              //         style: BorderStyle.solid,
+                              //       ),
+                              //       borderRadius: BorderRadius.circular(100),
+                              //     ),
+                              //     child: const Center(
+                              //       child: Text(
+                              //         'Não',
+                              //         style: TextStyle(
+                              //           color: Color(0xFF5767FE),
+                              //           fontWeight: FontWeight.bold,
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
+                              btnOkColor: const Color(0xFF5767FE),
+                              btnOkIcon: Icons.check_circle,
+                              onDismissCallback: (type) {
+                                debugPrint(
+                                    'Dialog Dissmiss from callback $type');
+                              },
+                            ).show();
+                            // setState(() {
+                            //   // demoCarts.removeAt(index);
+                            //   // print('REMOVER DO CARRINHO');
+                            // });
+                          },
+                          background: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            decoration: BoxDecoration(
+                              color: const Color(0xff181920),
+                              // color: Color(0xFFFFE6E6),
+                              borderRadius: BorderRadius.circular(15),
                             ),
-                            child: CartCard(product: data[index]),
+                            child: Row(
+                              children: const [
+                                Spacer(),
+                                /* SvgPicture.asset("assets/icons/Trash.svg"), */
+                              ],
+                            ),
                           ),
+                          child: CartCard(product: data[index]),
                         ),
                       ),
                     ),
-                    const OrderButton(),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     Expanded(
-                    //       child: Container(
-                    //         margin: const EdgeInsets.only(
-                    //           top: 20,
-                    //           bottom: 20.0,
-                    //         ),
-                    //         // padding: const EdgeInsets.all(1),
-                    //         decoration: BoxDecoration(
-                    //           borderRadius: BorderRadius.circular(4),
-                    //           color: const Color(0xFF5767FE),
-                    //           boxShadow: const [
-                    //             BoxShadow(
-                    //               color: Colors.black,
-                    //               blurRadius: 15.0,
-                    //             )
-                    //           ],
-                    //         ),
-                    //         child: TextButton(
-                    //           onPressed: () {
-                    //             postOrder();
-                    //           },
-                    //           child: status == 'none'
-                    //               ? const Text(
-                    //                   'Realizar pedido',
-                    //                   style: TextStyle(
-                    //                     color: Colors.white,
-                    //                     fontSize: 15.0,
-                    //                     fontWeight: FontWeight.bold,
-                    //                   ),
-                    //                 )
-                    //               : status == 'pending'
-                    //                   ? const SizedBox(
-                    //                       width: 30,
-                    //                       height: 30,
-                    //                       child: CircularProgressIndicator(
-                    //                         color: Colors.white,
-                    //                         strokeWidth: 2.5,
-                    //                       ),
-                    //                     )
-                    //                   : Center(
-                    //                       child: Container(
-                    //                         decoration: BoxDecoration(
-                    //                           borderRadius:
-                    //                               BorderRadius.circular(100.0),
-                    //                           color: const Color(0xFF5767FE),
-                    //                           boxShadow: const [
-                    //                             BoxShadow(
-                    //                               color: Colors.black,
-                    //                               blurRadius: 1.0,
-                    //                             )
-                    //                           ],
-                    //                         ),
-                    //                         width: 30,
-                    //                         height: 30,
-                    //                         child: const Icon(
-                    //                           Icons.done,
-                    //                           color: Colors.white,
-                    //                         ),
-                    //                       ),
-                    //                     ),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                  ],
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2.5,
                   ),
-                );
-              }
-            },
-          )
-          // ListView.builder(
-          //   itemCount: demoCarts.length,
-          //   itemBuilder: (context, index) => Padding(
-          //     padding: const EdgeInsets.symmetric(vertical: 10),
-          //     child: Dismissible(
-          //       key: Key(demoCarts[index].product.id.toString()),
-          //       direction: DismissDirection.endToStart,
-          //       onDismissed: (direction) {
-          //         setState(() {
-          //           demoCarts.removeAt(index);
-          //         });
-          //       },
-          //       background: Container(
-          //         padding: const EdgeInsets.symmetric(horizontal: 20),
-          //         decoration: BoxDecoration(
-          //           color: const Color(0xff181920),
-          //           // color: Color(0xFFFFE6E6),
-          //           borderRadius: BorderRadius.circular(15),
-          //         ),
-          //         child: Row(
-          //           children: const [
-          //             Spacer(),
-          //             /* SvgPicture.asset("assets/icons/Trash.svg"), */
-          //           ],
-          //         ),
-          //       ),
-          //       child: CartCard(cart: demoCarts[index]),
-          //     ),
-          //   ),
-          // ),
-          ),
+                ),
+                Container(
+                  height: 150,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF252A34),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Total: ",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              'R\$ $total',
+                              // " R\$ ${widget.order_history['total']}",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const OrderButton(),
+                      ],
+                    ),
+                  ),
+                ),
+                // const OrderButton(),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Expanded(
+                //       child: Container(
+                //         margin: const EdgeInsets.only(
+                //           top: 20,
+                //           bottom: 20.0,
+                //         ),
+                //         // padding: const EdgeInsets.all(1),
+                //         decoration: BoxDecoration(
+                //           borderRadius: BorderRadius.circular(4),
+                //           color: const Color(0xFF5767FE),
+                //           boxShadow: const [
+                //             BoxShadow(
+                //               color: Colors.black,
+                //               blurRadius: 15.0,
+                //             )
+                //           ],
+                //         ),
+                //         child: TextButton(
+                //           onPressed: () {
+                //             postOrder();
+                //           },
+                //           child: status == 'none'
+                //               ? const Text(
+                //                   'Realizar pedido',
+                //                   style: TextStyle(
+                //                     color: Colors.white,
+                //                     fontSize: 15.0,
+                //                     fontWeight: FontWeight.bold,
+                //                   ),
+                //                 )
+                //               : status == 'pending'
+                //                   ? const SizedBox(
+                //                       width: 30,
+                //                       height: 30,
+                //                       child: CircularProgressIndicator(
+                //                         color: Colors.white,
+                //                         strokeWidth: 2.5,
+                //                       ),
+                //                     )
+                //                   : Center(
+                //                       child: Container(
+                //                         decoration: BoxDecoration(
+                //                           borderRadius:
+                //                               BorderRadius.circular(100.0),
+                //                           color: const Color(0xFF5767FE),
+                //                           boxShadow: const [
+                //                             BoxShadow(
+                //                               color: Colors.black,
+                //                               blurRadius: 1.0,
+                //                             )
+                //                           ],
+                //                         ),
+                //                         width: 30,
+                //                         height: 30,
+                //                         child: const Icon(
+                //                           Icons.done,
+                //                           color: Colors.white,
+                //                         ),
+                //                       ),
+                //                     ),
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+              ],
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 2.5,
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 
