@@ -14,7 +14,10 @@ class ItemImage extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8.0), // Image border
-          child: Image.network("https://${imgSrc}"),
+          child: Image.network(
+            "https://$imgSrc",
+            width: 180,
+          ),
         )
         //     ClipRRect(
         //   borderRadius: BorderRadius.circular(80.0),

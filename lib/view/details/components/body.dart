@@ -124,7 +124,7 @@ class _ItemInfoState extends State<ItemInfo> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      padding: const EdgeInsets.all(20),
+      // padding: const EdgeInsets.all(20),
       width: double.infinity,
       decoration: const BoxDecoration(
         color: Color(0xFF252A34),
@@ -137,30 +137,49 @@ class _ItemInfoState extends State<ItemInfo> {
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           FutureBuilder(
-              future: getCompany(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return shopeName(snapshot.data);
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                    widthFactor: 30,
-                    heightFactor: 30,
-                  );
-                }
-              }),
-          TitlePriceRating(
-            nome: widget.nome,
-            preco: widget.preco,
-            // tamanho: widget.tamanho,
+            future: getCompany(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return shopeName(snapshot.data);
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                  widthFactor: 30,
+                  heightFactor: 30,
+                );
+              }
+            },
           ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              widget.descricao,
-              style: const TextStyle(
-                height: 1.5,
-                color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: TitlePriceRating(
+              nome: widget.nome,
+              preco: widget.preco,
+              // tamanho: widget.tamanho,
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: SizedBox(
+                height: 80,
+                child: ListView(
+                  children: [
+                    Text(
+                      // maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      widget.descricao,
+                      style: const TextStyle(
+                        // height: 1.5,
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -168,6 +187,7 @@ class _ItemInfoState extends State<ItemInfo> {
           // const SizedBox(height: 25),
           const Spacer(),
           Container(
+            padding: const EdgeInsets.only(left: 20, right: 20),
             margin: const EdgeInsets.only(bottom: 15),
             child: Row(
               children: [
@@ -239,86 +259,90 @@ class _ItemInfoState extends State<ItemInfo> {
               ],
             ),
           ),
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: const Color(0xFF5767FE),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 2.0,
-                      )
-                    ],
-                  ),
-                  child: status == 'none'
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // const Icon(
-                            //   Icons.shopping_cart,
-                            //   color: Colors.white,
-                            // ),
-                            const FaIcon(
-                              FontAwesomeIcons.basketShopping,
-                              color: Colors.white,
-                            ),
-                            const SizedBox(width: 10),
-                            TextButton(
-                              onPressed: () => addToCart(),
-                              child: const Text(
-                                'Adicionar no carrinho',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: const Color(0xFF5767FE),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 2.0,
                         )
-                      : status == 'done'
-                          ? Padding(
-                              padding: const EdgeInsets.all(9.0),
-                              child: Center(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100.0),
-                                    color: const Color(0xFF5767FE),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black,
-                                        blurRadius: 1.0,
-                                      )
-                                    ],
-                                  ),
-                                  width: 30,
-                                  height: 30,
-                                  child: const Icon(
-                                    Icons.done,
+                      ],
+                    ),
+                    child: status == 'none'
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // const Icon(
+                              //   Icons.shopping_cart,
+                              //   color: Colors.white,
+                              // ),
+                              const FaIcon(
+                                FontAwesomeIcons.basketShopping,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(width: 10),
+                              TextButton(
+                                onPressed: () => addToCart(),
+                                child: const Text(
+                                  'Adicionar no carrinho',
+                                  style: TextStyle(
                                     color: Colors.white,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
-                            )
-                          : const Padding(
-                              padding: EdgeInsets.all(9.0),
-                              child: Center(
-                                child: SizedBox(
-                                  width: 30,
-                                  height: 30,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2.5,
+                            ],
+                          )
+                        : status == 'done'
+                            ? Padding(
+                                padding: const EdgeInsets.all(9.0),
+                                child: Center(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.circular(100.0),
+                                      color: const Color(0xFF5767FE),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Colors.black,
+                                          blurRadius: 1.0,
+                                        )
+                                      ],
+                                    ),
+                                    width: 30,
+                                    height: 30,
+                                    child: const Icon(
+                                      Icons.done,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : const Padding(
+                                padding: EdgeInsets.all(9.0),
+                                child: Center(
+                                  child: SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2.5,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
 
           // Free space  10% of total height
@@ -331,19 +355,23 @@ class _ItemInfoState extends State<ItemInfo> {
     );
   }
 
-  Row shopeName(name) {
-    return Row(
-      children: <Widget>[
-        const Icon(
-          Icons.location_on,
-          color: Color(0xFF5767FE),
-        ),
-        const SizedBox(width: 10),
-        Text(
-          name,
-          style: const TextStyle(color: Colors.white),
-        ),
-      ],
+  Widget shopeName(name) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 15.0, bottom: 10, top: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          const Icon(
+            Icons.location_on,
+            color: Color(0xFF5767FE),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            name,
+            style: const TextStyle(color: Colors.white),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -56,3 +56,11 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+/**
+* appBar na tela de detalhes do produto (menu)
+* refresh na tela de pagamentos (histórico) -- FEITO
+* badge do carrinho
+* data do pagamento do pix
+* botões do awesome dialog
+ */

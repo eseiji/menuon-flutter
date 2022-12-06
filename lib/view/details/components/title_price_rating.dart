@@ -31,7 +31,7 @@ class TitlePriceRating extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 0),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -60,7 +60,7 @@ class TitlePriceRating extends StatelessWidget {
                 //     ),
                 //   ),
                 // ),
-                const SizedBox(height: 10),
+                // const SizedBox(height: 10),
               ],
             ),
           ),
@@ -78,7 +78,7 @@ class TitlePriceRating extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 15),
         height: 66,
         width: 75,
-        color: Color(0xFF5767FE),
+        color: const Color(0xFF5767FE),
         // color: Colors.white,
         child: Text(
           "R\$ $price",

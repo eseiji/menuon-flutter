@@ -60,7 +60,7 @@ class _AppBarComponentState extends State<AppBarComponent> {
       case '/menu':
         var companyName = await getCompany();
         title = companyName;
-        if (appStore.state.value > 0) {
+        if (appStore.state.value >= 1) {
           action = IconButton(
             onPressed: () => Get.toNamed(
               '/cart',
@@ -124,6 +124,7 @@ class _AppBarComponentState extends State<AppBarComponent> {
         break;
       default:
         title = '';
+        action = Container();
     }
     return AppRoute(title: title, action: action);
   }

@@ -18,9 +18,10 @@ class _OrderHistoryDetailsBodyState extends State<OrderHistoryDetailsBody> {
   final _orderHistory = OrderHistory();
   late double orderTotal = 0;
   Future<Map<String, dynamic>> getOrderHistoryProducts() async {
-    setState(() {
-      status = 'pending';
-    });
+    // setState(() {
+    //   status = 'pending';
+    // });
+    status = 'pending';
     final prefs = await SharedPreferences.getInstance();
     var idOrder = prefs.getString('id_order') as String;
     order_history_products =
@@ -29,10 +30,12 @@ class _OrderHistoryDetailsBodyState extends State<OrderHistoryDetailsBody> {
       'order_history_products',
       convert.jsonEncode(order_history_products),
     );
-    setState(() {
-      orderTotal = double.parse(order_history_products['total']);
-      status = 'done';
-    });
+    // setState(() {
+    //   orderTotal = double.parse(order_history_products['total']);
+    //   status = 'done';
+    // });
+    orderTotal = double.parse(order_history_products['total']);
+    status = 'done';
     return order_history_products;
   }
 
@@ -285,15 +288,35 @@ class _OrderHistoryDetailsBodyState extends State<OrderHistoryDetailsBody> {
   }*/
 
   String formatDate(String value) {
-    var splittedDate = value.split(' ');
-    var date = splittedDate[0].split('-');
-    var formattedYear = date[0].substring(2);
-    var hour = splittedDate[1].split(':');
+    // var splittedDate = value.split(' ');
+    // var date = splittedDate[0].split('-');
+    // var formattedYear = date[0].substring(2);
+    // var hour = splittedDate[1].split(':');
 
     var parseHour = DateTime.parse(value);
-    var localHour = parseHour.toLocal();
+    var localHour = parseHour.toLocal().toString().split(' ');
+
+    var date = localHour[0].split('-');
+    var hour = localHour[1].split(':');
+
+    date[0] = date[0].substring(2);
+
+    // var sim = DateTime.parse('2022-12-06 12:52:48');
+
+    // print('DATE');
+    // print(sim.toUtc());
+    // print(sim.toLocal());
+
+    // DateTime dateTime = DateTime.now();
+    // print('timeZoneName');
+    // print(dateTime);
+    // print(dateTime.timeZoneName);
+    // print(dateTime.timeZoneOffset);
+
+//     var dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc, true);
+// var dateLocal = dateTime.toLocal();
     // var formattedDate = (localHour as String).split(' ');
-    return '$localHour';
+    return '${date[2]}/${date[1]}/${date[0]} - ${hour[0]}:${hour[1]}';
     // return "${date[2]}/${date[1]}/$formattedYear - ${hour[0]}:${hour[1]}";
   }
 
